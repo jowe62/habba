@@ -414,13 +414,103 @@
     "tags": ["Restaurant", "Cocktails"]
   },
   {
+    "id": "bar-barabicu-gbg",
+    "name": "Barabicu",
+    "address": "Rosenlundsgatan 4, 411 20 Göteborg",
+    "lat": 57.702560,
+    "lng": 11.958560,
+    "hasOutdoor": true,
+    "tags": ["Bar", "Grill", "AW"]
+  },
+  {
+    "id": "bar-pix-gbg",
+    "name": "Pix",
+    "address": "Grönsakstorget, 411 17 Göteborg",
+    "lat": 57.704250,
+    "lng": 11.965820,
+    "hasOutdoor": true,
+    "tags": ["Bar", "Pinchos"]
+  },
+  {
+    "id": "restaurant-clarion-post",
+    "name": "Clarion Hotel Post",
+    "address": "Drottningtorget 10, 411 03 Göteborg",
+    "lat": 57.708850,
+    "lng": 11.979850,
+    "hasOutdoor": true,
+    "tags": ["Restaurant", "Hotel", "AW"]
+  },
+  {
+    "id": "bar-pigalle-gbg",
+    "name": "Hotel Pigalle (Atelier)",
+    "address": "Södra Hamngatan 2A, 411 06 Göteborg",
+    "lat": 57.706780,
+    "lng": 11.969850,
+    "hasOutdoor": true,
+    "tags": ["Bar", "Scenic", "Rooftop"]
+  },
+  {
+    "id": "restaurant-johanna-steakhouse",
+    "name": "Johanna Steakhouse",
+    "address": "Södra Hamngatan 49, 411 06 Göteborg",
+    "lat": 57.706420,
+    "lng": 11.968210,
+    "hasOutdoor": true,
+    "tags": ["Restaurant", "AW"]
+  },
+  {
+    "id": "pub-7an-gbg",
+    "name": "Ölhallen 7:an",
+    "address": "Kungstorget 7, 411 17 Göteborg",
+    "lat": 57.703120,
+    "lng": 11.967850,
+    "hasOutdoor": true,
+    "tags": ["Pub", "Traditional"]
+  },
+  {
+    "id": "bar-tranquilo-gbg",
+    "name": "Tranquilo",
+    "address": "Kungstorget 14, 411 10 Göteborg",
+    "lat": 57.702850,
+    "lng": 11.968850,
+    "hasOutdoor": true,
+    "tags": ["Bar", "Mexican"]
+  },
+  {
+    "id": "bar-bruk-gbg",
+    "name": "BRUK",
+    "address": "Friggagatan 4, 411 01 Göteborg",
+    "lat": 57.709050,
+    "lng": 11.989210,
+    "hasOutdoor": true,
+    "tags": ["Café", "Bar", "Coffee"]
+  },
+  {
+    "id": "bar-blokk-gbg",
+    "name": "BLOKK",
+    "address": "Tegnérsgatan 10, 412 52 Göteborg",
+    "lat": 57.693150,
+    "lng": 11.984210,
+    "hasOutdoor": true,
+    "tags": ["Bar", "Beer", "Pub"]
+  },
+  {
     "id": "bar-cafe-havanna",
     "name": "Café Havanna",
-    "address": "Linnégatan 9, 413 04 Göteborg",
-    "lat": 57.697110,
-    "lng": 11.952520,
+    "address": "Viktor Rydbergsgatan 73, 412 61 Göteborg",
+    "lat": 57.690850,
+    "lng": 11.981850,
     "hasOutdoor": true,
     "tags": ["Café", "Bar"]
+  },
+  {
+    "id": "bar-bennys-rosenlund",
+    "name": "Bennys Bar & Slice Shop",
+    "address": "Rosenlundsgatan 4, 411 20 Göteborg",
+    "lat": 57.702560,
+    "lng": 11.958560,
+    "hasOutdoor": true,
+    "tags": ["Bar", "Pizza", "Pub"]
   },
   {
     "id": "bar-el-guiri",
@@ -430,14 +520,5 @@
     "lng": 11.961020,
     "hasOutdoor": true,
     "tags": ["Bar", "Tapas"]
-  },
-  {
-    "id": "bar-bennys-skanstorget",
-    "name": "Benny’s",
-    "address": "Skanstorget 9, 411 22 Göteborg",
-    "lat": 57.695880,
-    "lng": 11.957540,
-    "hasOutdoor": true,
-    "tags": ["Bar", "Pub"]
   }
 ]

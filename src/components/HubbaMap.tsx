@@ -72,6 +72,12 @@ export const HubbaMap: React.FC<HubbaMapProps> = ({
 
   const [zoomState, setZoomState] = useState(14);
 
+  // States to drive temporary highlights upon selecting a venue
+  const [highlightedVenueId, setHighlightedVenueId] = useState<string | null>(null);
+  const [isTemporarilyDimmed, setIsTemporarilyDimmed] = useState(false);
+  const [showNameTagId, setShowNameTagId] = useState<string | null>(null);
+
+  // Initialize Map
   useEffect(() => {
     if (!mapContainerRef.current || mapRef.current) return;
 
@@ -108,7 +114,7 @@ export const HubbaMap: React.FC<HubbaMapProps> = ({
     };
   }, []);
 
-  // Fixed map locking utilizing (map as any) type casts to bypass .tap TS errors
+  // Map interaction freezer (TS compiler errors fixed using map as any casts)
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
@@ -132,12 +138,41 @@ export const HubbaMap: React.FC<HubbaMapProps> = ({
     }
   }, [isAdjustingPoint]);
 
+  // Direct District quick jumps
   useEffect(() => {
     const map = mapRef.current;
     if (!map || !targetCenter) return;
     map.setView([targetCenter.lat, targetCenter.lng], targetCenter.zoom ?? 15, { animate: true });
   }, [targetCenter]);
 
+  // Timers to handle temporary visual feedback upon selecting a venue
+  useEffect(() => {
+    if (!selectedVenue) return;
+
+    setHighlightedVenueId(selectedVenue.id);
+    setIsTemporarilyDimmed(true);
+    setShowNameTagId(selectedVenue.id);
+
+    const sizeTimer = setTimeout(() => {
+      setHighlightedVenueId(null);
+    }, 1500); // 30% scale highlight lasts 1.5s
+
+    const dimTimer = setTimeout(() => {
+      setIsTemporarilyDimmed(false);
+    }, 2500); // De-emphasize surrounding markers lasts 2.5s
+
+    const tagTimer = setTimeout(() => {
+      setShowNameTagId(null);
+    }, 3000); // Anchored name tag lasts 3s
+
+    return () => {
+      clearTimeout(sizeTimer);
+      clearTimeout(dimTimer);
+      clearTimeout(tagTimer);
+    };
+  }, [selectedVenue]);
+
+  // Update/Draw Venue Markers
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
@@ -188,10 +223,10 @@ export const HubbaMap: React.FC<HubbaMapProps> = ({
             return inSunNow;
           });
 
-          const isDimmed = isAdjustingPoint;
+          const isDimmed = isAdjustingPoint || isTemporarilyDimmed;
 
           const html = `
-            <div class="flex items-center justify-center w-11 h-11 relative ${isDimmed ? 'opacity-15 pointer-events-none' : ''}">
+            <div class="flex items-center justify-center w-11 h-11 relative ${isDimmed ? 'opacity-30 pointer-events-none' : ''}">
               <div class="absolute inset-0"></div>
               <div class="w-8 h-8 bg-[#350505] text-[#eebd8d] rounded-full flex items-center justify-center text-xs font-bold shadow-md border-2 border-white relative transition-transform ${
                 anyInSun ? 'ring-4 ring-[#fc5a47]/30' : ''
@@ -225,7 +260,7 @@ export const HubbaMap: React.FC<HubbaMapProps> = ({
         renderIndividualMarker(map, venue, zoomState >= 15);
       });
     }
-  }, [venues, evaluatedTime, zoomState, isAdjustingPoint]);
+  }, [venues, evaluatedTime, zoomState, isAdjustingPoint, highlightedVenueId, isTemporarilyDimmed, showNameTagId]);
 
   const renderIndividualMarker = (map: L.Map, venue: Venue, showBadge: boolean) => {
     const activeLat = venue.outdoorPoint?.lat ?? venue.lat;
@@ -238,18 +273,36 @@ export const HubbaMap: React.FC<HubbaMapProps> = ({
     const roundedHours = Math.round(totalSunMinutes / 60);
     const badgeText = roundedHours >= 6 ? '6h+' : `${roundedHours}h`;
 
-    const isDimmed = isAdjustingPoint;
+    const isTarget = selectedVenue && venue.id === selectedVenue.id;
+    const isHighlighted = highlightedVenueId === venue.id;
+    const isDimmed = (isTemporarilyDimmed && !isTarget) || (isAdjustingPoint);
+    const isNameTagActive = showNameTagId === venue.id && !isAdjustingPoint;
 
+    // Direct sun uses Main (#fc5a47)
+    // Inactive shaded dots use a clean, semi-translucent soft Beige (#eebd8d)
     const html = `
-      <div class="flex items-center justify-center w-11 h-11 relative ${isDimmed ? 'opacity-15 pointer-events-none' : ''}">
+      <div class="flex items-center justify-center w-11 h-11 relative transition-all duration-300 ${isDimmed ? 'opacity-30 pointer-events-none scale-90' : ''}">
         <div class="absolute inset-0"></div>
         
+        <!-- Pulse Ring Animation (Max 2 pulses, active during highlight) -->
+        ${isHighlighted ? `
+          <div class="absolute w-10 h-10 bg-[#fc5a47] rounded-full opacity-35 animate-ping" style="animation-iteration-count: 2;"></div>
+        ` : ''}
+
         <div class="rounded-full border-2 border-white shadow-md transition-all duration-300 ${
           inSunNow 
-            ? 'w-5 h-5 bg-[#fc5a47] ring-4 ring-[#fc5a47]/20 scale-110' 
+            ? 'w-5 h-5 bg-[#fc5a47] ring-4 ring-[#fc5a47]/20' 
             : 'w-3.5 h-3.5 bg-[#eebd8d] opacity-55'
-        }" style="${inSunNow ? `background: linear-gradient(to top, #fc5a47 ${fillPercent}%, rgba(238, 189, 141, 0.3) ${fillPercent}%);` : ''}"></div>
+        } ${isHighlighted ? 'scale-130' : ''}" style="${inSunNow ? `background: linear-gradient(to top, #fc5a47 ${fillPercent}%, rgba(238, 189, 141, 0.3) ${fillPercent}%);` : ''}"></div>
 
+        <!-- Temporary Anchored Name Tag (V4) -->
+        ${isNameTagActive ? `
+          <div class="absolute -top-7 bg-[#350505] text-[#eebd8d] text-[10px] font-bold px-2 py-0.5 rounded shadow-lg whitespace-nowrap border border-[#eebd8d]/20 z-[5000]">
+            ${venue.name}
+          </div>
+        ` : ''}
+
+        <!-- Progressive disclosure hours badge (Visible at Zoom >= 15, unless dimmed) -->
         ${showBadge && !isDimmed ? `
           <div class="absolute left-7 bg-[#faf8f5]/95 px-1.5 py-0.5 rounded-md border border-[#eebd8d]/30 shadow-sm text-[9px] font-extrabold whitespace-nowrap text-[#350505] tracking-tight">
             ${badgeText}
@@ -267,7 +320,7 @@ export const HubbaMap: React.FC<HubbaMapProps> = ({
 
     const marker = L.marker([activeLat, activeLng], { 
       icon: customIcon,
-      zIndexOffset: inSunNow ? 1000 : 0
+      zIndexOffset: isTarget ? 5000 : inSunNow ? 1000 : 0
     })
       .addTo(map)
       .on('click', () => {
@@ -278,14 +331,21 @@ export const HubbaMap: React.FC<HubbaMapProps> = ({
     markersRef.current[venue.id] = marker;
   };
 
+  // Zoom fly-to panning updates
   useEffect(() => {
     const map = mapRef.current;
     if (!map || !selectedVenue) return;
     const targetLat = selectedVenue.outdoorPoint?.lat ?? selectedVenue.lat;
     const targetLng = selectedVenue.outdoorPoint?.lng ?? selectedVenue.lng;
-    map.setView([targetLat, targetLng], 16, { animate: true });
+
+    // Pan and zoom: "If current zoom < 15, zoom to 15. Otherwise keep zoom."
+    const currentZoom = map.getZoom();
+    const targetZoom = currentZoom < 15 ? 15 : currentZoom;
+
+    map.setView([targetLat, targetLng], targetZoom, { animate: true });
   }, [selectedVenue]);
 
+  // Adjusting Seating Point (V4 Duo-Marker Setup)
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
