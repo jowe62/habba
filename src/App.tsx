@@ -36,12 +36,12 @@ export default function App() {
 
   // Here is the initialization useEffect updated to read from processed_venues.json
   useEffect(() => {
-    const savedFavs = localStorage.getItem('hubba_favs');
+    const savedFavs = localStorage.getItem('habba_favs');
     if (savedFavs) {
       setFavorites(JSON.parse(savedFavs));
     }
 
-    const savedAdjustments = localStorage.getItem('hubba_adjustments');
+    const savedAdjustments = localStorage.getItem('habba_adjustments');
     const adjustments = savedAdjustments ? JSON.parse(savedAdjustments) : {};
 
     const merged = (processedVenues as Venue[]).map((v) => {
@@ -128,15 +128,15 @@ export default function App() {
       next = [...favorites, id];
     }
     setFavorites(next);
-    localStorage.setItem('hubba_favs', JSON.stringify(next));
+    localStorage.setItem('habba_favs', JSON.stringify(next));
   };
 
   const handleUpdateOutdoorPoint = (id: string, lat: number, lng: number) => {
-    const savedAdjustments = localStorage.getItem('hubba_adjustments');
+    const savedAdjustments = localStorage.getItem('habba_adjustments');
     const adjustments = savedAdjustments ? JSON.parse(savedAdjustments) : {};
 
     adjustments[id] = { lat, lng };
-    localStorage.setItem('hubba_adjustments', JSON.stringify(adjustments));
+    localStorage.setItem('habba_adjustments', JSON.stringify(adjustments));
 
     setVenues((prev) =>
       prev.map((v) => (v.id === id ? { ...v, outdoorPoint: { lat, lng } } : v))
@@ -146,11 +146,11 @@ export default function App() {
   };
 
   const handleResetOutdoorPoint = (id: string) => {
-    const savedAdjustments = localStorage.getItem('hubba_adjustments');
+    const savedAdjustments = localStorage.getItem('habba_adjustments');
     if (savedAdjustments) {
       const adjustments = JSON.parse(savedAdjustments);
       delete adjustments[id];
-      localStorage.setItem('hubba_adjustments', JSON.stringify(adjustments));
+      localStorage.setItem('habba_adjustments', JSON.stringify(adjustments));
     }
 
     setVenues((prev) =>
