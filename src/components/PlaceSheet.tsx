@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Venue, Report } from '../types';
 import { getSolarCoordinates, isPointInSun, calculateSunDetails } from '../utils/sunUtils';
 
@@ -12,16 +12,13 @@ interface PlaceSheetProps {
   onToggleAdjustMode: () => void;
   onResetOutdoorPoint: () => void;
   
-  // Save/Cancel operational hooks (V3)
   onCancelAdjustMode: () => void;
   onSaveAdjustMode: () => void;
 
-  // Crowdsourcing (V3)
   reports: Report[];
-  onAddReport: (value: 'yes' | 'no') => void;
+  onAddReport: (value: 'yes' | 'no') => boolean; // Updated to return success status
 }
 
-// Config flag for pending backend suggest pipeline
 const BACKEND_ENABLED = false;
 
 export const PlaceSheet: React.FC<PlaceSheetProps> = ({
@@ -43,7 +40,17 @@ export const PlaceSheet: React.FC<PlaceSheetProps> = ({
 
   const sun = calculateSunDetails(activeLat, activeLng, evaluatedTime, venue.horizonMask);
 
-  // 1. Calculate live consensus signal in the last 30 minutes
+  // 1-second button lock feedback
+  const [isVoteLocked, setIsVoteLocked] = useState(false);
+  const [feedbackMsg, setFeedbackMsg] = useState<string | null>(null);
+
+  // Find user's previous active vote for this venue to prevent spamming
+  const userVote = useMemo(() => {
+    const devId = localStorage.getItem('habba_device_id') || 'anon';
+    return reports.find(r => r.venueId === venue.id && r.deviceId === devId) || null;
+  }, [reports, venue.id]);
+
+  // Calculate live consensus signals inside the 30-minute window
   const liveSignal = useMemo(() => {
     const halfHourAgo = Date.now() - 30 * 60 * 1000;
     const relevant = reports.filter(r => r.venueId === venue.id && r.timestamp >= halfHourAgo);
@@ -93,6 +100,20 @@ export const PlaceSheet: React.FC<PlaceSheetProps> = ({
     return Math.max(0, Math.min(100, percentage));
   }, [evaluatedTime]);
 
+  const handleVoteSubmit = (val: 'yes' | 'no') => {
+    if (isVoteLocked) return;
+
+    const success = onAddReport(val);
+    if (success) {
+      setFeedbackMsg("Thanks!");
+      setIsVoteLocked(true);
+      setTimeout(() => {
+        setFeedbackMsg(null);
+        setIsVoteLocked(false);
+      }, 1000); // 1-second button lock release
+    }
+  };
+
   const getDirectionsUrl = () => {
     const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
     return isIOS
@@ -105,7 +126,7 @@ export const PlaceSheet: React.FC<PlaceSheetProps> = ({
   };
 
   return (
-    <div className="bg-[#faf8f5] rounded-t-3xl shadow-2xl border-t border-slate-100 flex flex-col max-h-[85vh] overflow-hidden">
+    <div className="bg-white rounded-t-3xl shadow-2xl border-t border-slate-100 flex flex-col max-h-[85vh] overflow-hidden">
       <div className="flex items-center justify-between px-5 pt-5 pb-3 border-b border-slate-50">
         <div className="flex-1 min-w-0">
           <h3 className="text-lg font-bold text-[#350505] truncate">{venue.name}</h3>
@@ -134,7 +155,7 @@ export const PlaceSheet: React.FC<PlaceSheetProps> = ({
         <div className="grid grid-cols-2 gap-3">
           <div className="p-3 bg-[#eabd8d]/10 border border-[#eabd8d]/20 rounded-2xl">
             <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Currently</span>
-            <span className={`text-sm font-extrabold block mt-0.5 ${sun.inSunNow ? 'text-[#fc5a47]' : 'text-slate-500'}`}>
+            <span className={`text-sm font-extrabold block mt-0.5 ${sun.inSunNow ? 'text-[#cf5a47]' : 'text-slate-500'}`}>
               {sun.inSunNow ? '☀️ Sunny Patio' : '🌥️ In Shade'}
             </span>
           </div>
@@ -147,29 +168,46 @@ export const PlaceSheet: React.FC<PlaceSheetProps> = ({
         {/* --- CROWDSOURCED LIVE SIGNAL BLOCK (V3) --- */}
         <div className="p-4 bg-[#eebd8d]/5 border border-[#eebd8d]/15 rounded-2xl flex flex-col gap-3">
           <div className="flex items-center justify-between">
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Live Crowdsourced Signal</span>
-            {liveSignal ? (
-              <span className="text-xs font-extrabold text-[#fc5a47] flex items-center gap-1">
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Live Seating Signal</span>
+            {feedbackMsg ? (
+              <span className="text-xs font-extrabold text-emerald-600 animate-pulse">✓ {feedbackMsg}</span>
+            ) : liveSignal ? (
+              <span className="text-xs font-extrabold text-[#cf5a47] flex items-center gap-1">
                 <span className="w-2 h-2 bg-[#fc5a47] rounded-full animate-pulse inline-block"></span>
                 Mostly {liveSignal.majority} ({liveSignal.count} vote{liveSignal.count > 1 ? 's' : ''})
               </span>
             ) : (
-              <span className="text-xs text-slate-400 font-semibold italic">No live reports yet</span>
+              <span className="text-xs text-slate-400 font-semibold italic">No live updates yet</span>
             )}
           </div>
           
           <div className="flex items-center justify-between border-t border-[#eabd8d]/10 pt-2.5">
-            <span className="text-xs font-bold text-[#350505]">Is it sunny on the patio right now?</span>
+            <div className="flex flex-col">
+              <span className="text-xs font-bold text-[#350505]">Is it sunny on the patio right now?</span>
+              {userVote && (
+                <span className="text-[9px] font-bold text-slate-400 mt-0.5">You already voted (tap to change)</span>
+              )}
+            </div>
             <div className="flex gap-1.5">
               <button
-                onClick={() => onAddReport('yes')}
-                className="px-3 py-1.5 bg-white hover:bg-emerald-50 border border-slate-200 text-emerald-700 text-xs font-bold rounded-lg transition-colors"
+                disabled={isVoteLocked}
+                onClick={() => handleVoteSubmit('yes')}
+                className={`px-3 py-1.5 border text-xs font-bold rounded-lg transition-colors ${
+                  isVoteLocked 
+                    ? 'bg-slate-50 border-slate-100 text-slate-300 cursor-not-allowed'
+                    : 'bg-white hover:bg-emerald-50 border-slate-200 text-emerald-700'
+                }`}
               >
                 👍 Yes
               </button>
               <button
-                onClick={() => onAddReport('no')}
-                className="px-3 py-1.5 bg-white hover:bg-rose-50 border border-slate-200 text-rose-700 text-xs font-bold rounded-lg transition-colors"
+                disabled={isVoteLocked}
+                onClick={() => handleVoteSubmit('no')}
+                className={`px-3 py-1.5 border text-xs font-bold rounded-lg transition-colors ${
+                  isVoteLocked 
+                    ? 'bg-slate-50 border-slate-100 text-slate-300 cursor-not-allowed'
+                    : 'bg-white hover:bg-rose-50 border-slate-200 text-rose-700'
+                }`}
               >
                 👎 No
               </button>
@@ -225,7 +263,6 @@ export const PlaceSheet: React.FC<PlaceSheetProps> = ({
         </div>
 
         <div className="pt-2 space-y-2">
-          {/* Primary Action Button */}
           <a
             href={getDirectionsUrl()}
             target="_blank"
@@ -235,7 +272,6 @@ export const PlaceSheet: React.FC<PlaceSheetProps> = ({
             🗺️ Open in Map Navigation
           </a>
 
-          {/* Draggable position editor Save/Cancel operations */}
           <div className="flex flex-col gap-2">
             {isAdjustingPoint ? (
               <div className="flex gap-2 w-full">
@@ -272,7 +308,6 @@ export const PlaceSheet: React.FC<PlaceSheetProps> = ({
               </div>
             )}
 
-            {/* Hidden Suggest Submission Block */}
             {BACKEND_ENABLED && (
               <button className="w-full py-2.5 bg-[#7cbec7]/10 border border-[#7cbec7]/25 text-[#350505] rounded-xl text-xs font-bold hover:bg-[#7cbec7]/20 transition-colors">
                 🚀 Submit to improve app

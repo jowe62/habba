@@ -57,10 +57,7 @@ export default function App() {
   const [targetCenter, setTargetCenter] = useState<{ lat: number; lng: number; zoom?: number } | null>(null);
   const [activeDistrict, setActiveDistrict] = useState<string | null>(null);
 
-  // V3 Seating point cache coordinate mapping
   const [originalOutdoorPoint, setOriginalOutdoorPoint] = useState<OutdoorPoint | null>(null);
-
-  // V3 Crowdsourced live reports database
   const [reports, setReports] = useState<Report[]>([]);
 
   const evaluatedTime = useMemo(() => {
@@ -77,14 +74,12 @@ export default function App() {
       setFavorites(JSON.parse(savedFavs));
     }
 
-    // Initialize unique anonymized device ID
     let deviceId = localStorage.getItem('habba_device_id');
     if (!deviceId) {
       deviceId = 'device_' + Math.random().toString(36).substring(2, 15);
       localStorage.setItem('habba_device_id', deviceId);
     }
 
-    // Initialize local reports database
     const savedReports = localStorage.getItem('habba_reports');
     if (savedReports) {
       setReports(JSON.parse(savedReports));
@@ -192,7 +187,6 @@ export default function App() {
     localStorage.setItem('habba_favs', JSON.stringify(next));
   };
 
-  // Seating coordinates adjustments handler
   const handleUpdateOutdoorPoint = (id: string, lat: number, lng: number) => {
     setVenues((prev) =>
       prev.map((v) => (v.id === id ? { ...v, outdoorPoint: { lat, lng } } : v))
@@ -234,6 +228,14 @@ export default function App() {
     setOriginalOutdoorPoint(null);
   };
 
+  const handleResetOutdoorPointSelf = () => {
+    if (selectedVenue) {
+      handleResetOutdoorPoint(selectedVenue.id);
+      setIsAdjustingPoint(false);
+      setOriginalOutdoorPoint(null);
+    }
+  };
+
   const handleResetOutdoorPoint = (id: string) => {
     const savedAdjustments = localStorage.getItem('habba_adjustments');
     if (savedAdjustments) {
@@ -263,19 +265,46 @@ export default function App() {
     });
   };
 
-  // Add crowsourced report
-  const handleAddReport = (value: 'yes' | 'no') => {
-    if (!selectedVenue) return;
+  // Anti-Spam voting handler checking for unique local device IDs and 30s cooldowns
+  const handleAddReport = (value: 'yes' | 'no'): boolean => {
+    if (!selectedVenue) return false;
     const devId = localStorage.getItem('habba_device_id') || 'anon';
-    const newReport: Report = {
-      timestamp: Date.now(),
-      venueId: selectedVenue.id,
-      deviceId: devId,
-      value
-    };
-    const updated = [...reports, newReport];
-    setReports(updated);
-    localStorage.setItem('habba_reports', JSON.stringify(updated));
+    
+    const existingIdx = reports.findIndex(r => r.venueId === selectedVenue.id && r.deviceId === devId);
+
+    if (existingIdx > -1) {
+      const existing = reports[existingIdx];
+      const elapsed = Date.now() - existing.timestamp;
+
+      // 30-second cooldown rule
+      if (elapsed < 30 * 1000) {
+        const remaining = Math.ceil((30 * 1000 - elapsed) / 1000);
+        alert(`Please wait ${remaining}s before changing your vote.`);
+        return false;
+      }
+
+      // Update/overwrite existing vote and refresh timestamp
+      const updated = [...reports];
+      updated[existingIdx] = {
+        ...existing,
+        timestamp: Date.now(),
+        value
+      };
+      setReports(updated);
+      localStorage.setItem('habba_reports', JSON.stringify(updated));
+    } else {
+      // Register new vote
+      const newReport: Report = {
+        timestamp: Date.now(),
+        venueId: selectedVenue.id,
+        deviceId: devId,
+        value
+      };
+      const updated = [...reports, newReport];
+      setReports(updated);
+      localStorage.setItem('habba_reports', JSON.stringify(updated));
+    }
+    return true;
   };
 
   const handleClearFilters = () => {
@@ -290,52 +319,76 @@ export default function App() {
   return (
     <div className="relative w-screen h-[100dvh] flex flex-col overflow-hidden bg-[#faf8f5] font-sans antialiased text-slate-800">
       
-      {/* Search Header and filters (Overcast Alert Banner completely removed) */}
-      <div className="absolute top-4 left-4 right-4 z-[1000] flex flex-col gap-2 pointer-events-none">
-        <div className="w-full pointer-events-auto bg-white/95 backdrop-blur-md rounded-2xl shadow-xl border border-[#eebd8d]/30 p-2.5 flex items-center justify-between gap-2">
-          
-          <div className="flex items-center gap-2.5 flex-1 min-w-0">
-            <svg className="w-5 h-5 text-slate-400 flex-shrink-0 ml-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-            </svg>
-            <input
-              type="text"
-              placeholder="Search..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full focus:outline-none bg-transparent text-sm font-bold placeholder-slate-400 text-[#350505]"
-            />
-          </div>
+      {/* Search Header Overlay (Overcast warning banner completely removed) */}
+      {!isAdjustingPoint && (
+        <div className="absolute top-4 left-4 right-4 z-[1000] flex flex-col gap-2 pointer-events-none">
+          <div className="w-full pointer-events-auto bg-white/95 backdrop-blur-md rounded-2xl shadow-xl border border-[#eebd8d]/30 p-2.5 flex items-center justify-between gap-2">
+            
+            <div className="flex items-center gap-2.5 flex-1 min-w-0">
+              <svg className="w-5 h-5 text-slate-400 flex-shrink-0 ml-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+              </svg>
+              <input
+                type="text"
+                placeholder="Search..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full focus:outline-none bg-transparent text-sm font-bold placeholder-slate-400 text-[#350505]"
+              />
+            </div>
 
-          <div className="flex items-center gap-1.5 flex-shrink-0">
-            <button
-              onClick={() => setShowFilters(true)}
-              className={`px-3.5 py-1.5 rounded-xl text-xs font-bold border transition-all ${
-                activeFilters.tags.length > 0 || activeFilters.onlyFavs || activeFilters.minHours > 1 || activeDistrict
-                  ? 'bg-[#fc5a47] border-[#fc5a47] text-white shadow-sm'
-                  : 'bg-white border-[#eebd8d]/30 text-[#350505] hover:bg-[#eebd8d]/10'
-              }`}
-            >
-              Filters {(activeFilters.tags.length > 0 || activeFilters.onlyFavs || activeFilters.minHours > 1 || activeDistrict) && '●'}
-            </button>
+            <div className="flex items-center gap-1.5 flex-shrink-0">
+              <button
+                onClick={() => setShowFilters(true)}
+                className={`px-3.5 py-1.5 rounded-xl text-xs font-bold border transition-all ${
+                  activeFilters.tags.length > 0 || activeFilters.onlyFavs || activeFilters.minHours > 1 || activeDistrict
+                    ? 'bg-[#fc5a47] border-[#fc5a47] text-white shadow-sm'
+                    : 'bg-white border-[#eebd8d]/30 text-[#350505] hover:bg-[#eebd8d]/10'
+                }`}
+              >
+                Filters {(activeFilters.tags.length > 0 || activeFilters.onlyFavs || activeFilters.minHours > 1 || activeDistrict) && '●'}
+              </button>
 
-            {weather && (
-              <div className="text-xs font-bold text-[#350505] bg-[#eebd8d]/10 border border-[#eebd8d]/20 px-2 py-1.5 rounded-xl flex items-center gap-1 shadow-sm" title={weather.description}>
-                <span>{weather.icon}</span>
-                <span>{weather.temp}°C</span>
-              </div>
-            )}
+              {weather && (
+                <div className="text-xs font-bold text-[#350505] bg-[#eebd8d]/10 border border-[#eebd8d]/20 px-2 py-1.5 rounded-xl flex items-center gap-1 shadow-sm" title={weather.description}>
+                  <span>{weather.icon}</span>
+                  <span>{weather.temp}°C</span>
+                </div>
+              )}
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
-      {/* Seating Coordinate Adjustments Drag Instruction Overlay Toast */}
-      {isAdjustingPoint && (
-        <div className="absolute top-[135px] left-1/2 -translate-x-1/2 z-[1000] w-auto max-w-[90%] pointer-events-auto bg-[#350505] text-[#eebd8d] px-4 py-2.5 rounded-xl shadow-lg flex items-center gap-2 border border-[#eebd8d]/20 animate-bounce">
-          <span className="text-xs">📐</span>
-          <p className="text-[11px] font-bold leading-tight whitespace-nowrap">
-            Drag the blue pin to the outdoor seating area
-          </p>
+      {/* --- INSTRUCTION EDIT HEADER OVERLAY (V3 Active adjustment mode) --- */}
+      {isAdjustingPoint && selectedVenue && (
+        <div className="absolute top-4 left-4 right-4 z-[1000] pointer-events-auto bg-white/95 backdrop-blur-md rounded-2xl shadow-xl border border-[#eebd8d]/30 p-4 flex flex-col md:flex-row md:items-center justify-between gap-3 animate-fade-in">
+          <div className="flex items-center gap-2">
+            <span className="text-sm">📐</span>
+            <p className="text-xs font-bold text-[#350505]">
+              Drag the blue pin to the outdoor seating area
+            </p>
+          </div>
+          <div className="flex items-center gap-2 self-end md:self-auto">
+            <button
+              onClick={handleResetOutdoorPointSelf}
+              className="px-3 py-2 bg-red-50 hover:bg-red-100 border border-red-100 text-red-600 rounded-xl text-xs font-bold transition-all"
+            >
+              Reset
+            </button>
+            <button
+              onClick={handleCancelAdjustMode}
+              className="px-3.5 py-2 bg-white border border-slate-200 text-slate-700 rounded-xl text-xs font-bold hover:bg-slate-50 transition-all"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={handleSaveAdjustMode}
+              className="px-4 py-2 bg-[#fc5a47] hover:bg-[#fc5a47]/95 text-white rounded-xl text-xs font-bold transition-all shadow-md"
+            >
+              Save Position
+            </button>
+          </div>
         </div>
       )}
 
@@ -357,49 +410,49 @@ export default function App() {
       </div>
 
       {/* Floating bottom overlay section */}
-      <div className="absolute bottom-0 left-0 right-0 z-[1001] flex flex-col gap-3 pointer-events-none p-4 max-w-lg mx-auto w-full">
-        <div className="pointer-events-auto">
-          {selectedVenue ? (
-            <PlaceSheet
-              venue={selectedVenue}
-              evaluatedTime={evaluatedTime}
-              onClose={() => {
-                setSelectedVenue(null);
-                setIsAdjustingPoint(false);
-              }}
-              isFavorite={favorites.includes(selectedVenue.id)}
-              onToggleFavorite={() => handleToggleFavorite(selectedVenue.id)}
-              isAdjustingPoint={isAdjustingPoint}
-              onToggleAdjustMode={handleStartAdjustMode} // Modified to trigger initial coordinate caches
-              onResetOutdoorPoint={() => handleResetOutdoorPoint(selectedVenue.id)}
-              
-              // Connecting the coordinate V3 save/cancel operation hooks
-              onCancelAdjustMode={handleCancelAdjustMode}
-              onSaveAdjustMode={handleSaveAdjustMode}
-              
-              // Connecting the V3 crowsourced reports array and handlers
-              reports={reports}
-              onAddReport={handleAddReport}
-            />
-          ) : (
-            <UnifiedBottomPanel
-              currentHour={timeState.hour}
-              currentMin={timeState.min}
-              onTimeChange={(h, m) => {
-                setIsLiveNow(false);
-                setTimeState({ hour: h, min: m });
-              }}
-              isLiveNow={isLiveNow}
-              onSetLiveNow={() => setIsLiveNow(true)}
-              venuesInView={venuesInView}
-              evaluatedTime={evaluatedTime}
-              onSelectVenue={setSelectedVenue}
-              hasActiveFilters={activeFilters.tags.length > 0 || activeFilters.onlyFavs || activeDistrict !== null}
-              onClearFilters={handleClearFilters}
-            />
-          )}
+      {!isAdjustingPoint && (
+        <div className="absolute bottom-0 left-0 right-0 z-[1001] flex flex-col gap-3 pointer-events-none p-4 max-w-lg mx-auto w-full">
+          <div className="pointer-events-auto">
+            {selectedVenue ? (
+              <PlaceSheet
+                venue={selectedVenue}
+                evaluatedTime={evaluatedTime}
+                onClose={() => {
+                  setSelectedVenue(null);
+                  setIsAdjustingPoint(false);
+                }}
+                isFavorite={favorites.includes(selectedVenue.id)}
+                onToggleFavorite={() => handleToggleFavorite(selectedVenue.id)}
+                isAdjustingPoint={isAdjustingPoint}
+                onToggleAdjustMode={handleStartAdjustMode}
+                onResetOutdoorPoint={() => handleResetOutdoorPoint(selectedVenue.id)}
+                
+                onCancelAdjustMode={handleCancelAdjustMode}
+                onSaveAdjustMode={handleSaveAdjustMode}
+                
+                reports={reports}
+                onAddReport={handleAddReport}
+              />
+            ) : (
+              <UnifiedBottomPanel
+                currentHour={timeState.hour}
+                currentMin={timeState.min}
+                onTimeChange={(h, m) => {
+                  setIsLiveNow(false);
+                  setTimeState({ hour: h, min: m });
+                }}
+                isLiveNow={isLiveNow}
+                onSetLiveNow={() => setIsLiveNow(true)}
+                venuesInView={venuesInView}
+                evaluatedTime={evaluatedTime}
+                onSelectVenue={setSelectedVenue}
+                hasActiveFilters={activeFilters.tags.length > 0 || activeFilters.onlyFavs || activeDistrict !== null}
+                onClearFilters={handleClearFilters}
+              />
+            )}
+          </div>
         </div>
-      </div>
+      )}
 
       {showFilters && (
         <div className="absolute inset-0 z-[2000] bg-slate-900/40 backdrop-blur-sm flex items-end justify-center">

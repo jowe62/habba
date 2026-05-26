@@ -72,6 +72,7 @@ export const HubbaMap: React.FC<HubbaMapProps> = ({
 
   const [zoomState, setZoomState] = useState(14);
 
+  // Initialize Map
   useEffect(() => {
     if (!mapContainerRef.current || mapRef.current) return;
 
@@ -108,6 +109,30 @@ export const HubbaMap: React.FC<HubbaMapProps> = ({
     };
   }, []);
 
+  // Freeze Map Interactions while Seating Point adjustment is active
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+
+    if (isAdjustingPoint) {
+      map.dragging.disable();
+      map.touchZoom.disable();
+      map.doubleClickZoom.disable();
+      map.scrollWheelZoom.disable();
+      map.boxZoom.disable();
+      map.keyboard.disable();
+      if (map.tap) map.tap.disable();
+    } else {
+      map.dragging.enable();
+      map.touchZoom.enable();
+      map.doubleClickZoom.enable();
+      map.scrollWheelZoom.enable();
+      map.boxZoom.enable();
+      map.keyboard.enable();
+      if (map.tap) map.tap.enable();
+    }
+  }, [isAdjustingPoint]);
+
   useEffect(() => {
     const map = mapRef.current;
     if (!map || !targetCenter) return;
@@ -132,7 +157,6 @@ export const HubbaMap: React.FC<HubbaMapProps> = ({
       const gridSize = zoomState === 13 ? 0.007 : zoomState === 12 ? 0.014 : 0.028;
 
       venues.forEach((venue) => {
-        // Skip selected venue in adjustment mode so we don't draw its dot twice
         if (isAdjustingPoint && selectedVenue && venue.id === selectedVenue.id) return;
 
         const lat = venue.outdoorPoint?.lat ?? venue.lat;
@@ -167,7 +191,7 @@ export const HubbaMap: React.FC<HubbaMapProps> = ({
             return inSunNow;
           });
 
-          // Dim the clusters to 15% opacity if currently in seating adjustment mode
+          // Dim clusters during Seating Point adjustment mode
           const isDimmed = isAdjustingPoint;
 
           const html = `
@@ -192,6 +216,7 @@ export const HubbaMap: React.FC<HubbaMapProps> = ({
           const clusterMarker = L.marker([avgLat, avgLng], { icon: customIcon, zIndexOffset: 2000 })
             .addTo(map)
             .on('click', () => {
+              if (isAdjustingPoint) return; // Ignore interaction while locked
               map.setView([avgLat, avgLng], zoomState + 2, { animate: true });
             });
 
@@ -200,7 +225,6 @@ export const HubbaMap: React.FC<HubbaMapProps> = ({
       });
     } else {
       venues.forEach((venue) => {
-        // Skip drawing the selected venue's normal dot if we are adjusting its coordinates
         if (isAdjustingPoint && selectedVenue && venue.id === selectedVenue.id) return;
         renderIndividualMarker(map, venue, zoomState >= 15);
       });
@@ -223,6 +247,7 @@ export const HubbaMap: React.FC<HubbaMapProps> = ({
     const html = `
       <div class="flex items-center justify-center w-11 h-11 relative ${isDimmed ? 'opacity-15 pointer-events-none' : ''}">
         <div class="absolute inset-0"></div>
+        
         <div class="rounded-full border-2 border-white shadow-md transition-all duration-300 ${
           inSunNow 
             ? 'w-5 h-5 bg-[#fc5a47] ring-4 ring-[#fc5a47]/20 scale-110' 
@@ -250,6 +275,7 @@ export const HubbaMap: React.FC<HubbaMapProps> = ({
     })
       .addTo(map)
       .on('click', () => {
+        if (isAdjustingPoint) return; // Lock map interactions
         onSelectVenue(venue);
       });
 
@@ -264,7 +290,7 @@ export const HubbaMap: React.FC<HubbaMapProps> = ({
     map.setView([targetLat, targetLng], 16, { animate: true });
   }, [selectedVenue]);
 
-  // Adjusting Seating Point (V4 Duo-Marker Setup)
+  // Adjusting Seating Point (Locked venue and draggable blue indicators)
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
@@ -284,10 +310,10 @@ export const HubbaMap: React.FC<HubbaMapProps> = ({
       const currentSeatingLat = selectedVenue.outdoorPoint?.lat ?? selectedVenue.lat;
       const currentSeatingLng = selectedVenue.outdoorPoint?.lng ?? selectedVenue.lng;
 
-      // A. Draw Locked Venue Center Marker (slate-gray)
+      // 1. Draw Static Venue Center Node (slate-gray)
       const lockedIcon = L.divIcon({
         html: `
-          <div class="flex flex-col items-center">
+          <div class="flex flex-col items-center select-none">
             <div class="bg-[#94a3b8] text-white text-[9px] font-bold px-1.5 py-0.5 rounded shadow-sm whitespace-nowrap mb-1">
               Venue Center
             </div>
@@ -302,7 +328,7 @@ export const HubbaMap: React.FC<HubbaMapProps> = ({
       lockedVenueMarkerRef.current = L.marker([venueLat, venueLng], { icon: lockedIcon })
         .addTo(map);
 
-      // B. Draw Draggable Seating Marker (larger teal/blue #7cbec7)
+      // 2. Draw Draggable Seating Node (larger blue #7cbec7 with autoPan: false)
       const seatingIcon = L.divIcon({
         html: `
           <div class="flex flex-col items-center select-none">
@@ -320,6 +346,7 @@ export const HubbaMap: React.FC<HubbaMapProps> = ({
       const adjMarker = L.marker([currentSeatingLat, currentSeatingLng], {
         icon: seatingIcon,
         draggable: true,
+        autoPan: false, // Prevent dragging the marker from moving the map boundaries
         zIndexOffset: 3000
       }).addTo(map);
 
