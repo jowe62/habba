@@ -3,8 +3,7 @@ import processedVenues from './data/processed_venues.json';
 import { Venue } from './types';
 import { calculateSunDetails } from './utils/sunUtils';
 import { HubbaMap } from './components/HubbaMap';
-import { TimeControls } from './components/TimeControls';
-import { BottomList } from './components/BottomList';
+import { UnifiedBottomPanel } from './components/UnifiedBottomPanel';
 import { PlaceSheet } from './components/PlaceSheet';
 import { FilterSheet } from './components/FilterSheet';
 import L from 'leaflet';
@@ -13,10 +12,9 @@ interface WeatherState {
   temp: number;
   icon: string;
   description: string;
-  isBad: boolean; // Overcast, rain, or fog
+  isBad: boolean;
 }
 
-// Decodes WMO weather codes into plain description structures
 function parseWMOCode(code: number): { desc: string; isBad: boolean; icon: string } {
   if (code === 0) return { desc: "Clear sky", isBad: false, icon: "☀️" };
   if (code === 1) return { desc: "Mainly clear", isBad: false, icon: "🌤️" };
@@ -44,8 +42,6 @@ export default function App() {
   const [mapBounds, setMapBounds] = useState<L.LatLngBounds | null>(null);
   const [favorites, setFavorites] = useState<string[]>([]);
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
-  
-  // Real-time weather state
   const [weather, setWeather] = useState<WeatherState | null>(null);
 
   const evaluatedTime = useMemo(() => {
@@ -56,7 +52,6 @@ export default function App() {
     return d;
   }, [timeState.hour, timeState.min]);
 
-  // Initialization: Favorites, Seating coordinates, Geolocation, and Open-Meteo Weather
   useEffect(() => {
     const savedFavs = localStorage.getItem('habba_favs');
     if (savedFavs) {
@@ -74,7 +69,6 @@ export default function App() {
     });
     setVenues(merged);
 
-    // Fetch live weather from free Open-Meteo API (Gothenburg coordinates)
     fetch("https://api.open-meteo.com/v1/forecast?latitude=57.7089&longitude=11.9746&current=weather_code,temperature_2m")
       .then((res) => res.json())
       .then((data) => {
@@ -220,9 +214,8 @@ export default function App() {
   return (
     <div className="relative w-screen h-[100dvh] flex flex-col overflow-hidden bg-slate-50 font-sans antialiased text-slate-800">
       
-      {/* Search and Action Dashboard Header */}
+      {/* Search Header and live Weather Alerts */}
       <div className="absolute top-4 left-4 right-4 z-[1000] flex flex-col gap-2 pointer-events-none">
-        {/* Search input field with Live Weather Indicator */}
         <div className="w-full pointer-events-auto bg-white/95 backdrop-blur-md rounded-2xl shadow-xl border border-slate-100 p-2.5 flex items-center justify-between gap-2.5">
           <div className="flex items-center gap-2.5 flex-1 min-w-0">
             <svg className="w-5 h-5 text-slate-400 flex-shrink-0 ml-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -237,7 +230,6 @@ export default function App() {
             />
           </div>
 
-          {/* Dynamic weather pill */}
           {weather && (
             <div className="text-xs font-bold text-slate-600 bg-slate-100 px-2.5 py-1.5 rounded-xl flex items-center gap-1.5 flex-shrink-0 mr-1 shadow-sm" title={weather.description}>
               <span>{weather.icon}</span>
@@ -246,7 +238,6 @@ export default function App() {
           )}
         </div>
 
-        {/* 3 Core Filter Chips */}
         <div className="flex items-center gap-1.5 pointer-events-auto overflow-x-auto no-scrollbar py-1">
           <button
             onClick={() => setIsLiveNow(true)}
@@ -285,7 +276,6 @@ export default function App() {
           </button>
         </div>
 
-        {/* Dynamic Overcast/Cloudy Weather Banner Alert */}
         {weather?.isBad && (
           <div className="w-full pointer-events-auto bg-amber-500 text-slate-950 px-4 py-2.5 rounded-xl shadow-lg flex items-center gap-2 border border-amber-400/30">
             <span className="text-sm">⚠️</span>
@@ -312,20 +302,8 @@ export default function App() {
         />
       </div>
 
+      {/* Floating bottom overlay section */}
       <div className="absolute bottom-0 left-0 right-0 z-[1001] flex flex-col gap-3 pointer-events-none p-4 max-w-lg mx-auto w-full">
-        <div className="pointer-events-auto">
-          <TimeControls
-            currentHour={timeState.hour}
-            currentMin={timeState.min}
-            onTimeChange={(h, m) => {
-              setIsLiveNow(false);
-              setTimeState({ hour: h, min: m });
-            }}
-            isLiveNow={isLiveNow}
-            onSetLiveNow={() => setIsLiveNow(true)}
-          />
-        </div>
-
         <div className="pointer-events-auto">
           {selectedVenue ? (
             <PlaceSheet
@@ -342,13 +320,21 @@ export default function App() {
               onResetOutdoorPoint={() => handleResetOutdoorPoint(selectedVenue.id)}
             />
           ) : (
-            <BottomList
+            /* Using our new consolidated Bottom Panel containing the slider and venue list */
+            <UnifiedBottomPanel
+              currentHour={timeState.hour}
+              currentMin={timeState.min}
+              onTimeChange={(h, m) => {
+                setIsLiveNow(false);
+                setTimeState({ hour: h, min: m });
+              }}
+              isLiveNow={isLiveNow}
+              onSetLiveNow={() => setIsLiveNow(true)}
               venuesInView={venuesInView}
-              totalVenuesCount={filteredVenues.length}
               evaluatedTime={evaluatedTime}
               onSelectVenue={setSelectedVenue}
-              onClearFilters={handleClearFilters}
               hasActiveFilters={activeFilters.tags.length > 0 || activeFilters.onlyFavs}
+              onClearFilters={handleClearFilters}
             />
           )}
         </div>
