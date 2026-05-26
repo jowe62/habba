@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import processedVenues from './data/processed_venues.json';
 import { Venue, Report, OutdoorPoint } from './types';
-import { calculateSunDetails } from './utils/sunUtils';
+import { calculateSunDetails, recomputeClientHorizonMask, getSolarCoordinates } from './utils/sunUtils';
 import { HubbaMap } from './components/HubbaMap';
 import { UnifiedBottomPanel } from './components/UnifiedBottomPanel';
 import { PlaceSheet } from './components/PlaceSheet';
@@ -60,6 +60,9 @@ export default function App() {
   const [originalOutdoorPoint, setOriginalOutdoorPoint] = useState<OutdoorPoint | null>(null);
   const [reports, setReports] = useState<Report[]>([]);
 
+  const [isRecomputingMask, setIsRecomputingMask] = useState(false);
+  const [recomputeError, setRecomputeError] = useState<string | null>(null);
+
   const evaluatedTime = useMemo(() => {
     const d = new Date();
     d.setHours(timeState.hour);
@@ -67,6 +70,37 @@ export default function App() {
     d.setSeconds(0);
     return d;
   }, [timeState.hour, timeState.min]);
+
+  // --- AUTOMATED BROWSER F12 CONSOLE DIAGNOSTIC BLOCKS (V4) ---
+  useEffect(() => {
+    if (!selectedVenue) return;
+    const activeLat = selectedVenue.outdoorPoint?.lat ?? selectedVenue.lat;
+    const activeLng = selectedVenue.outdoorPoint?.lng ?? selectedVenue.lng;
+
+    console.log(`%c=== DIAGNOSTIC CONSOLE: ${selectedVenue.name} ===`, "color: #cf5a47; font-weight: bold; font-size: 11px;");
+    console.log(`Seating coordinates: Lat ${activeLat.toFixed(6)}, Lng ${activeLng.toFixed(6)}`);
+
+    // Target specific 10:30 solar time checks (Bruk calibration validation)
+    const t1030 = new Date(evaluatedTime);
+    t1030.setHours(10);
+    t1030.setMinutes(30);
+    const pos1030 = getSolarCoordinates(activeLat, activeLng, t1030);
+    const bin1030 = Math.floor(pos1030.azimuth / 5) % 72;
+    const mask1030 = selectedVenue.horizonMask ? selectedVenue.horizonMask[bin1030] : 0;
+
+    console.log(`10:30 Sun Vector: Alt ${pos1030.altitude.toFixed(2)}°, Az ${pos1030.azimuth.toFixed(2)}° (Bin ${bin1030}, Obstruction: ${mask1030}°)`);
+    console.log(`Is sunny at 10:30? -> ${pos1030.altitude > mask1030 ? "YES ☀️" : "NO 🌥️"}`);
+
+    // Target current slider time checks
+    const { altitude: currAlt, azimuth: currAz } = getSolarCoordinates(activeLat, activeLng, evaluatedTime);
+    const currBin = Math.floor(currAz / 5) % 72;
+    const currMask = selectedVenue.horizonMask ? selectedVenue.horizonMask[currBin] : 0;
+    const displayHourStr = `${String(evaluatedTime.getHours()).padStart(2, '0')}:${String(evaluatedTime.getMinutes()).padStart(2, '0')}`;
+
+    console.log(`${displayHourStr} Sun Vector: Alt ${currAlt.toFixed(2)}°, Az ${currAz.toFixed(2)}° (Bin ${currBin}, Obstruction: ${currMask}°)`);
+    console.log(`Is sunny now (${displayHourStr})? -> ${currAlt > currMask ? "YES ☀️" : "NO 🌥️"}`);
+    console.log("====================================================");
+  }, [selectedVenue, evaluatedTime]);
 
   useEffect(() => {
     const savedFavs = localStorage.getItem('habba_favs');
@@ -90,7 +124,11 @@ export default function App() {
 
     const merged = (processedVenues as Venue[]).map((v) => {
       if (adjustments[v.id]) {
-        return { ...v, outdoorPoint: adjustments[v.id] };
+        return { 
+          ...v, 
+          outdoorPoint: { lat: adjustments[v.id].lat, lng: adjustments[v.id].lng },
+          horizonMask: adjustments[v.id].horizonMask || v.horizonMask
+        };
       }
       return v;
     });
@@ -214,18 +252,50 @@ export default function App() {
     setOriginalOutdoorPoint(null);
   };
 
-  const handleSaveAdjustMode = () => {
-    if (selectedVenue) {
-      const currentPoint = selectedVenue.outdoorPoint;
-      if (currentPoint) {
-        const savedAdjustments = localStorage.getItem('habba_adjustments');
-        const adjustments = savedAdjustments ? JSON.parse(savedAdjustments) : {};
-        adjustments[selectedVenue.id] = currentPoint;
-        localStorage.setItem('habba_adjustments', JSON.stringify(adjustments));
-      }
+  const handleSaveAdjustMode = async () => {
+    if (!selectedVenue) return;
+    const currentPoint = selectedVenue.outdoorPoint;
+    if (!currentPoint) {
+      setIsAdjustingPoint(false);
+      setOriginalOutdoorPoint(null);
+      return;
     }
-    setIsAdjustingPoint(false);
-    setOriginalOutdoorPoint(null);
+
+    setIsRecomputingMask(true);
+    setRecomputeError(null);
+
+    try {
+      const newMask = await recomputeClientHorizonMask(currentPoint.lat, currentPoint.lng);
+
+      const savedAdjustments = localStorage.getItem('habba_adjustments');
+      const adjustments = savedAdjustments ? JSON.parse(savedAdjustments) : {};
+      adjustments[selectedVenue.id] = {
+        lat: currentPoint.lat,
+        lng: currentPoint.lng,
+        horizonMask: newMask
+      };
+      localStorage.setItem('habba_adjustments', JSON.stringify(adjustments));
+
+      setVenues((prev) =>
+        prev.map((v) => (v.id === selectedVenue.id ? { ...v, outdoorPoint: currentPoint, horizonMask: newMask } : v))
+      );
+      setSelectedVenue((prev) => (prev && prev.id === selectedVenue.id ? { ...prev, outdoorPoint: currentPoint, horizonMask: newMask } : prev));
+    } catch (e) {
+      console.error("Client shadow calculations failed:", e);
+      setRecomputeError("Could not update shade model. Using default.");
+
+      const savedAdjustments = localStorage.getItem('habba_adjustments');
+      const adjustments = savedAdjustments ? JSON.parse(savedAdjustments) : {};
+      adjustments[selectedVenue.id] = {
+        lat: currentPoint.lat,
+        lng: currentPoint.lng
+      };
+      localStorage.setItem('habba_adjustments', JSON.stringify(adjustments));
+    } finally {
+      setIsRecomputingMask(false);
+      setIsAdjustingPoint(false);
+      setOriginalOutdoorPoint(null);
+    }
   };
 
   const handleResetOutdoorPointSelf = () => {
@@ -259,6 +329,10 @@ export default function App() {
       if (prev && prev.id === id) {
         const copy = { ...prev };
         delete copy.outdoorPoint;
+        const originalDbVenue = processedVenues.find(v => v.id === id);
+        if (originalDbVenue) {
+          copy.horizonMask = originalDbVenue.horizonMask;
+        }
         return copy;
       }
       return prev;
@@ -315,6 +389,7 @@ export default function App() {
   return (
     <div className="relative w-screen h-[100dvh] flex flex-col overflow-hidden bg-[#faf8f5] font-sans antialiased text-slate-800">
       
+      {/* Search Header Overlay */}
       {!isAdjustingPoint && (
         <div className="absolute top-4 left-4 right-4 z-[1000] flex flex-col gap-2 pointer-events-none">
           <div className="w-full pointer-events-auto bg-white/95 backdrop-blur-md rounded-2xl shadow-xl border border-[#eebd8d]/30 p-2.5 flex items-center justify-between gap-2">
@@ -355,34 +430,48 @@ export default function App() {
         </div>
       )}
 
+      {/* --- INSTRUCTION EDIT HEADER OVERLAY --- */}
       {isAdjustingPoint && selectedVenue && (
         <div className="absolute top-4 left-4 right-4 z-[1000] pointer-events-auto bg-white/95 backdrop-blur-md rounded-2xl shadow-xl border border-[#eebd8d]/30 p-4 flex flex-col md:flex-row md:items-center justify-between gap-3 animate-fade-in">
           <div className="flex items-center gap-2">
             <span className="text-sm">📐</span>
             <p className="text-xs font-bold text-[#350505]">
-              Drag the blue pin to the outdoor seating area
+              {isRecomputingMask ? "Updating shade model..." : "Drag the blue pin to the outdoor seating area"}
             </p>
           </div>
           <div className="flex items-center gap-2 self-end md:self-auto">
             <button
+              disabled={isRecomputingMask}
               onClick={handleResetOutdoorPointSelf}
-              className="px-3 py-2 bg-red-50 hover:bg-red-100 border border-red-100 text-red-600 rounded-xl text-xs font-bold transition-all"
+              className="px-3 py-2 bg-red-50 hover:bg-red-100 border border-red-100 text-red-600 rounded-xl text-xs font-bold transition-all disabled:opacity-50"
             >
               Reset
             </button>
             <button
+              disabled={isRecomputingMask}
               onClick={handleCancelAdjustMode}
-              className="px-3.5 py-2 bg-white border border-slate-200 text-slate-700 rounded-xl text-xs font-bold hover:bg-slate-50 transition-all"
+              className="px-3.5 py-2 bg-white border border-slate-200 text-slate-700 rounded-xl text-xs font-bold hover:bg-slate-50 transition-all disabled:opacity-50"
             >
-              Cancel
+              ✕ Cancel
             </button>
             <button
+              disabled={isRecomputingMask}
               onClick={handleSaveAdjustMode}
-              className="px-4 py-2 bg-[#fc5a47] hover:bg-[#fc5a47]/95 text-white rounded-xl text-xs font-bold transition-all shadow-md"
+              className="px-4 py-2 bg-[#fc5a47] hover:bg-[#fc5a47]/95 text-white rounded-xl text-xs font-bold transition-all shadow-md disabled:opacity-50"
             >
-              Save Position
+              {isRecomputingMask ? "Computing..." : "Save Position"}
             </button>
           </div>
+        </div>
+      )}
+
+      {/* Temporary Recomputation Error Toast */}
+      {recomputeError && (
+        <div className="absolute top-[135px] left-1/2 -translate-x-1/2 z-[1000] pointer-events-auto bg-amber-500 text-slate-950 px-4 py-2.5 rounded-xl shadow-lg flex items-center gap-2 border border-amber-400/30">
+          <span className="text-xs">⚠️</span>
+          <p className="text-[11px] font-bold leading-tight whitespace-nowrap">
+            {recomputeError}
+          </p>
         </div>
       )}
 
@@ -403,6 +492,7 @@ export default function App() {
         />
       </div>
 
+      {/* Floating bottom overlay section */}
       {!isAdjustingPoint && (
         <div className="absolute bottom-0 left-0 right-0 z-[1001] flex flex-col gap-3 pointer-events-none p-4 max-w-lg mx-auto w-full">
           <div className="pointer-events-auto">

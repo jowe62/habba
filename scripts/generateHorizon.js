@@ -39,11 +39,11 @@ const OVERPASS_SERVERS = [
 ];
 
 async function fetchSurroundingBuildings(lat, lng, radius = 150) {
+  // Relation query removed to prevent missing/corrupt polygons
   const query = `
     [out:json];
     (
       way["building"](around:${radius}, ${lat}, ${lng});
-      relation["building"](around:${radius}, ${lat}, ${lng});
     );
     out body;
     >;
@@ -70,7 +70,7 @@ async function fetchSurroundingBuildings(lat, lng, radius = 150) {
 }
 
 function computeHorizonMask(venueLat, venueLng, osmData) {
-  const mask = new Array(72).fill(0); // Upgraded to 72 bins (5-degree increments)
+  const mask = new Array(72).fill(0); // Stable 72 bins (5-degree increments)
   const nodes = {};
 
   osmData.elements.forEach(el => {
@@ -83,6 +83,7 @@ function computeHorizonMask(venueLat, venueLng, osmData) {
     if (el.type === 'way' && el.nodes && el.tags) {
       const height = estimateBuildingHeight(el.tags);
 
+      // Loop through nodes
       for (let i = 0; i < el.nodes.length - 1; i++) {
         const nodeA = nodes[el.nodes[i]];
         const nodeB = nodes[el.nodes[i + 1]];
@@ -100,10 +101,37 @@ function computeHorizonMask(venueLat, venueLng, osmData) {
           if (distance < 3) continue;
 
           const elevation = Math.atan2(height, distance) * (180 / Math.PI);
-          const binIndex = Math.round(azimuth / 5) % 72; // 5-degree steps
+          const binIndex = Math.floor(azimuth / 5) % 72; // Stable 5-degree binning
           
           if (elevation > mask[binIndex]) {
             mask[binIndex] = Math.round(elevation);
+          }
+        }
+      }
+
+      // Close polygon: Connect final node back to first node if they are not identical
+      const firstNodeId = el.nodes[0];
+      const lastNodeId = el.nodes[el.nodes.length - 1];
+      if (firstNodeId !== lastNodeId) {
+        const nodeA = nodes[lastNodeId];
+        const nodeB = nodes[firstNodeId];
+        if (nodeA && nodeB) {
+          const { distance: segmentLen } = getDistanceAndAzimuth(nodeA.lat, nodeA.lon, nodeB.lat, nodeB.lon);
+          const steps = Math.max(1, Math.floor(segmentLen / 2));
+          for (let s = 0; s <= steps; s++) {
+            const t = s / steps;
+            const pointLat = nodeA.lat + (nodeB.lat - nodeA.lat) * t;
+            const pointLon = nodeA.lon + (nodeB.lon - nodeA.lon) * t;
+
+            const { distance, azimuth } = getDistanceAndAzimuth(venueLat, venueLng, pointLat, pointLon);
+            if (distance < 3) continue;
+
+            const elevation = Math.atan2(height, distance) * (180 / Math.PI);
+            const binIndex = Math.floor(azimuth / 5) % 72;
+
+            if (elevation > mask[binIndex]) {
+              mask[binIndex] = Math.round(elevation);
+            }
           }
         }
       }
@@ -145,12 +173,13 @@ async function run() {
   for (const venue of venues) {
     const cached = cachedMap[venue.id];
     
+    // Check if we can reuse the cached horizonMask
+    // Coordinate matching will force recalculation if coordinate changed, or if existing mask is not the new 72-bin standard
     const hasUnchangedLocation = cached && 
       cached.lat === venue.lat && 
       cached.lng === venue.lng &&
       JSON.stringify(cached.outdoorPoint) === JSON.stringify(venue.outdoorPoint);
 
-    // Skip recalculation if location is identical AND contains the upgraded 72-bin mask
     if (hasUnchangedLocation && cached.horizonMask && cached.horizonMask.length === 72) {
       processed.push({
         ...venue,
@@ -159,7 +188,7 @@ async function run() {
       continue;
     }
 
-    console.log(`+ Analyzing: ${venue.name} (Location added/modified or upgraded, querying Overpass...)`);
+    console.log(`+ Analyzing: ${venue.name} (Location modified or upgraded to 72-bin, querying Overpass...)`);
     try {
       const lat = venue.outdoorPoint?.lat ?? venue.lat;
       const lng = venue.outdoorPoint?.lng ?? venue.lng;

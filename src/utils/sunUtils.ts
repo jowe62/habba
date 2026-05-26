@@ -1,8 +1,6 @@
 import { SunDetails, SunWindow } from '../types';
 
-/**
- * Smarter building-type based height fallbacks for Gothenburg structures
- */
+// Smarter building-type based heights for Gothenburg structures
 export function estimateBuildingHeight(tags: any): number {
   if (tags.height) {
     return parseFloat(tags.height);
@@ -20,9 +18,6 @@ export function estimateBuildingHeight(tags: any): number {
   return 14.0; // General urban fallback
 }
 
-/**
- * Distance and compass Azimuth calculation between coordinates
- */
 export function getDistanceAndAzimuth(lat1: number, lon1: number, lat2: number, lon2: number) {
   const rad = Math.PI / 180;
   const latMean = ((lat1 + lat2) / 2) * rad;
@@ -36,56 +31,70 @@ export function getDistanceAndAzimuth(lat1: number, lon1: number, lat2: number, 
   return { distance, azimuth };
 }
 
+// --- EXACT SUNCALC ASTRONOMICAL POSITION ALGORITHMS ---
+const rad = Math.PI / 180;
+const J1970 = 2440588;
+const J2000 = 2451545;
+const dayMs = 1000 * 60 * 60 * 24;
+
+function toJulian(date: Date) { return date.getTime() / dayMs - 0.5 + J1970; }
+function toDays(date: Date) { return toJulian(date) - J2000; }
+
+const e = rad * 23.4397; // Earth obliquity
+
+function rightAscension(l: number, b: number) { return Math.atan2(Math.sin(l) * Math.cos(e) - Math.tan(b) * Math.sin(e), Math.cos(l)); }
+function declination(l: number, b: number) { return Math.asin(Math.sin(b) * Math.cos(e) + Math.cos(b) * Math.sin(e) * Math.sin(l)); }
+
+function azimuth(H: number, phi: number, dec: number) { return Math.atan2(Math.sin(H), Math.cos(H) * Math.sin(phi) - Math.tan(dec) * Math.cos(phi)); }
+function altitude(H: number, phi: number, dec: number) { return Math.asin(Math.sin(phi) * Math.sin(dec) + Math.cos(phi) * Math.cos(dec) * Math.cos(H)); }
+
+function siderealTime(d: number, lw: number) { return rad * (280.1600 + 360.9856235 * d) - lw; }
+
+function sunCoords(d: number) {
+  const M = rad * (357.5291 + 0.98560028 * d); // Mean anomaly
+  const C = rad * (1.9148 * Math.sin(M) + 0.02 * Math.sin(2 * M) + 0.0003 * Math.sin(3 * M)); // Equation of center
+  const L = M + C + rad * 102.9372 + Math.PI; // Ecliptic longitude
+  return {
+    dec: declination(L, 0),
+    ra: rightAscension(L, 0)
+  };
+}
+
 /**
- * Calculates both solar altitude and azimuth in degrees.
+ * Calculates high-precision solar coordinates (altitude and azimuth) using exact SunCalc equations.
  */
 export function getSolarCoordinates(lat: number, lng: number, date: Date) {
-  const rad = Math.PI / 180;
-  const start = new Date(date.getFullYear(), 0, 0);
-  const diff = date.getTime() - start.getTime();
-  const oneDay = 1000 * 60 * 60 * 24;
-  const day = Math.floor(diff / oneDay);
+  const lw = rad * -lng;
+  const phi = rad * lat;
+  const d = toDays(date);
+  const c = sunCoords(d);
+  const H = siderealTime(d, lw) - c.ra;
+
+  const alt = altitude(H, phi, c.dec) / rad;
+  const az = azimuth(H, phi, c.dec) / rad;
   
-  const declination = 23.45 * Math.sin(rad * (360 / 365) * (284 + day));
-  
-  const utcHours = date.getUTCHours() + date.getUTCMinutes() / 60 + date.getUTCSeconds() / 3600;
-  const solarTimeDiff = lng / 15.0;
-  const solarTime = (utcHours + solarTimeDiff) % 24;
-  const hourAngle = (solarTime - 12) * 15;
-  
-  const latRad = lat * rad;
-  const declRad = declination * rad;
-  const hrRad = hourAngle * rad;
-  
-  const sinAltitude = Math.sin(latRad) * Math.sin(declRad) + Math.cos(latRad) * Math.cos(declRad) * Math.cos(hrRad);
-  const altitude = Math.asin(sinAltitude) / rad;
-  
-  const cosAzimuth = (Math.sin(declRad) - Math.sin(latRad) * sinAltitude) / (Math.cos(latRad) * Math.cos(Math.asin(sinAltitude)));
-  let azimuth = Math.acos(Math.max(-1, Math.min(1, cosAzimuth))) / rad;
-  
-  if (hourAngle > 0) {
-    azimuth = 360 - azimuth;
-  }
-  
-  return { altitude, azimuth };
+  // Convert SunCalc azimuth (South is 0) to standard meteorological compass (North is 0)
+  const standardAzimuth = (az + 180) % 360;
+
+  return { altitude: alt, azimuth: standardAzimuth };
 }
 
 /**
  * Evaluates whether a point is in direct sun, checking against its 72-point horizon mask.
+ * Uses Math.floor for stable, non-overlapping 5-degree bin mapping.
  */
 export function isPointInSun(altitude: number, azimuth: number, horizonMask?: number[]): boolean {
   if (altitude <= 0) return false;
   if (!horizonMask) return true;
   
   const expectedLength = horizonMask.length;
-  if (expectedLength !== 72 && expectedLength !== 36) return true; // Graceful fallback
+  if (expectedLength !== 72 && expectedLength !== 36) return true;
   
-  // Match sun's heading to nearest bin
   if (expectedLength === 72) {
-    const binIndex = Math.round(azimuth / 5) % 72; // 5-degree steps
+    const binIndex = Math.floor(azimuth / 5) % 72; // Stable 5-degree binning
     return altitude > horizonMask[binIndex];
   } else {
-    const binIndex = Math.round(azimuth / 10) % 36; // 10-degree steps (V2 backward compatibility)
+    const binIndex = Math.floor(azimuth / 10) % 36; // Stable 10-degree binning (Backward compatibility)
     return altitude > horizonMask[binIndex];
   }
 }
@@ -144,7 +153,7 @@ export function calculateSunDetails(
   };
 }
 
-// Mirror server pool to bypass rate limits
+// Mirror server pool to bypass rate limits (Relations removed for cleaner, more reliable data)
 const OVERPASS_SERVERS = [
   'https://overpass-api.de/api/interpreter',
   'https://lz4.overpass-api.de/api/interpreter',
@@ -175,15 +184,15 @@ async function fetchOSMWithFallback(query: string): Promise<any> {
 }
 
 /**
- * CLIENT-SIDE 3D SHADING ENGINE
- * Compiles a 72-bin (5-degree) horizon mask directly inside the client's browser
+ * CLIENT-SIDE 3D SHADING ENGINE (V4)
+ * Compiles a 72-bin (5-degree) horizon mask directly inside the client's browser.
+ * Closes building polygons and removes relation fetching to prevent missing/incorrect data.
  */
 export async function recomputeClientHorizonMask(lat: number, lng: number): Promise<number[]> {
   const query = `
     [out:json];
     (
       way["building"](around:150, ${lat}, ${lng});
-      relation["building"](around:150, ${lat}, ${lng});
     );
     out body;
     >;
@@ -204,11 +213,13 @@ export async function recomputeClientHorizonMask(lat: number, lng: number): Prom
     if (el.type === 'way' && el.nodes && el.tags) {
       const height = estimateBuildingHeight(el.tags);
 
+      // Loop through all nodes to process segments
       for (let i = 0; i < el.nodes.length - 1; i++) {
         const nodeA = nodes[el.nodes[i]];
         const nodeB = nodes[el.nodes[i + 1]];
         if (!nodeA || !nodeB) continue;
 
+        // Subdivide segment into 2-meter chunks
         const { distance: segmentLen } = getDistanceAndAzimuth(nodeA.lat, nodeA.lon, nodeB.lat, nodeB.lon);
         const steps = Math.max(1, Math.floor(segmentLen / 2));
         
@@ -221,10 +232,37 @@ export async function recomputeClientHorizonMask(lat: number, lng: number): Prom
           if (distance < 3) continue;
 
           const elevation = Math.atan2(height, distance) * (180 / Math.PI);
-          const binIndex = Math.round(azimuth / 5) % 72; // 5-degree increments
+          const binIndex = Math.floor(azimuth / 5) % 72; // Stable 5-degree binning
 
           if (elevation > mask[binIndex]) {
             mask[binIndex] = Math.round(elevation);
+          }
+        }
+      }
+
+      // Close polygon: Connect final node back to first node if they are not already identical
+      const firstNodeId = el.nodes[0];
+      const lastNodeId = el.nodes[el.nodes.length - 1];
+      if (firstNodeId !== lastNodeId) {
+        const nodeA = nodes[lastNodeId];
+        const nodeB = nodes[firstNodeId];
+        if (nodeA && nodeB) {
+          const { distance: segmentLen } = getDistanceAndAzimuth(nodeA.lat, nodeA.lon, nodeB.lat, nodeB.lon);
+          const steps = Math.max(1, Math.floor(segmentLen / 2));
+          for (let s = 0; s <= steps; s++) {
+            const t = s / steps;
+            const pointLat = nodeA.lat + (nodeB.lat - nodeA.lat) * t;
+            const pointLon = nodeA.lon + (nodeB.lon - nodeA.lon) * t;
+
+            const { distance, azimuth } = getDistanceAndAzimuth(lat, lng, pointLat, pointLon);
+            if (distance < 3) continue;
+
+            const elevation = Math.atan2(height, distance) * (180 / Math.PI);
+            const binIndex = Math.floor(azimuth / 5) % 72;
+
+            if (elevation > mask[binIndex]) {
+              mask[binIndex] = Math.round(elevation);
+            }
           }
         }
       }
