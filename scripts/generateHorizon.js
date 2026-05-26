@@ -14,7 +14,6 @@ function getDistanceAndAzimuth(lat1, lon1, lat2, lon2) {
   return { distance, azimuth };
 }
 
-// Mirror server pool to bypass blocks and rate limits
 const OVERPASS_SERVERS = [
   'https://overpass-api.de/api/interpreter',
   'https://lz4.overpass-api.de/api/interpreter',
@@ -115,11 +114,43 @@ async function run() {
   const raw = fs.readFileSync(inputPath, 'utf8');
   const venues = JSON.parse(raw);
 
-  console.log(`Starting V2 shadow calculations for ${venues.length} venues...`);
+  // Load existing compiled profiles to use as a local cache
+  const cachedMap = {};
+  if (fs.existsSync(outputPath)) {
+    try {
+      const cachedRaw = fs.readFileSync(outputPath, 'utf8');
+      const cachedList = JSON.parse(cachedRaw);
+      cachedList.forEach((v) => {
+        cachedMap[v.id] = v;
+      });
+      console.log(`Loaded cache: ${cachedList.length} pre-calculated profiles found.`);
+    } catch (e) {
+      console.log("No valid cache file found. Commencing clean compilation.");
+    }
+  }
+
+  console.log(`Starting shadow calculations for ${venues.length} venues...`);
   const processed = [];
 
   for (const venue of venues) {
-    console.log(`Analyzing: ${venue.name}...`);
+    const cached = cachedMap[venue.id];
+    
+    // Check if we can reuse the cached horizonMask
+    const hasUnchangedLocation = cached && 
+      cached.lat === venue.lat && 
+      cached.lng === venue.lng &&
+      JSON.stringify(cached.outdoorPoint) === JSON.stringify(venue.outdoorPoint);
+
+    if (hasUnchangedLocation && cached.horizonMask && cached.horizonMask.length === 36) {
+      // Copy existing mask immediately
+      processed.push({
+        ...venue,
+        horizonMask: cached.horizonMask
+      });
+      continue;
+    }
+
+    console.log(`+ Analyzing: ${venue.name} (Location added/modified, querying Overpass...)`);
     try {
       const lat = venue.outdoorPoint?.lat ?? venue.lat;
       const lng = venue.outdoorPoint?.lng ?? venue.lng;
