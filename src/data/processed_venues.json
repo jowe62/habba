@@ -130,5 +130,135 @@
     "tags": ["Bar", "Activity"],
     "notes": "Gravel courts with tables. Superb midday light along the canal.",
     "horizonMask": [12,12,15,18,22,25,28,28,25,22,18,15,12,12,12,12,12,12,15,18,22,25,28,28,25,22,18,15,12,12,12,12,12,12,12,12]
+  },
+  {
+    "id": "pustervik-gbg",
+    "name": "Pustervik",
+    "address": "Järntorgsgatan 12, 413 01 Göteborg",
+    "lat": 57.699926,
+    "lng": 11.954005,
+    "hasOutdoor": true,
+    "tags": ["Bar", "Music", "AW"],
+    "horizonMask": [15,15,18,22,25,28,30,30,25,20,15,12,10,10,12,15,18,22,25,25,22,18,15,12,10,10,12,15,18,22,25,28,30,28,25,18]
+  },
+  {
+    "id": "rodasten-konsthall",
+    "name": "Röda Sten Konsthall (Restaurang)",
+    "address": "Röda Sten 1, 414 51 Göteborg",
+    "lat": 57.690184,
+    "lng": 11.901502,
+    "hasOutdoor": true,
+    "tags": ["Café", "Scenic", "Vegetarian"],
+    "horizonMask": [5,5,5,5,5,5,5,5,5,8,12,15,15,12,8,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5]
+  },
+  {
+    "id": "olssons-vin-tredje",
+    "name": "Olssons Vin",
+    "address": "Tredje Långgatan 9, 413 03 Göteborg",
+    "lat": 57.699812,
+    "lng": 11.948332,
+    "hasOutdoor": true,
+    "tags": ["Bar", "Wine", "Pizza"],
+    "horizonMask": [30,30,30,25,20,15,12,10,10,12,15,20,25,30,30,30,30,30,25,20,15,12,10,10,12,15,20,25,30,30,30,30,30,30,30,30]
+  },
+  {
+    "id": "skorda-skanstorget",
+    "name": "Skörda (Skanstorget)",
+    "address": "Skanstorget 1, 411 22 Göteborg",
+    "lat": 57.695543,
+    "lng": 11.958310,
+    "hasOutdoor": true,
+    "tags": ["Restaurant", "Healthy"],
+    "horizonMask": [15,15,18,22,25,25,20,15,12,10,8,8,8,10,12,15,18,22,25,25,22,15,12,10,8,8,8,10,12,15,18,22,25,25,20,15]
+  },
+  {
+    "id": "levantine-french",
+    "name": "Levantine (French Bistro)",
+    "address": "Aschebergsgatan 22, 411 27 Göteborg",
+    "lat": 57.696120,
+    "lng": 11.974220,
+    "hasOutdoor": true,
+    "tags": ["Restaurant", "Wine", "Bistro"],
+    "horizonMask": [10,10,10,12,15,18,20,22,20,18,15,12,10,10,12,15,18,22,25,25,22,18,15,12,10,10,12,15,18,22,25,25,22,18,15,10]
+  },
+  {
+    "id": "yakida-avenyn",
+    "name": "Yaki-Da",
+    "address": "Storgatan 47, 411 38 Göteborg",
+    "lat": 57.701100,
+    "lng": 11.971200,
+    "hasOutdoor": true,
+    "tags": ["Bar", "Club", "Coffee"],
+    "horizonMask": [25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25,25]
+  },
+  {
+    "id": "steampunk-kungsgatan",
+    "name": "Steampunk Bar",
+    "address": "Kungsgatan 7A, 411 19 Göteborg",
+    "lat": 57.703211,
+    "lng": 11.961423,
+    "hasOutdoor": true,
+    "tags": ["Bar", "Cocktails"],
+    "horizonMask": [30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30]
+  },
+  {
+    "id": "kafe-magasinet",
+    "name": "Kafé Magasinet",
+    "address": "Tredje Långgatan 9, 413 03 Göteborg",
+    "lat": 57.699910,
+    "lng": 11.948500,
+    "hasOutdoor": true,
+    "tags": ["Café", "Bar", "Pizza"],
+    "horizonMask": [28,28,28,22,18,15,12,10,10,12,15,18,22,28,28,28,28,28,22,18,15,12,10,10,12,15,18,22,28,28,28,28,28,28,28,28]
+  },
+  {
+    "id": "bruno-jarntorget",
+    "name": "Bruno (Pusterviksgatan)",
+    "address": "Pusterviksgatan 2, 413 01 Göteborg",
+    "lat": 57.700100,
+    "lng": 11.953800,
+    "hasOutdoor": true,
+    "tags": ["Bar", "Coffee"],
+    "horizonMask": [12,12,15,18,22,25,25,22,18,15,12,10,10,12,15,18,22,25,25,22,18,15,12,10,10,12,15,18,22,25,25,22,18,15,12,12]
+  },
+  {
+    "id": "moreno-pizza-majorna",
+    "name": "Moreno Pizza",
+    "address": "Stigbergstorget 10, 414 63 Göteborg",
+    "lat": 57.697000,
+    "lng": 11.935100,
+    "hasOutdoor": true,
+    "tags": ["Restaurant", "Pizza", "Beer"],
+    "horizonMask": [10,10,10,10,12,15,18,20,20,18,15,12,10,10,10,10,10,10,10,10,10,10,12,15,18,20,20,18,15,12,10,10,10,10,10,10]
+  },
+  {
+    "id": "haket-majorna",
+    "name": "Haket",
+    "address": "Första Långgatan 32, 413 27 Göteborg",
+    "lat": 57.699100,
+    "lng": 11.942200,
+    "hasOutdoor": true,
+    "tags": ["Bar", "Pub"],
+    "horizonMask": [15,15,15,15,18,22,25,25,22,18,15,12,10,10,12,15,18,22,25,25,22,18,15,12,10,10,12,15,18,22,25,25,22,18,15,15]
+  },
+  {
+    "id": "red-lion-pub",
+    "name": "Red Lion",
+    "address": "Mariagatan 11, 414 71 Göteborg",
+    "lat": 57.688200,
+    "lng": 11.916100,
+    "hasOutdoor": true,
+    "tags": ["Bar", "Pub"],
+    "horizonMask": [8,8,10,12,15,18,20,20,18,15,12,10,8,8,8,8,8,8,10,12,15,18,20,20,18,15,12,10,8,8,8,8,8,8,8,8]
+  },
+  {
+    "id": "zamenhof-gbg",
+    "name": "Zamenhof",
+    "address": "Esperantoplatsen 5, 411 19 Göteborg",
+    "lat": 57.701900,
+    "lng": 11.956200,
+    "hasOutdoor": true,
+    "tags": ["Bar", "Restaurant", "Games"],
+    "horizonMask": [15,15,18,22,25,28,30,30,25,20,15,12,10,10,12,15,18,22,25,25,22,18,15,12,10,10,12,15,18,22,25,28,30,28,25,18]
   }
 ]

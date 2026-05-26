@@ -9,6 +9,25 @@ import { PlaceSheet } from './components/PlaceSheet';
 import { FilterSheet } from './components/FilterSheet';
 import L from 'leaflet';
 
+interface WeatherState {
+  temp: number;
+  icon: string;
+  description: string;
+  isBad: boolean; // Overcast, rain, or fog
+}
+
+// Decodes WMO weather codes into plain description structures
+function parseWMOCode(code: number): { desc: string; isBad: boolean; icon: string } {
+  if (code === 0) return { desc: "Clear sky", isBad: false, icon: "☀️" };
+  if (code === 1) return { desc: "Mainly clear", isBad: false, icon: "🌤️" };
+  if (code === 2) return { desc: "Partly cloudy", isBad: false, icon: "⛅" };
+  if (code === 3) return { desc: "Overcast", isBad: true, icon: "☁️" };
+  if (code >= 45 && code <= 48) return { desc: "Foggy", isBad: true, icon: "🌫️" };
+  if (code >= 51 && code <= 67) return { desc: "Raining", isBad: true, icon: "🌧️" };
+  if (code >= 80 && code <= 82) return { desc: "Showers", isBad: true, icon: "🌦️" };
+  return { desc: "Unsettled", isBad: true, icon: "☁️" };
+}
+
 export default function App() {
   const [timeState, setTimeState] = useState({ hour: 14, min: 0 });
   const [isLiveNow, setIsLiveNow] = useState(true);
@@ -25,6 +44,9 @@ export default function App() {
   const [mapBounds, setMapBounds] = useState<L.LatLngBounds | null>(null);
   const [favorites, setFavorites] = useState<string[]>([]);
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
+  
+  // Real-time weather state
+  const [weather, setWeather] = useState<WeatherState | null>(null);
 
   const evaluatedTime = useMemo(() => {
     const d = new Date();
@@ -34,7 +56,7 @@ export default function App() {
     return d;
   }, [timeState.hour, timeState.min]);
 
-  // Here is the initialization useEffect updated to read from processed_venues.json
+  // Initialization: Favorites, Seating coordinates, Geolocation, and Open-Meteo Weather
   useEffect(() => {
     const savedFavs = localStorage.getItem('habba_favs');
     if (savedFavs) {
@@ -51,6 +73,19 @@ export default function App() {
       return v;
     });
     setVenues(merged);
+
+    // Fetch live weather from free Open-Meteo API (Gothenburg coordinates)
+    fetch("https://api.open-meteo.com/v1/forecast?latitude=57.7089&longitude=11.9746&current=weather_code,temperature_2m")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data && data.current) {
+          const temp = Math.round(data.current.temperature_2m);
+          const code = data.current.weather_code;
+          const { desc, isBad, icon } = parseWMOCode(code);
+          setWeather({ temp, icon, description: desc, isBad });
+        }
+      })
+      .catch((err) => console.error("Weather service currently unavailable:", err));
 
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -184,20 +219,34 @@ export default function App() {
 
   return (
     <div className="relative w-screen h-[100dvh] flex flex-col overflow-hidden bg-slate-50 font-sans antialiased text-slate-800">
+      
+      {/* Search and Action Dashboard Header */}
       <div className="absolute top-4 left-4 right-4 z-[1000] flex flex-col gap-2 pointer-events-none">
-        <div className="w-full pointer-events-auto bg-white/95 backdrop-blur-md rounded-2xl shadow-xl border border-slate-100 p-2.5 flex items-center gap-2.5">
-          <svg className="w-5 h-5 text-slate-400 flex-shrink-0 ml-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-          </svg>
-          <input
-            type="text"
-            placeholder="Search venues, tags..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full focus:outline-none bg-transparent text-sm font-semibold placeholder-slate-400"
-          />
+        {/* Search input field with Live Weather Indicator */}
+        <div className="w-full pointer-events-auto bg-white/95 backdrop-blur-md rounded-2xl shadow-xl border border-slate-100 p-2.5 flex items-center justify-between gap-2.5">
+          <div className="flex items-center gap-2.5 flex-1 min-w-0">
+            <svg className="w-5 h-5 text-slate-400 flex-shrink-0 ml-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            </svg>
+            <input
+              type="text"
+              placeholder="Search venues, tags..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full focus:outline-none bg-transparent text-sm font-semibold placeholder-slate-400"
+            />
+          </div>
+
+          {/* Dynamic weather pill */}
+          {weather && (
+            <div className="text-xs font-bold text-slate-600 bg-slate-100 px-2.5 py-1.5 rounded-xl flex items-center gap-1.5 flex-shrink-0 mr-1 shadow-sm" title={weather.description}>
+              <span>{weather.icon}</span>
+              <span>{weather.temp}°C</span>
+            </div>
+          )}
         </div>
 
+        {/* 3 Core Filter Chips */}
         <div className="flex items-center gap-1.5 pointer-events-auto overflow-x-auto no-scrollbar py-1">
           <button
             onClick={() => setIsLiveNow(true)}
@@ -235,6 +284,16 @@ export default function App() {
             ⚙️ Filters {(activeFilters.tags.length > 0 || activeFilters.onlyFavs) && '●'}
           </button>
         </div>
+
+        {/* Dynamic Overcast/Cloudy Weather Banner Alert */}
+        {weather?.isBad && (
+          <div className="w-full pointer-events-auto bg-amber-500 text-slate-950 px-4 py-2.5 rounded-xl shadow-lg flex items-center gap-2 border border-amber-400/30">
+            <span className="text-sm">⚠️</span>
+            <p className="text-[11px] font-bold leading-tight">
+              Göteborg is currently {weather.description.toLowerCase()}. Calculated sun windows represent theoretical clear skies.
+            </p>
+          </div>
+        )}
       </div>
 
       <div className="flex-1 w-full h-full relative z-0">
