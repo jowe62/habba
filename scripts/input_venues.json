@@ -3,522 +3,724 @@
     "id": "bar-brewers-tredje",
     "name": "Brewers Beer Bar (Tredje Lång)",
     "address": "Tredje Långgatan 8, 413 03 Göteborg",
-    "lat": 57.699741,
-    "lng": 11.948283,
+    "lat": 57.69865,
+    "lng": 11.950947,
     "hasOutdoor": true,
-    "tags": ["Bar", "Pizza", "Beer"]
+    "tags": [
+      "Bar",
+      "Pizza",
+      "Beer"
+    ]
   },
   {
     "id": "restaurant-kino-linne",
     "name": "Kino",
     "address": "Linnégatan 21, 413 04 Göteborg",
-    "lat": 57.698322,
-    "lng": 11.951566,
+    "lat": 57.696466,
+    "lng": 11.95063,
     "hasOutdoor": true,
-    "tags": ["Restaurant", "Café", "Vegetarian"]
+    "tags": [
+      "Restaurant",
+      "Café",
+      "Vegetarian"
+    ]
   },
   {
     "id": "bar-kellys-andra",
     "name": "Kellys",
     "address": "Andra Långgatan 28, 413 27 Göteborg",
-    "lat": 57.699478,
-    "lng": 11.947231,
+    "lat": 57.717435,
+    "lng": 12.001017,
     "hasOutdoor": true,
-    "tags": ["Bar", "Pub"]
+    "tags": [
+      "Bar",
+      "Pub"
+    ]
   },
   {
     "id": "bar-pustervik-gbg",
     "name": "Pustervik",
     "address": "Järntorgsgatan 12, 413 01 Göteborg",
-    "lat": 57.699926,
-    "lng": 11.954005,
+    "lat": 57.701457,
+    "lng": 11.953883,
     "hasOutdoor": true,
-    "tags": ["Bar", "Music", "AW"]
+    "tags": [
+      "Bar",
+      "Music",
+      "AW"
+    ]
   },
   {
     "id": "bar-lagerhuset-gbg",
     "name": "Lagerhuset",
     "address": "Heurlins Plats 1, 413 01 Göteborg",
-    "lat": 57.701123,
-    "lng": 11.954200,
+    "lat": 57.706806,
+    "lng": 11.976412,
     "hasOutdoor": true,
-    "tags": ["Café", "Bar"]
+    "tags": [
+      "Café",
+      "Bar"
+    ]
   },
   {
     "id": "bar-boulebar-rosenlund",
     "name": "Boulebar Rosenlund",
     "address": "Rosenlundsgatan 8, 411 20 Göteborg",
-    "lat": 57.702412,
-    "lng": 11.958210,
+    "lat": 57.701149,
+    "lng": 11.958786,
     "hasOutdoor": true,
-    "tags": ["Bar", "Activity"]
+    "tags": [
+      "Bar",
+      "Activity"
+    ]
   },
   {
     "id": "restaurant-taverna-averna",
     "name": "Taverna Averna",
     "address": "Tredje Långgatan 9, 413 03 Göteborg",
-    "lat": 57.699920,
-    "lng": 11.948833,
+    "lat": 57.698841,
+    "lng": 11.951054,
     "hasOutdoor": true,
-    "tags": ["Restaurant", "Italian"]
+    "tags": [
+      "Restaurant",
+      "Italian"
+    ]
   },
   {
     "id": "bar-kafe-magasinet",
     "name": "Kafé Magasinet",
     "address": "Tredje Långgatan 9, 413 03 Göteborg",
-    "lat": 57.699910,
-    "lng": 11.948500,
+    "lat": 57.698995,
+    "lng": 11.950996,
     "hasOutdoor": true,
-    "tags": ["Café", "Bar", "Pizza"]
+    "tags": [
+      "Café",
+      "Bar",
+      "Pizza"
+    ]
   },
   {
     "id": "bar-olssons-vin-tredje",
     "name": "Olssons Vin",
     "address": "Tredje Långgatan 9, 413 03 Göteborg",
-    "lat": 57.699812,
-    "lng": 11.948332,
+    "lat": 57.698995,
+    "lng": 11.950996,
     "hasOutdoor": true,
-    "tags": ["Bar", "Wine", "Pizza"]
+    "tags": [
+      "Bar",
+      "Wine",
+      "Pizza"
+    ]
   },
   {
     "id": "restaurant-levantine-french",
     "name": "Levantine (French Bistro)",
     "address": "Aschebergsgatan 22, 411 27 Göteborg",
-    "lat": 57.696120,
-    "lng": 11.974220,
+    "lat": 57.696494,
+    "lng": 11.971268,
     "hasOutdoor": true,
-    "tags": ["Restaurant", "Wine", "Bistro"]
+    "tags": [
+      "Restaurant",
+      "Wine",
+      "Bistro"
+    ]
   },
   {
     "id": "restaurant-moreno-pizza",
     "name": "Moreno Pizza",
     "address": "Stigbergstorget 10, 414 63 Göteborg",
-    "lat": 57.697000,
-    "lng": 11.935100,
+    "lat": 57.698571,
+    "lng": 11.933114,
     "hasOutdoor": true,
-    "tags": ["Restaurant", "Pizza", "Beer"]
+    "tags": [
+      "Restaurant",
+      "Pizza",
+      "Beer"
+    ]
   },
   {
     "id": "bar-haket-majorna",
     "name": "Haket",
     "address": "Första Långgatan 32, 413 27 Göteborg",
-    "lat": 57.699100,
-    "lng": 11.942200,
+    "lat": 57.6991,
+    "lng": 11.9422,
     "hasOutdoor": true,
-    "tags": ["Bar", "Pub"]
+    "tags": [
+      "Bar",
+      "Pub"
+    ]
   },
   {
     "id": "bar-oceanen-majorna",
     "name": "Oceanen",
     "address": "Stigbergstorget 8, 414 63 Göteborg",
-    "lat": 57.697120,
-    "lng": 11.936210,
+    "lat": 57.698407,
+    "lng": 11.933635,
     "hasOutdoor": true,
-    "tags": ["Bar", "Music", "Culture"]
+    "tags": [
+      "Bar",
+      "Music",
+      "Culture"
+    ]
   },
   {
     "id": "pub-red-lion-pub",
     "name": "Red Lion Pub",
     "address": "Mariagatan 11, 414 71 Göteborg",
-    "lat": 57.688200,
-    "lng": 11.916100,
+    "lat": 57.686408,
+    "lng": 11.919671,
     "hasOutdoor": true,
-    "tags": ["Bar", "Pub"]
+    "tags": [
+      "Bar",
+      "Pub"
+    ]
   },
   {
     "id": "bar-zamenhof-gbg",
     "name": "Zamenhof",
     "address": "Esperantoplatsen 5, 411 19 Göteborg",
-    "lat": 57.701900,
-    "lng": 11.956200,
+    "lat": 57.702176,
+    "lng": 11.956133,
     "hasOutdoor": true,
-    "tags": ["Bar", "Restaurant", "Games"]
+    "tags": [
+      "Bar",
+      "Restaurant",
+      "Games"
+    ]
   },
   {
     "id": "cafe-skansen-kronan",
     "name": "Skansen Kronan (Kiosk)",
     "address": "Skanstorget, 411 22 Göteborg",
-    "lat": 57.695841,
-    "lng": 11.956690,
+    "lat": 57.695836,
+    "lng": 11.959086,
     "hasOutdoor": true,
-    "tags": ["Café", "Scenic"]
+    "tags": [
+      "Café",
+      "Scenic"
+    ]
   },
   {
     "id": "bar-jarntorgets-brygghus",
     "name": "Järntorgets Brygghus",
     "address": "Järntorget 4, 413 01 Göteborg",
-    "lat": 57.700142,
-    "lng": 11.952541,
+    "lat": 57.699604,
+    "lng": 11.951908,
     "hasOutdoor": true,
-    "tags": ["Bar", "Restaurant"]
+    "tags": [
+      "Bar",
+      "Restaurant"
+    ]
   },
   {
     "id": "cafe-rodasten-konsthall",
     "name": "Röda Sten Konsthall",
     "address": "Röda Sten 1, 414 51 Göteborg",
-    "lat": 57.690184,
-    "lng": 11.901502,
+    "lat": 57.689174,
+    "lng": 11.901629,
     "hasOutdoor": true,
-    "tags": ["Café", "Scenic", "Vegetarian"]
+    "tags": [
+      "Café",
+      "Scenic",
+      "Vegetarian"
+    ]
   },
   {
     "id": "restaurant-sjomagasinet-klippan",
     "name": "Sjömagasinet",
     "address": "Adolf Edelsvärds gata 5, 414 51 Göteborg",
-    "lat": 57.690550,
-    "lng": 11.902200,
+    "lat": 57.691591,
+    "lng": 11.909056,
     "hasOutdoor": true,
-    "tags": ["Restaurant", "Seafood", "Scenic"]
+    "tags": [
+      "Restaurant",
+      "Seafood",
+      "Scenic"
+    ]
   },
   {
     "id": "bar-bar-centro",
     "name": "Bar Centro",
     "address": "Kyrkogatan 31, 411 08 Göteborg",
-    "lat": 57.705292,
-    "lng": 11.968840,
+    "lat": 57.705451,
+    "lng": 11.969727,
     "hasOutdoor": true,
-    "tags": ["Café", "Wine Bar"]
+    "tags": [
+      "Café",
+      "Wine Bar"
+    ]
   },
   {
     "id": "bar-steampunk-kungsgatan",
     "name": "Steampunk Bar",
     "address": "Kungsgatan 7A, 411 19 Göteborg",
-    "lat": 57.703211,
-    "lng": 11.961423,
+    "lat": 57.70279,
+    "lng": 11.957667,
     "hasOutdoor": true,
-    "tags": ["Bar", "Cocktails"]
+    "tags": [
+      "Bar",
+      "Cocktails"
+    ]
   },
   {
     "id": "restaurant-familjen-arkiv",
     "name": "Restaurang Familjen",
     "address": "Arkivgatan 7, 411 34 Göteborg",
-    "lat": 57.697818,
-    "lng": 11.979310,
+    "lat": 57.697525,
+    "lng": 11.976256,
     "hasOutdoor": true,
-    "tags": ["Restaurant", "Cocktails"]
+    "tags": [
+      "Restaurant",
+      "Cocktails"
+    ]
   },
   {
     "id": "restaurant-rollin-bistro-backyard",
     "name": "Rollin Bistro Backyard",
     "address": "Lindholmsallén 8B, 417 55 Göteborg",
-    "lat": 57.706780,
-    "lng": 11.936640,
+    "lat": 57.711349,
+    "lng": 11.944213,
     "hasOutdoor": true,
-    "tags": ["Restaurant", "Asian Fusion"]
+    "tags": [
+      "Restaurant",
+      "Asian Fusion"
+    ]
   },
   {
     "id": "bar-bruno-pusterviksgatan",
     "name": "Bruno (Pusterviksgatan)",
     "address": "Pusterviksgatan 2, 413 01 Göteborg",
-    "lat": 57.700100,
-    "lng": 11.953800,
+    "lat": 57.700612,
+    "lng": 11.956791,
     "hasOutdoor": true,
-    "tags": ["Bar", "Coffee"]
+    "tags": [
+      "Bar",
+      "Coffee"
+    ]
   },
   {
     "id": "bar-yakida-avenyn",
     "name": "Yaki-Da",
     "address": "Storgatan 47, 411 38 Göteborg",
-    "lat": 57.701100,
-    "lng": 11.971200,
+    "lat": 57.701369,
+    "lng": 11.972787,
     "hasOutdoor": true,
-    "tags": ["Bar", "Club", "Coffee"]
+    "tags": [
+      "Bar",
+      "Club",
+      "Coffee"
+    ]
   },
   {
     "id": "bar-bar-himmel-gotaplatsen",
     "name": "Bar Himmel (Götaplatsen)",
     "address": "Götaplatsen, 412 56 Göteborg",
-    "lat": 57.696900,
-    "lng": 11.979100,
+    "lat": 57.697123,
+    "lng": 11.979955,
     "hasOutdoor": true,
-    "tags": ["Bar", "Scenic", "Rooftop"]
+    "tags": [
+      "Bar",
+      "Scenic",
+      "Rooftop"
+    ]
   },
   {
     "id": "bar-henriksberg-stigberg",
     "name": "Henriksberg (Takterrass)",
     "address": "Stigbergsliden 7, 414 63 Göteborg",
-    "lat": 57.699120,
-    "lng": 11.938210,
+    "lat": 57.699602,
+    "lng": 11.93663,
     "hasOutdoor": true,
-    "tags": ["Bar", "Rooftop", "Pub"]
+    "tags": [
+      "Bar",
+      "Rooftop",
+      "Pub"
+    ]
   },
   {
     "id": "pub-tullen-andra-lang",
     "name": "Ölstugan Tullen (Andra Lång)",
     "address": "Andra Långgatan 13, 413 03 Göteborg",
-    "lat": 57.699890,
-    "lng": 11.950100,
+    "lat": 57.699295,
+    "lng": 11.949407,
     "hasOutdoor": true,
-    "tags": ["Pub", "Beer"]
+    "tags": [
+      "Pub",
+      "Beer"
+    ]
   },
   {
     "id": "pub-tullen-linne",
     "name": "Ölstugan Tullen (Linné)",
     "address": "Linnégatan 50, 413 08 Göteborg",
-    "lat": 57.695120,
-    "lng": 11.953110,
+    "lat": 57.694006,
+    "lng": 11.952749,
     "hasOutdoor": true,
-    "tags": ["Pub", "Beer"]
+    "tags": [
+      "Pub",
+      "Beer"
+    ]
   },
   {
     "id": "pub-tullen-majorna",
     "name": "Ölstugan Tullen (Majorna)",
     "address": "Mariagatan 15, 414 71 Göteborg",
-    "lat": 57.687980,
-    "lng": 11.916210,
+    "lat": 57.685714,
+    "lng": 11.918572,
     "hasOutdoor": true,
-    "tags": ["Pub", "Beer"]
+    "tags": [
+      "Pub",
+      "Beer"
+    ]
   },
   {
     "id": "bar-basque-magasinsgatan",
     "name": "Basque",
     "address": "Magasinsgatan 3, 411 18 Göteborg",
-    "lat": 57.703900,
-    "lng": 11.962210,
+    "lat": 57.704539,
+    "lng": 11.961811,
     "hasOutdoor": true,
-    "tags": ["Bar", "Tapas", "Beer"]
+    "tags": [
+      "Bar",
+      "Tapas",
+      "Beer"
+    ]
   },
   {
     "id": "cafe-da-matteo-magasinsgatan",
     "name": "Da Matteo (Magasinsgatan)",
     "address": "Magasinsgatan 17A, 411 18 Göteborg",
-    "lat": 57.703710,
-    "lng": 11.961980,
+    "lat": 57.70278,
+    "lng": 11.96226,
     "hasOutdoor": true,
-    "tags": ["Café", "Bakery"]
+    "tags": [
+      "Café",
+      "Bakery"
+    ]
   },
   {
     "id": "bar-rover-andra-lang",
     "name": "The Rover",
     "address": "Andra Långgatan 12, 413 03 Göteborg",
-    "lat": 57.699910,
-    "lng": 11.949110,
+    "lat": 57.699154,
+    "lng": 11.949041,
     "hasOutdoor": true,
-    "tags": ["Bar", "Pub", "Beer"]
+    "tags": [
+      "Bar",
+      "Pub",
+      "Beer"
+    ]
   },
   {
     "id": "restaurant-2112-magasinsgatan",
     "name": "Restaurang 2112",
     "address": "Magasinsgatan 5, 411 18 Göteborg",
-    "lat": 57.703810,
-    "lng": 11.962310,
+    "lat": 57.704443,
+    "lng": 11.961935,
     "hasOutdoor": true,
-    "tags": ["Restaurant", "Burgers", "Beer"]
+    "tags": [
+      "Restaurant",
+      "Burgers",
+      "Beer"
+    ]
   },
   {
     "id": "bar-wet-whistle-lindholmen",
     "name": "Wet Whistle",
     "address": "Lindholmspiren 5, 417 56 Göteborg",
-    "lat": 57.706110,
-    "lng": 11.940120,
+    "lat": 57.707236,
+    "lng": 11.940075,
     "hasOutdoor": true,
-    "tags": ["Bar", "Scenic", "Waterfront"]
+    "tags": [
+      "Bar",
+      "Scenic",
+      "Waterfront"
+    ]
   },
   {
     "id": "pub-bishops-arms-plaza",
     "name": "The Bishops Arms (Plaza)",
     "address": "Västra Hamngatan 3, 411 17 Göteborg",
-    "lat": 57.705880,
-    "lng": 11.963110,
+    "lat": 57.70513,
+    "lng": 11.962828,
     "hasOutdoor": true,
-    "tags": ["Pub", "Beer"]
+    "tags": [
+      "Pub",
+      "Beer"
+    ]
   },
   {
     "id": "pub-bishops-arms-jarntorget",
     "name": "The Bishops Arms (Järntorget)",
     "address": "Järntorget 6, 413 01 Göteborg",
-    "lat": 57.699980,
-    "lng": 11.953100,
+    "lat": 57.699462,
+    "lng": 11.953214,
     "hasOutdoor": true,
-    "tags": ["Pub", "Beer"]
+    "tags": [
+      "Pub",
+      "Beer"
+    ]
   },
   {
     "id": "bar-john-scotts-linne",
     "name": "John Scotts (Linné)",
     "address": "Linnégatan 38, 413 04 Göteborg",
-    "lat": 57.696110,
-    "lng": 11.952990,
+    "lat": 57.69529,
+    "lng": 11.952262,
     "hasOutdoor": true,
-    "tags": ["Bar", "Pub", "Beer"]
+    "tags": [
+      "Bar",
+      "Pub",
+      "Beer"
+    ]
   },
   {
     "id": "restaurant-stationen-neli",
     "name": "Stationen (Nelin)",
     "address": "Karl Johansgatan 88, 414 55 Göteborg",
-    "lat": 57.691990,
-    "lng": 11.913120,
+    "lat": 57.693593,
+    "lng": 11.918764,
     "hasOutdoor": true,
-    "tags": ["Restaurant", "Pub"]
+    "tags": [
+      "Restaurant",
+      "Pub"
+    ]
   },
   {
     "id": "bar-oceanen-terrass",
     "name": "Oceanen (Takterrass)",
     "address": "Stigbergstorget 8, 414 63 Göteborg",
-    "lat": 57.697080,
-    "lng": 11.936180,
+    "lat": 57.698407,
+    "lng": 11.933635,
     "hasOutdoor": true,
-    "tags": ["Bar", "Culture", "Scenic"]
+    "tags": [
+      "Bar",
+      "Culture",
+      "Scenic"
+    ]
   },
   {
     "id": "restaurant-jinx-dynasty",
     "name": "Jinx Dynasty",
     "address": "Magasinsgatan 17, 411 18 Göteborg",
-    "lat": 57.703750,
-    "lng": 11.961950,
+    "lat": 57.703598,
+    "lng": 11.965807,
     "hasOutdoor": true,
-    "tags": ["Restaurant", "Bao", "AW"]
+    "tags": [
+      "Restaurant",
+      "Bao",
+      "AW"
+    ]
   },
   {
     "id": "restaurant-14m2bao",
     "name": "14m2Bao",
     "address": "Storgatan 3, 411 24 Göteborg",
-    "lat": 57.700140,
-    "lng": 11.967880,
+    "lat": 57.699007,
+    "lng": 11.963644,
     "hasOutdoor": true,
-    "tags": ["Restaurant", "Bao"]
+    "tags": [
+      "Restaurant",
+      "Bao"
+    ]
   },
   {
     "id": "bar-juan-font",
     "name": "Juan Font",
     "address": "Linnégatan 5, 413 04 Göteborg",
-    "lat": 57.697420,
-    "lng": 11.952110,
+    "lat": 57.698529,
+    "lng": 11.951447,
     "hasOutdoor": true,
-    "tags": ["Bar", "Wine"]
+    "tags": [
+      "Bar",
+      "Wine"
+    ]
   },
   {
     "id": "restaurant-lavette",
     "name": "Lavette",
     "address": "Södra Vägen 30, 412 54 Göteborg",
-    "lat": 57.698050,
-    "lng": 11.979350,
+    "lat": 57.697611,
+    "lng": 11.984306,
     "hasOutdoor": true,
-    "tags": ["Restaurant", "Bistro", "AW"]
+    "tags": [
+      "Restaurant",
+      "Bistro",
+      "AW"
+    ]
   },
   {
     "id": "restaurant-totale",
     "name": "Totale",
     "address": "Kristinelundsgatan 16, 411 37 Göteborg",
-    "lat": 57.698280,
-    "lng": 11.974420,
+    "lat": 57.698856,
+    "lng": 11.974021,
     "hasOutdoor": true,
-    "tags": ["Restaurant", "Wine"]
+    "tags": [
+      "Restaurant",
+      "Wine"
+    ]
   },
   {
     "id": "restaurant-moon-thai",
     "name": "Moon Thai Kitchen",
     "address": "Kristinelundsgatan 9, 411 37 Göteborg",
-    "lat": 57.698710,
-    "lng": 11.974890,
+    "lat": 57.699344,
+    "lng": 11.975234,
     "hasOutdoor": true,
-    "tags": ["Restaurant", "Cocktails"]
+    "tags": [
+      "Restaurant",
+      "Cocktails"
+    ]
   },
   {
     "id": "bar-barabicu-gbg",
     "name": "Barabicu",
     "address": "Rosenlundsgatan 4, 411 20 Göteborg",
-    "lat": 57.702560,
-    "lng": 11.958560,
+    "lat": 57.701898,
+    "lng": 11.955905,
     "hasOutdoor": true,
-    "tags": ["Bar", "Grill", "AW"]
+    "tags": [
+      "Bar",
+      "Grill",
+      "AW"
+    ]
   },
   {
     "id": "bar-pix-gbg",
     "name": "Pix",
     "address": "Grönsakstorget, 411 17 Göteborg",
-    "lat": 57.704250,
-    "lng": 11.965820,
+    "lat": 57.70257,
+    "lng": 11.965178,
     "hasOutdoor": true,
-    "tags": ["Bar", "Pinchos"]
+    "tags": [
+      "Bar",
+      "Pinchos"
+    ]
   },
   {
     "id": "restaurant-clarion-post",
     "name": "Clarion Hotel Post",
     "address": "Drottningtorget 10, 411 03 Göteborg",
-    "lat": 57.708850,
-    "lng": 11.979850,
+    "lat": 57.708098,
+    "lng": 11.975068,
     "hasOutdoor": true,
-    "tags": ["Restaurant", "Hotel", "AW"]
+    "tags": [
+      "Restaurant",
+      "Hotel",
+      "AW"
+    ]
   },
   {
     "id": "bar-pigalle-gbg",
     "name": "Hotel Pigalle (Atelier)",
     "address": "Södra Hamngatan 2A, 411 06 Göteborg",
-    "lat": 57.706780,
-    "lng": 11.969850,
+    "lat": 57.706892,
+    "lng": 11.970951,
     "hasOutdoor": true,
-    "tags": ["Bar", "Scenic", "Rooftop"]
+    "tags": [
+      "Bar",
+      "Scenic",
+      "Rooftop"
+    ]
   },
   {
     "id": "restaurant-johanna-steakhouse",
     "name": "Johanna Steakhouse",
     "address": "Södra Hamngatan 49, 411 06 Göteborg",
-    "lat": 57.706420,
-    "lng": 11.968210,
+    "lat": 57.706892,
+    "lng": 11.970951,
     "hasOutdoor": true,
-    "tags": ["Restaurant", "AW"]
+    "tags": [
+      "Restaurant",
+      "AW"
+    ]
   },
   {
     "id": "pub-7an-gbg",
     "name": "Ölhallen 7:an",
     "address": "Kungstorget 7, 411 17 Göteborg",
-    "lat": 57.703120,
-    "lng": 11.967850,
+    "lat": 57.703848,
+    "lng": 11.967698,
     "hasOutdoor": true,
-    "tags": ["Pub", "Traditional"]
+    "tags": [
+      "Pub",
+      "Traditional"
+    ]
   },
   {
     "id": "bar-tranquilo-gbg",
     "name": "Tranquilo",
     "address": "Kungstorget 14, 411 10 Göteborg",
-    "lat": 57.702850,
-    "lng": 11.968850,
+    "lat": 57.703575,
+    "lng": 11.968914,
     "hasOutdoor": true,
-    "tags": ["Bar", "Mexican"]
+    "tags": [
+      "Bar",
+      "Mexican"
+    ]
   },
   {
     "id": "bar-bruk-gbg",
     "name": "BRUK",
     "address": "Friggagatan 4, 411 01 Göteborg",
-    "lat": 57.709050,
-    "lng": 11.989210,
+    "lat": 57.71053,
+    "lng": 11.986166,
     "hasOutdoor": true,
-    "tags": ["Café", "Bar", "Coffee"]
+    "tags": [
+      "Café",
+      "Bar",
+      "Coffee"
+    ]
   },
   {
     "id": "bar-blokk-gbg",
     "name": "BLOKK",
     "address": "Tegnérsgatan 10, 412 52 Göteborg",
-    "lat": 57.693150,
-    "lng": 11.984210,
+    "lat": 57.698417,
+    "lng": 11.984505,
     "hasOutdoor": true,
-    "tags": ["Bar", "Beer", "Pub"]
+    "tags": [
+      "Bar",
+      "Beer",
+      "Pub"
+    ]
   },
   {
     "id": "bar-cafe-havanna",
     "name": "Café Havanna",
     "address": "Viktor Rydbergsgatan 73, 412 61 Göteborg",
-    "lat": 57.690850,
-    "lng": 11.981850,
+    "lat": 57.68691,
+    "lng": 11.985672,
     "hasOutdoor": true,
-    "tags": ["Café", "Bar"]
+    "tags": [
+      "Café",
+      "Bar"
+    ]
   },
   {
     "id": "bar-bennys-rosenlund",
     "name": "Bennys Bar & Slice Shop",
     "address": "Rosenlundsgatan 4, 411 20 Göteborg",
-    "lat": 57.702560,
-    "lng": 11.958560,
+    "lat": 57.701284,
+    "lng": 11.957385,
     "hasOutdoor": true,
-    "tags": ["Bar", "Pizza", "Pub"]
+    "tags": [
+      "Bar",
+      "Pizza",
+      "Pub"
+    ]
   },
   {
     "id": "bar-el-guiri",
     "name": "Bar El Guiri",
     "address": "Kaserntorget 4, 411 18 Göteborg",
-    "lat": 57.702890,
-    "lng": 11.961020,
+    "lat": 57.703759,
+    "lng": 11.969528,
     "hasOutdoor": true,
-    "tags": ["Bar", "Tapas"]
+    "tags": [
+      "Bar",
+      "Tapas"
+    ]
   }
 ]
