@@ -15,14 +15,18 @@ interface WeatherState {
   isBad: boolean;
 }
 
+// Minimal, emoji-free district jump coordinates
 const DISTRICTS = [
-  { name: "📍 Majorna", lat: 57.6920, lng: 11.9180 },
-  { name: "🍷 Linné", lat: 57.6980, lng: 11.9510 },
-  { name: "☕ Haga", lat: 57.6970, lng: 11.9560 },
-  { name: "🍺 Järntorget", lat: 57.7000, lng: 11.9530 },
-  { name: "🍸 Innerstaden", lat: 57.7040, lng: 11.9650 },
-  { name: "🚢 Lindholmen", lat: 57.7060, lng: 11.9370 }
+  { name: "Majorna", lat: 57.6920, lng: 11.9180 },
+  { name: "Linné", lat: 57.6980, lng: 11.9510 },
+  { name: "Haga", lat: 57.6970, lng: 11.9560 },
+  { name: "Järntorget", lat: 57.7000, lng: 11.9530 },
+  { name: "Innerstaden", lat: 57.7040, lng: 11.9650 },
+  { name: "Lindholmen", lat: 57.7060, lng: 11.9370 }
 ];
+
+// Simplified core amenity list (removes messy raw OSM food sub-tags)
+const CLEAN_AMENITIES = ['Bar', 'Pub', 'Restaurant', 'Café'];
 
 function parseWMOCode(code: number): { desc: string; isBad: boolean; icon: string } {
   if (code === 0) return { desc: "Clear sky", isBad: false, icon: "☀️" };
@@ -40,11 +44,14 @@ export default function App() {
   const [isLiveNow, setIsLiveNow] = useState(true);
   const [venues, setVenues] = useState<Venue[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
+  
+  // Advanced filters state
   const [activeFilters, setActiveFilters] = useState({
     tags: [] as string[],
-    minHours: 2,
+    minHours: 2.0, // Swapped to float for continuous slider
     onlyFavs: false,
   });
+  
   const [selectedVenue, setSelectedVenue] = useState<Venue | null>(null);
   const [showFilters, setShowFilters] = useState(false);
   const [isAdjustingPoint, setIsAdjustingPoint] = useState(false);
@@ -117,12 +124,6 @@ export default function App() {
     return () => clearInterval(interval);
   }, [isLiveNow]);
 
-  const availableTags = useMemo(() => {
-    const tags = new Set<string>();
-    venues.forEach((v) => v.tags.forEach((t) => tags.add(t)));
-    return Array.from(tags);
-  }, [venues]);
-
   const filteredVenues = useMemo(() => {
     return venues.filter((v) => {
       if (searchQuery.trim().length > 0) {
@@ -136,6 +137,7 @@ export default function App() {
       if (!v.hasOutdoor) return false;
       if (activeFilters.onlyFavs && !favorites.includes(v.id)) return false;
 
+      // Filter by clean amenities (matching 'Bar', 'Pub', 'Restaurant', 'Café')
       if (activeFilters.tags.length > 0) {
         const hasMatchingTag = activeFilters.tags.some((t) => v.tags.includes(t));
         if (!hasMatchingTag) return false;
@@ -216,13 +218,15 @@ export default function App() {
   const handleClearFilters = () => {
     setActiveFilters({
       tags: [],
-      minHours: 1,
+      minHours: 1.0,
       onlyFavs: false,
     });
   };
 
   return (
     <div className="relative w-screen h-[100dvh] flex flex-col overflow-hidden bg-slate-50 font-sans antialiased text-slate-800">
+      
+      {/* Search Header and live Weather Alerts */}
       <div className="absolute top-4 left-4 right-4 z-[1000] flex flex-col gap-2 pointer-events-none">
         <div className="w-full pointer-events-auto bg-white/95 backdrop-blur-md rounded-2xl shadow-xl border border-slate-100 p-2.5 flex items-center justify-between gap-2.5">
           <div className="flex items-center gap-2.5 flex-1 min-w-0">
@@ -284,6 +288,7 @@ export default function App() {
           </button>
         </div>
 
+        {/* Minimalist, emoji-free district jump row */}
         <div className="flex items-center gap-1.5 pointer-events-auto overflow-x-auto no-scrollbar py-0.5">
           {DISTRICTS.map((dist) => (
             <button
@@ -364,7 +369,7 @@ export default function App() {
           <div className="w-full max-w-lg">
             <FilterSheet
               onClose={() => setShowFilters(false)}
-              availableTags={availableTags}
+              availableTags={CLEAN_AMENITIES} // Passing the simplified categories array
               selectedTags={activeFilters.tags}
               onToggleTag={(t) => {
                 setActiveFilters((prev) => {

@@ -13,7 +13,7 @@ interface HubbaMapProps {
   onUpdateOutdoorPoint: (id: string, lat: number, lng: number) => void;
   userLocation: { lat: number; lng: number } | null;
   onBoundsChange: (bounds: L.LatLngBounds) => void;
-  targetCenter: { lat: number; lng: number; zoom?: number } | null; // Added in V3
+  targetCenter: { lat: number; lng: number; zoom?: number } | null;
 }
 
 export const HubbaMap: React.FC<HubbaMapProps> = ({
@@ -33,7 +33,6 @@ export const HubbaMap: React.FC<HubbaMapProps> = ({
   const adjustmentMarkerRef = useRef<L.Marker | null>(null);
   const userLocMarkerRef = useRef<L.Marker | null>(null);
 
-  // Initialize Map
   useEffect(() => {
     if (!mapContainerRef.current || mapRef.current) return;
 
@@ -65,14 +64,13 @@ export const HubbaMap: React.FC<HubbaMapProps> = ({
     };
   }, []);
 
-  // Fly-to listener for district chips jumping
   useEffect(() => {
     const map = mapRef.current;
     if (!map || !targetCenter) return;
     map.setView([targetCenter.lat, targetCenter.lng], targetCenter.zoom ?? 15, { animate: true });
   }, [targetCenter]);
 
-  // Update/Draw Venue Markers
+  // Update/Draw Venue Markers with ultra-clean, minimal geometric dots
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
@@ -85,25 +83,22 @@ export const HubbaMap: React.FC<HubbaMapProps> = ({
       const activeLng = venue.outdoorPoint?.lng ?? venue.lng;
       const { inSunNow } = calculateSunDetails(activeLat, activeLng, evaluatedTime, venue.horizonMask);
 
+      // Replaced busy SVG icon with a clean, high-contrast, modern solid dot
       const html = `
-        <div class="flex items-center justify-center transition-all duration-300">
-          <div class="relative flex items-center justify-center ${
+        <div class="flex items-center justify-center transition-transform duration-300">
+          <div class="rounded-full border-2 border-white shadow-md transition-all duration-300 ${
             inSunNow 
-              ? 'w-9 h-9 bg-amber-400 text-slate-900 border-2 border-white rounded-full shadow-lg ring-4 ring-amber-400/30' 
-              : 'w-7 h-7 bg-slate-400 text-white border border-white rounded-full opacity-70 shadow'
-          }">
-            <svg class="${inSunNow ? 'w-5 h-5 animate-pulse' : 'w-4 h-4'}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.364l-.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z"></path>
-            </svg>
-          </div>
+              ? 'w-5 h-5 bg-amber-500 ring-4 ring-amber-500/20 scale-110' 
+              : 'w-3 h-3 bg-slate-400 opacity-65'
+          }"></div>
         </div>
       `;
 
       const customIcon = L.divIcon({
         html,
-        className: 'custom-venue-icon',
-        iconSize: inSunNow ? [36, 36] : [28, 28],
-        iconAnchor: inSunNow ? [18, 18] : [14, 14],
+        className: 'custom-venue-dot',
+        iconSize: inSunNow ? [24, 24] : [16, 16],
+        iconAnchor: inSunNow ? [12, 12] : [8, 8],
       });
 
       const marker = L.marker([activeLat, activeLng], { icon: customIcon })
@@ -116,7 +111,6 @@ export const HubbaMap: React.FC<HubbaMapProps> = ({
     });
   }, [venues, evaluatedTime]);
 
-  // Handle Selected Venue camera panning
   useEffect(() => {
     const map = mapRef.current;
     if (!map || !selectedVenue) return;
@@ -125,7 +119,6 @@ export const HubbaMap: React.FC<HubbaMapProps> = ({
     map.setView([targetLat, targetLng], 16, { animate: true });
   }, [selectedVenue]);
 
-  // Adjusting Seating Point (Drag and Drop Marker interface)
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
@@ -142,10 +135,10 @@ export const HubbaMap: React.FC<HubbaMapProps> = ({
       const adjustIcon = L.divIcon({
         html: `
           <div class="flex flex-col items-center">
-            <div class="bg-indigo-600 text-white rounded-lg px-2 py-1 text-xs font-semibold shadow-md whitespace-nowrap mb-1">
+            <div class="bg-slate-900 text-white rounded-lg px-2.5 py-1 text-[10px] font-bold shadow-md whitespace-nowrap mb-1">
               Drag to outdoor seating
             </div>
-            <div class="w-8 h-8 rounded-full border-2 border-white bg-indigo-500 shadow-xl flex items-center justify-center text-white">
+            <div class="w-7 h-7 rounded-full border-2 border-white bg-slate-900 shadow-xl flex items-center justify-center text-white">
               📍
             </div>
           </div>
@@ -169,7 +162,6 @@ export const HubbaMap: React.FC<HubbaMapProps> = ({
     }
   }, [isAdjustingPoint, selectedVenue]);
 
-  // User Live Geolocation Marker
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
@@ -183,8 +175,8 @@ export const HubbaMap: React.FC<HubbaMapProps> = ({
       const userIcon = L.divIcon({
         html: `
           <div class="relative flex items-center justify-center">
-            <div class="w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-md"></div>
-            <div class="absolute w-8 h-8 bg-blue-400 rounded-full opacity-30 animate-ping"></div>
+            <div class="w-3.5 h-3.5 bg-blue-500 rounded-full border-2 border-white shadow-md"></div>
+            <div class="absolute w-7 h-7 bg-blue-400 rounded-full opacity-30 animate-ping"></div>
           </div>
         `,
         className: 'user-location-marker',
