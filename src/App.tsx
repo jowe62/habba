@@ -44,7 +44,7 @@ export default function App() {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeFilters, setActiveFilters] = useState({
     tags: [] as string[],
-    minHours: 2.0,
+    minHours: 1.0,
     onlyFavs: false,
   });
   const [selectedVenue, setSelectedVenue] = useState<Venue | null>(null);
@@ -222,106 +222,51 @@ export default function App() {
       minHours: 1.0,
       onlyFavs: false,
     });
+    setActiveDistrict(null);
   };
 
   return (
     <div className="relative w-screen h-[100dvh] flex flex-col overflow-hidden bg-slate-50 font-sans antialiased text-slate-800">
       
-      {/* Search Header and live Weather Alerts */}
+      {/* --- RECONSTITUTED SINGLE-ROW HEADER BAR (Maximum Map Visibility) --- */}
       <div className="absolute top-4 left-4 right-4 z-[1000] flex flex-col gap-2 pointer-events-none">
-        <div className="w-full pointer-events-auto bg-white/95 backdrop-blur-md rounded-2xl shadow-xl border border-[#eab88d]/30 p-2.5 flex items-center justify-between gap-2.5">
-          <div className="flex items-center gap-2.5 flex-1 min-w-0">
+        <div className="w-full pointer-events-auto bg-white/95 backdrop-blur-md rounded-2xl shadow-xl border border-[#eab88d]/30 p-2.5 flex items-center justify-between gap-2">
+          
+          {/* Input field */}
+          <div className="flex items-center gap-2 flex-1 min-w-0">
             <svg className="w-5 h-5 text-slate-400 flex-shrink-0 ml-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
             </svg>
             <input
               type="text"
-              placeholder="Search venues, tags..."
+              placeholder="Search..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full focus:outline-none bg-transparent text-sm font-semibold placeholder-slate-400 text-[#350505]"
+              className="w-full focus:outline-none bg-transparent text-sm font-bold placeholder-slate-400 text-[#350505]"
             />
           </div>
 
-          {/* Weather pill implicitly styled with Secondary/BG (#7cbcc7) */}
-          {weather && (
-            <div className="text-xs font-bold text-[#350505] bg-[#7cbcc7]/15 border border-[#7cbcc7]/35 px-2.5 py-1.5 rounded-xl flex items-center gap-1.5 flex-shrink-0 mr-1 shadow-sm" title={weather.description}>
-              <span>{weather.icon}</span>
-              <span>{weather.temp}°C</span>
-            </div>
-          )}
-        </div>
+          {/* Combined Filters Button & Weather HUD */}
+          <div className="flex items-center gap-1.5 flex-shrink-0">
+            <button
+              onClick={() => setShowFilters(true)}
+              className={`px-3.5 py-1.5 rounded-xl text-xs font-bold border transition-all ${
+                activeFilters.tags.length > 0 || activeFilters.onlyFavs || activeFilters.minHours > 1 || activeDistrict
+                  ? 'bg-[#cf5a47] border-[#cf5a47] text-white shadow-sm'
+                  : 'bg-white border-[#eab88d]/30 text-[#350505] hover:bg-[#eab88d]/10'
+              }`}
+            >
+              Filters {(activeFilters.tags.length > 0 || activeFilters.onlyFavs || activeFilters.minHours > 1 || activeDistrict) && '●'}
+            </button>
 
-        <div className="flex items-center gap-1.5 pointer-events-auto overflow-x-auto no-scrollbar py-0.5">
-          {/* Main chips styled with Main (#cf5a47) and Secondary/BG (#7cbcc7) */}
-          <button
-            onClick={() => setIsLiveNow(true)}
-            className={`px-4 py-2 rounded-full text-xs font-bold shadow-md transition-all whitespace-nowrap border ${
-              isLiveNow
-                ? 'bg-[#cf5a47] border-[#cf5a47] text-white ring-2 ring-[#cf5a47]/20'
-                : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
-            }`}
-          >
-            ☀️ Now
-          </button>
-
-          <button
-            onClick={() => {
-              setIsLiveNow(false);
-              setActiveFilters((prev) => ({ ...prev, minHours: prev.minHours >= 2 ? 0 : 2 }));
-            }}
-            className={`px-4 py-2 rounded-full text-xs font-bold shadow-md transition-all whitespace-nowrap border ${
-              activeFilters.minHours >= 2
-                ? 'bg-[#7cbcc7] border-[#7cbcc7] text-[#350505] shadow-[#7cbcc7]/15 ring-2 ring-[#7cbcc7]/15'
-                : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
-            }`}
-          >
-            ⏱️ ≥ 2h Today
-          </button>
-
-          <button
-            onClick={() => setShowFilters(true)}
-            className={`px-4 py-2 rounded-full text-xs font-bold shadow-md transition-all whitespace-nowrap border ${
-              showFilters || activeFilters.tags.length > 0 || activeFilters.onlyFavs
-                ? 'bg-[#7cbcc7] border-[#7cbcc7] text-[#350505] shadow-[#7cbcc7]/15 ring-2 ring-[#7cbcc7]/15'
-                : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
-            }`}
-          >
-            ⚙️ Filters {(activeFilters.tags.length > 0 || activeFilters.onlyFavs) && '●'}
-          </button>
-        </div>
-
-        {/* District Chips (Selected: Teal #7cbcc7 | Inactive: Peach #eab88d/10) */}
-        <div className="flex items-center gap-1.5 pointer-events-auto overflow-x-auto no-scrollbar py-0.5">
-          {DISTRICTS.map((dist) => {
-            const isSelected = activeDistrict === dist.name;
-            return (
-              <button
-                key={dist.name}
-                onClick={() => {
-                  setActiveDistrict(dist.name);
-                  setTargetCenter({ lat: dist.lat, lng: dist.lng, zoom: 15 });
-                }}
-                className={`px-3.5 py-1.5 rounded-full text-[11px] font-bold shadow-md transition-all whitespace-nowrap border ${
-                  isSelected
-                    ? 'bg-[#7cbcc7] border-[#7cbcc7] text-[#350505] shadow-[#7cbcc7]/15'
-                    : 'bg-[#eab88D]/10 border-[#eab88D]/35 text-[#350505] hover:bg-[#eab88D]/20'
-                }`}
-              >
-                {dist.name}
-              </button>
-            );
-          })}
-        </div>
-
-        {weather?.isBad && (
-          <div className="w-full pointer-events-auto bg-[#eab88d]/15 text-[#350505] px-4 py-2.5 rounded-xl shadow-lg flex items-center gap-2 border border-[#eab88d]/30">
-            <span className="text-sm">⚠️</span>
-            <p className="text-[11px] font-bold leading-tight">
-              Göteborg is currently {weather.description.toLowerCase()}. Calculated sun windows represent theoretical clear skies.
-            </p>
+            {weather && (
+              <div className="text-xs font-bold text-[#350505] bg-[#eab88d]/10 border border-[#eab88d]/20 px-2 py-1.5 rounded-xl flex items-center gap-1 shadow-sm" title={weather.description}>
+                <span>{weather.icon}</span>
+                <span>{weather.temp}°C</span>
+              </div>
+            )}
           </div>
-        )}
+        </div>
       </div>
 
       <div className="flex-1 w-full h-full relative z-0">
@@ -370,7 +315,7 @@ export default function App() {
               venuesInView={venuesInView}
               evaluatedTime={evaluatedTime}
               onSelectVenue={setSelectedVenue}
-              hasActiveFilters={activeFilters.tags.length > 0 || activeFilters.onlyFavs}
+              hasActiveFilters={activeFilters.tags.length > 0 || activeFilters.onlyFavs || activeDistrict !== null}
               onClearFilters={handleClearFilters}
             />
           )}
@@ -400,6 +345,14 @@ export default function App() {
                 setActiveFilters((prev) => ({ ...prev, onlyFavs: !prev.onlyFavs }));
               }}
               onClear={handleClearFilters}
+              
+              // Connecting the quick-jump districts array and handlers into the modal
+              districts={DISTRICTS}
+              activeDistrict={activeDistrict}
+              onSelectDistrict={(name, lat, lng) => {
+                setActiveDistrict(name);
+                setTargetCenter({ lat, lng, zoom: 15 });
+              }}
             />
           </div>
         </div>

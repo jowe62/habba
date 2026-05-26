@@ -112,7 +112,7 @@ export const PlaceSheet: React.FC<PlaceSheetProps> = ({
           </div>
         </div>
 
-        {/* --- TIMELINE SECTION (Legend is hidden) --- */}
+        {/* --- TIMELINE SECTION (Legend and Alerts completely hidden) --- */}
         <div className="space-y-2">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Day Sun-Profile (08:00 - 22:00)</span>
@@ -131,14 +131,15 @@ export const PlaceSheet: React.FC<PlaceSheetProps> = ({
               ))}
             </div>
 
+            {/* Selected timeline pointer styled back to Main (#cf5a47) */}
             <div 
               className="absolute top-0 bottom-1 flex flex-col items-center transition-all duration-300 pointer-events-none"
               style={{ left: `${pointerPercent}%` }}
             >
-              <div className="bg-[#7cbcc7] text-[#350505] text-[9px] font-extrabold px-1.5 py-0.5 rounded shadow-md -translate-y-5 whitespace-nowrap border border-white">
+              <div className="bg-[#cf5a47] text-white text-[9px] font-extrabold px-1.5 py-0.5 rounded shadow-md -translate-y-5 whitespace-nowrap border border-white">
                 {formatDisplayTime(evaluatedTime)}
               </div>
-              <div className="w-[2px] h-[100%] bg-[#7cbcc7] z-10 shadow-sm"></div>
+              <div className="w-[2px] h-[100%] bg-[#cf5a47] z-10 shadow-sm"></div>
             </div>
           </div>
 
@@ -160,11 +161,12 @@ export const PlaceSheet: React.FC<PlaceSheetProps> = ({
         </div>
 
         <div className="pt-2 space-y-2">
+          {/* Primary Action Button styled back in Main/Terracotta (#cf5a47) with white text */}
           <a
             href={getDirectionsUrl()}
             target="_blank"
             rel="noopener noreferrer"
-            className="w-full py-3 bg-[#7cbcc7] hover:bg-[#7cbcc7]/90 text-[#350505] rounded-xl text-center text-sm font-bold transition-all flex items-center justify-center gap-2 shadow-md"
+            className="w-full py-3 bg-[#cf5a47] hover:bg-[#cf5a47]/90 text-white rounded-xl text-center text-sm font-bold transition-all flex items-center justify-center gap-2 shadow-md"
           >
             🗺️ Open in Map Navigation
           </a>

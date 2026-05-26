@@ -10,6 +10,11 @@ interface FilterSheetProps {
   onlyFavorites: boolean;
   onToggleFavorites: () => void;
   onClear: () => void;
+  
+  // District controls moved inside the modal (V4)
+  districts: { name: string; lat: number; lng: number }[];
+  activeDistrict: string | null;
+  onSelectDistrict: (name: string, lat: number, lng: number) => void;
 }
 
 export const FilterSheet: React.FC<FilterSheetProps> = ({
@@ -22,6 +27,9 @@ export const FilterSheet: React.FC<FilterSheetProps> = ({
   onlyFavorites,
   onToggleFavorites,
   onClear,
+  districts,
+  activeDistrict,
+  onSelectDistrict,
 }) => {
   return (
     <div className="bg-white/95 backdrop-blur-md rounded-t-[2.5rem] shadow-[0_-12px_40px_-15px_rgba(0,0,0,0.15)] border-t border-slate-100 flex flex-col max-h-[85vh] overflow-hidden transition-all duration-300">
@@ -39,6 +47,8 @@ export const FilterSheet: React.FC<FilterSheetProps> = ({
       </div>
 
       <div className="overflow-y-auto px-5 py-5 space-y-6">
+        
+        {/* Favorites only */}
         <div className="flex items-center justify-between p-4 bg-slate-50 border border-slate-100 rounded-2xl">
           <div>
             <span className="text-sm font-bold text-slate-800">Favorites Only</span>
@@ -52,7 +62,7 @@ export const FilterSheet: React.FC<FilterSheetProps> = ({
           />
         </div>
 
-        {/* Hour threshold slider accented with Terracotta (#cf5a47) */}
+        {/* Continuous Hour Slider */}
         <div className="space-y-3 p-4 bg-[#eab88d]/5 border border-[#eab88d]/15 rounded-2xl">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold text-slate-400 tracking-wider uppercase">Minimum Sun Duration</span>
@@ -76,6 +86,30 @@ export const FilterSheet: React.FC<FilterSheetProps> = ({
           </div>
         </div>
 
+        {/* --- GEOGRAPHICAL DISTRICT CHIPS (Moved up here) --- */}
+        <div className="space-y-2.5">
+          <span className="text-xs font-bold text-slate-400 tracking-wider uppercase block">Go to Neighborhood</span>
+          <div className="grid grid-cols-3 gap-2">
+            {districts.map((dist) => {
+              const isSelected = activeDistrict === dist.name;
+              return (
+                <button
+                  key={dist.name}
+                  onClick={() => onSelectDistrict(dist.name, dist.lat, dist.lng)}
+                  className={`py-2 text-xs font-bold rounded-xl border transition-all ${
+                    isSelected
+                      ? 'bg-[#cf5a47] border-[#cf5a47] text-white shadow-sm shadow-[#cf5a47]/20'
+                      : 'bg-[#eab88D]/10 border-[#eab88D]/30 text-[#350505] hover:bg-[#eab88D]/20'
+                  }`}
+                >
+                  {dist.name}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Clean, categorized amenity filters */}
         <div className="space-y-2.5">
           <span className="text-xs font-bold text-slate-400 tracking-wider uppercase block">Filter Categories</span>
           <div className="grid grid-cols-2 gap-2">
@@ -98,6 +132,7 @@ export const FilterSheet: React.FC<FilterSheetProps> = ({
           </div>
         </div>
 
+        {/* Action Buttons */}
         <div className="pt-3 flex gap-2.5">
           <button
             onClick={onClear}
@@ -105,10 +140,9 @@ export const FilterSheet: React.FC<FilterSheetProps> = ({
           >
             Reset Filters
           </button>
-          {/* Apply button explicitly styled with Secondary/Teal (#7cbcc7) and Dark Burgundy text (#350505) */}
           <button
             onClick={onClose}
-            className="flex-1 py-3 bg-[#7cbcc7] hover:bg-[#7cbcc7]/95 text-[#350505] rounded-xl text-xs font-bold transition-all shadow-md"
+            className="flex-1 py-3 bg-[#cf5a47] hover:bg-[#cf5a47]/95 text-white rounded-xl text-xs font-bold transition-all shadow-md"
           >
             Apply
           </button>
