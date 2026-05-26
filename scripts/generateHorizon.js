@@ -1,7 +1,6 @@
 import fs from 'fs';
 import path from 'path';
 
-// Helper: Distance in meters between two coordinates (Equirectangular approximation for small scales)
 function getDistanceAndAzimuth(lat1, lon1, lat2, lon2) {
   const rad = Math.PI / 180;
   const latMean = ((lat1 + lat2) / 2) * rad;
@@ -15,7 +14,14 @@ function getDistanceAndAzimuth(lat1, lon1, lat2, lon2) {
   return { distance, azimuth };
 }
 
-// Overpass API caller for a single coordinate
+// Mirror server pool to bypass blocks and rate limits
+const OVERPASS_SERVERS = [
+  'https://overpass-api.de/api/interpreter',
+  'https://lz4.overpass-api.de/api/interpreter',
+  'https://overpass.kumi.systems/api/interpreter',
+  'https://overpass.nchc.org.tw/api/interpreter'
+];
+
 async function fetchSurroundingBuildings(lat, lng, radius = 150) {
   const query = `
     [out:json];
@@ -27,66 +33,65 @@ async function fetchSurroundingBuildings(lat, lng, radius = 150) {
     >;
     out skel qt;
   `;
-  const url = `https://overpass-api.de/api/interpreter?data=${encodeURIComponent(query)}`;
-  
-  const response = await fetch(url);
-  if (!response.ok) {
-    throw new Error(`Overpass API returned status: ${response.status}`);
+
+  let lastError = null;
+  for (const server of OVERPASS_SERVERS) {
+    try {
+      const url = `${server}?data=${encodeURIComponent(query)}`;
+      const response = await fetch(url, {
+        headers: {
+          'User-Agent': 'HabbaSeatingFinderGbg/1.0 (contact: jowe62 on github)'
+        }
+      });
+      if (response.ok) {
+        return await response.json();
+      }
+    } catch (e) {
+      lastError = e;
+    }
   }
-  return await response.json();
+  throw new Error(`All Overpass mirror servers failed. Last error: ${lastError?.message}`);
 }
 
-// Compute the 36-point horizon mask
 function computeHorizonMask(venueLat, venueLng, osmData) {
-  // Initialize 36 bins (every 10 degrees, centered on 0, 10, 20... 350) with 0 degrees elevation
   const mask = new Array(36).fill(0);
-
-  // Map nodes for coordinate lookup
   const nodes = {};
+
   osmData.elements.forEach(el => {
     if (el.type === 'node') {
       nodes[el.id] = { lat: el.lat, lon: el.lon };
     }
   });
 
-  // Process building outlines
   osmData.elements.forEach(el => {
     if (el.type === 'way' && el.nodes && el.tags) {
-      // Resolve building height (OSM defaults to levels or flat height tags)
-      let height = 15; // Default to 15m (approx. 4-5 stories, common in Gothenburg inner city)
+      let height = 15;
       if (el.tags.height) {
         height = parseFloat(el.tags.height);
       } else if (el.tags['building:levels']) {
         const levels = parseFloat(el.tags['building:levels']);
-        height = levels * 3.5; // Estimate 3.5m per level
+        height = levels * 3.5;
       }
 
-      // Check all line segments of the building
       for (let i = 0; i < el.nodes.length - 1; i++) {
         const nodeA = nodes[el.nodes[i]];
         const nodeB = nodes[el.nodes[i + 1]];
         if (!nodeA || !nodeB) continue;
 
-        // Calculate length of wall segment in meters
         const { distance: segmentLen } = getDistanceAndAzimuth(nodeA.lat, nodeA.lon, nodeB.lat, nodeB.lon);
-        
-        // Subdivide segment into 2-meter chunks to capture precise azimuth headings
         const steps = Math.max(1, Math.floor(segmentLen / 2));
+        
         for (let s = 0; s <= steps; s++) {
           const t = s / steps;
           const pointLat = nodeA.lat + (nodeB.lat - nodeA.lat) * t;
           const pointLon = nodeA.lon + (nodeB.lon - nodeA.lon) * t;
 
           const { distance, azimuth } = getDistanceAndAzimuth(venueLat, venueLng, pointLat, pointLon);
-          if (distance < 3) continue; // Ignore points on top of the venue itself
+          if (distance < 3) continue;
 
-          // Elevation angle to roof edge: tan(theta) = height / distance
           const elevation = Math.atan2(height, distance) * (180 / Math.PI);
-
-          // Find the nearest 10-degree bin
           const binIndex = Math.round(azimuth / 10) % 36;
           
-          // Save the maximum height found at this angle
           if (elevation > mask[binIndex]) {
             mask[binIndex] = Math.round(elevation);
           }
@@ -98,7 +103,6 @@ function computeHorizonMask(venueLat, venueLng, osmData) {
   return mask;
 }
 
-// Master execution block
 async function run() {
   const inputPath = path.resolve('scripts/input_venues.json');
   const outputPath = path.resolve('src/data/processed_venues.json');
@@ -117,7 +121,6 @@ async function run() {
   for (const venue of venues) {
     console.log(`Analyzing: ${venue.name}...`);
     try {
-      // Use custom outdoor coordinate if it exists, otherwise fall back to venue center
       const lat = venue.outdoorPoint?.lat ?? venue.lat;
       const lng = venue.outdoorPoint?.lng ?? venue.lng;
 
@@ -129,7 +132,6 @@ async function run() {
         horizonMask
       });
 
-      // Throttle queries to be nice to the free OSM Overpass public server
       await new Promise(resolve => setTimeout(resolve, 1500));
     } catch (e) {
       console.error(`Failed to process ${venue.name}:`, e.message);
@@ -137,7 +139,6 @@ async function run() {
     }
   }
 
-  // Ensure output directory exists and write final JSON file
   fs.mkdirSync(path.dirname(outputPath), { recursive: true });
   fs.writeFileSync(outputPath, JSON.stringify(processed, null, 2), 'utf8');
   console.log(`Success! Output written to src/data/processed_venues.json`);

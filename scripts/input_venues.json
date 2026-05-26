@@ -1,29 +1,2365 @@
 [
   {
-    "id": "brewers-tredje",
-    "name": "Brewers Beer Bar (Tredje Lång)",
+    "id": "restaurant-305677054",
+    "name": "Panos panos tavern",
+    "address": "Teknologgatan 3, 411 32 Göteborg",
+    "lat": 57.694042,
+    "lng": 11.977812,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant",
+      "Greek"
+    ]
+  },
+  {
+    "id": "restaurant-309483273",
+    "name": "Ölstugan Tullen",
+    "address": "Mariagatan 15, 414 71 Göteborg",
+    "lat": 57.685789,
+    "lng": 11.918713,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant",
+      "Swedish"
+    ]
+  },
+  {
+    "id": "restaurant-320215118",
+    "name": "Restaurang Afamia",
+    "address": "Reutersgatan 2, 413 20 Göteborg",
+    "lat": 57.688846,
+    "lng": 11.96727,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant"
+    ]
+  },
+  {
+    "id": "cafe-456027887",
+    "name": "Björngårdsvillan",
+    "address": "Dufvas Backe 3, 413 11 Göteborg",
+    "lat": 57.685869,
+    "lng": 11.944198,
+    "hasOutdoor": true,
+    "tags": [
+      "Cafe",
+      "Pizza;burger;salad"
+    ]
+  },
+  {
+    "id": "restaurant-456027888",
+    "name": "Villa Belparc",
+    "address": "A O Elliots Väg 10, 41311 Göteborg",
+    "lat": 57.683322,
+    "lng": 11.946997,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant",
+      "Pizza;burger;fish;sandwich;fish_and_chips;salad"
+    ]
+  },
+  {
+    "id": "cafe-456027889",
+    "name": "Café Bräket",
+    "address": "Dovhjortsstigen 50, Göteborg",
+    "lat": 57.687307,
+    "lng": 11.942369,
+    "hasOutdoor": true,
+    "tags": [
+      "Cafe",
+      "Burger;hot_dog;ice_cream;fish_and_chips;pancake"
+    ]
+  },
+  {
+    "id": "cafe-456027890",
+    "name": "Solterrassen",
+    "address": "Slottsskogspromenaden 1, 414 76 Göteborg",
+    "lat": 57.688878,
+    "lng": 11.951613,
+    "hasOutdoor": true,
+    "tags": [
+      "Cafe"
+    ]
+  },
+  {
+    "id": "cafe-462002877",
+    "name": "Oh My Coffe",
+    "address": "Linnégatan 53, 41308 Göteborg",
+    "lat": 57.692905,
+    "lng": 11.95222,
+    "hasOutdoor": true,
+    "tags": [
+      "Cafe",
+      "Coffee_shop;thai"
+    ]
+  },
+  {
+    "id": "cafe-466204350",
+    "name": "Le pain Francais",
+    "address": "Övre Husargatan 26, 413 14 Göteborg",
+    "lat": 57.692492,
+    "lng": 11.956073,
+    "hasOutdoor": true,
+    "tags": [
+      "Cafe",
+      "French"
+    ]
+  },
+  {
+    "id": "cafe-565429963",
+    "name": "Konditori Brogyllen",
+    "address": "Västra Hamngatan 2, 411 17 Göteborg",
+    "lat": 57.705571,
+    "lng": 11.963301,
+    "hasOutdoor": true,
+    "tags": [
+      "Cafe"
+    ]
+  },
+  {
+    "id": "cafe-577403980",
+    "name": "Rosenkaféet",
+    "address": "Slussgatan 1, 411 06 Göteborg",
+    "lat": 57.706602,
+    "lng": 11.976063,
+    "hasOutdoor": true,
+    "tags": [
+      "Cafe",
+      "Coffee_shop"
+    ]
+  },
+  {
+    "id": "restaurant-589002637",
+    "name": "Soppa & Sunt",
+    "address": "Göteborg, Sweden",
+    "lat": 57.703321,
+    "lng": 11.962556,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant"
+    ]
+  },
+  {
+    "id": "cafe-625870774",
+    "name": "Café Näckrosen",
+    "address": "Göteborg, Sweden",
+    "lat": 57.694799,
+    "lng": 11.984819,
+    "hasOutdoor": true,
+    "tags": [
+      "Cafe"
+    ]
+  },
+  {
+    "id": "restaurant-710681559",
+    "name": "Manfred's Brasserie",
+    "address": "Nordenskiöldsgatan 28, 413 09 Göteborg",
+    "lat": 57.692573,
+    "lng": 11.948936,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant"
+    ]
+  },
+  {
+    "id": "restaurant-710681892",
+    "name": "Buenos Aires",
+    "address": "Nordenskiöldsgatan 21A, 41309 Göteborg",
+    "lat": 57.692714,
+    "lng": 11.950147,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant"
+    ]
+  },
+  {
+    "id": "restaurant-710682286",
+    "name": "Da Vinci",
+    "address": "Nordenskiöldsgatan 23, 41309 Göteborg",
+    "lat": 57.692709,
+    "lng": 11.949293,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant",
+      "Italian"
+    ]
+  },
+  {
+    "id": "cafe-727537164",
+    "name": "Espresso House",
+    "address": "Linnégatan 30, 413 04 Göteborg",
+    "lat": 57.696442,
+    "lng": 11.951756,
+    "hasOutdoor": true,
+    "tags": [
+      "Cafe",
+      "Coffee_shop"
+    ]
+  },
+  {
+    "id": "pub-763220987",
+    "name": "The Bishops Arms",
+    "address": "Järntorget 6, Göteborg",
+    "lat": 57.699462,
+    "lng": 11.953214,
+    "hasOutdoor": true,
+    "tags": [
+      "Pub"
+    ]
+  },
+  {
+    "id": "restaurant-830350033",
+    "name": "Salsa & Salsa",
+    "address": "Storgatan 1, 411 24 Göteborg",
+    "lat": 57.698904,
+    "lng": 11.963092,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant",
+      "Mexican"
+    ]
+  },
+  {
+    "id": "cafe-832458191",
+    "name": "Café Nöller",
+    "address": "Haga Nygata 28, 411 22 Göteborg",
+    "lat": 57.698364,
+    "lng": 11.960049,
+    "hasOutdoor": true,
+    "tags": [
+      "Cafe"
+    ]
+  },
+  {
+    "id": "pub-971343594",
+    "name": "Johannebar",
+    "address": "Göteborg, Sweden",
+    "lat": 57.686017,
+    "lng": 11.983084,
+    "hasOutdoor": true,
+    "tags": [
+      "Pub"
+    ]
+  },
+  {
+    "id": "restaurant-971343610",
+    "name": "Grab & Go Burger",
+    "address": "Gibraltargatan 54, 412 58 Göteborg",
+    "lat": 57.687601,
+    "lng": 11.982534,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant",
+      "Burger"
+    ]
+  },
+  {
+    "id": "restaurant-971343611",
+    "name": "Wokie",
+    "address": "Göteborg, Sweden",
+    "lat": 57.687084,
+    "lng": 11.982989,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant"
+    ]
+  },
+  {
+    "id": "restaurant-1020182011",
+    "name": "Gowri",
+    "address": "Utlandagatan 14, 412 61 Göteborg",
+    "lat": 57.688871,
+    "lng": 11.990545,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant",
+      "Indian"
+    ]
+  },
+  {
+    "id": "restaurant-1022505577",
+    "name": "Danilo Restaurang & Bar",
+    "address": "Skånegatan 16 B, 411 40 Göteborg",
+    "lat": 57.702302,
+    "lng": 11.98605,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant"
+    ]
+  },
+  {
+    "id": "restaurant-1035762838",
+    "name": "Rimini",
+    "address": "Göteborg, Sweden",
+    "lat": 57.690782,
+    "lng": 11.988572,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant",
+      "Italian"
+    ]
+  },
+  {
+    "id": "restaurant-1035762896",
+    "name": "Thai Mums",
+    "address": "Göteborg, Sweden",
+    "lat": 57.690255,
+    "lng": 11.988931,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant",
+      "Thai"
+    ]
+  },
+  {
+    "id": "cafe-1035762953",
+    "name": "Domi Café",
+    "address": "Eklandagatan 11, 412 55 Göteborg",
+    "lat": 57.694053,
+    "lng": 11.987081,
+    "hasOutdoor": true,
+    "tags": [
+      "Cafe"
+    ]
+  },
+  {
+    "id": "restaurant-1035762979",
+    "name": "Svennepizzan",
+    "address": "Eklandagatan 41B, 412 61 Göteborg",
+    "lat": 57.690999,
+    "lng": 11.987777,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant",
+      "Pizza"
+    ]
+  },
+  {
+    "id": "restaurant-1035763064",
+    "name": "Sushi Wong",
+    "address": "Göteborg, Sweden",
+    "lat": 57.691663,
+    "lng": 11.98738,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant",
+      "Sushi"
+    ]
+  },
+  {
+    "id": "restaurant-1035763264",
+    "name": "Indya",
+    "address": "Eklandagatan 1, 412 55 Göteborg",
+    "lat": 57.69493,
+    "lng": 11.987024,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant",
+      "Indian"
+    ]
+  },
+  {
+    "id": "restaurant-1035763342",
+    "name": "La Sultana",
+    "address": "Göteborg, Sweden",
+    "lat": 57.694442,
+    "lng": 11.987565,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant",
+      "Pizza"
+    ]
+  },
+  {
+    "id": "restaurant-1042339576",
+    "name": "Gillestugan",
+    "address": "Göteborg, Sweden",
+    "lat": 57.69958,
+    "lng": 11.953572,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant"
+    ]
+  },
+  {
+    "id": "restaurant-1069834399",
+    "name": "lou lou",
+    "address": "Göteborg, Sweden",
+    "lat": 57.70468,
+    "lng": 11.961733,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant",
+      "International"
+    ]
+  },
+  {
+    "id": "restaurant-1201390952",
+    "name": "Šnyt pilsnercafé",
+    "address": "Sveagatan 29, 41314 Göteborg",
+    "lat": 57.692018,
+    "lng": 11.954512,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant"
+    ]
+  },
+  {
+    "id": "restaurant-1201390957",
+    "name": "Ramen Ya",
+    "address": "Linnéplatsen 4, 41310 Göteborg",
+    "lat": 57.690766,
+    "lng": 11.952468,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant"
+    ]
+  },
+  {
+    "id": "restaurant-1300365560",
+    "name": "Sannegårdens Pizzeria",
+    "address": "Gibraltargatan 52, 412 58 Göteborg",
+    "lat": 57.687871,
+    "lng": 11.982287,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant",
+      "Pizza"
+    ]
+  },
+  {
+    "id": "restaurant-1484918499",
+    "name": "Texas Longhorn",
+    "address": "Göteborg, Sweden",
+    "lat": 57.690998,
+    "lng": 11.952427,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant"
+    ]
+  },
+  {
+    "id": "pub-1629179165",
+    "name": "Viva",
+    "address": "Vasaplatsen 1, 411 26 Göteborg",
+    "lat": 57.700192,
+    "lng": 11.968429,
+    "hasOutdoor": true,
+    "tags": [
+      "Pub"
+    ]
+  },
+  {
+    "id": "pub-1629179193",
+    "name": "Skål",
+    "address": "Göteborg, Sweden",
+    "lat": 57.699947,
+    "lng": 11.968435,
+    "hasOutdoor": true,
+    "tags": [
+      "Pub"
+    ]
+  },
+  {
+    "id": "restaurant-1632019492",
+    "name": "Bee Kök & Bar",
+    "address": "Göteborg, Sweden",
+    "lat": 57.703717,
+    "lng": 11.967929,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant"
+    ]
+  },
+  {
+    "id": "restaurant-1632019578",
+    "name": "Bastard Burgers",
+    "address": "Göteborg, Sweden",
+    "lat": 57.707476,
+    "lng": 11.967969,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant",
+      "Burger"
+    ]
+  },
+  {
+    "id": "pub-1632019745",
+    "name": "Ölhallen 7:an",
+    "address": "Göteborg, Sweden",
+    "lat": 57.703848,
+    "lng": 11.967698,
+    "hasOutdoor": true,
+    "tags": [
+      "Pub"
+    ]
+  },
+  {
+    "id": "cafe-1691294619",
+    "name": "Egg & Milk",
+    "address": "Övre Husargatan 23, 413 14 Göteborg",
+    "lat": 57.692749,
+    "lng": 11.95553,
+    "hasOutdoor": true,
+    "tags": [
+      "Cafe",
+      "American_diner"
+    ]
+  },
+  {
+    "id": "pub-1691294705",
+    "name": "Majornas Krog",
+    "address": "Göteborg, Sweden",
+    "lat": 57.694913,
+    "lng": 11.921006,
+    "hasOutdoor": true,
+    "tags": [
+      "Pub"
+    ]
+  },
+  {
+    "id": "cafe-1691294758",
+    "name": "Crippas Café",
+    "address": "Kusttorget 1, 41455 Göteborg",
+    "lat": 57.694466,
+    "lng": 11.918841,
+    "hasOutdoor": true,
+    "tags": [
+      "Cafe",
+      "Pizza;burger"
+    ]
+  },
+  {
+    "id": "restaurant-1691294759",
+    "name": "The Old Beefeater Inn",
+    "address": "Plantagegatan 1, 413 05 Göteborg",
+    "lat": 57.697472,
+    "lng": 11.950725,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant",
+      "Fish_and_chips;burger"
+    ]
+  },
+  {
+    "id": "restaurant-1740293221",
+    "name": "Tre Indier",
+    "address": "Skanstorget 7, 411 22 Göteborg",
+    "lat": 57.695268,
+    "lng": 11.958461,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant",
+      "Indian"
+    ]
+  },
+  {
+    "id": "cafe-1762909438",
+    "name": "SeaCup Cafe",
+    "address": "Sörhallskajen 16A, 417 63 Göteborg",
+    "lat": 57.70198,
+    "lng": 11.920413,
+    "hasOutdoor": true,
+    "tags": [
+      "Cafe",
+      "Swedish"
+    ]
+  },
+  {
+    "id": "restaurant-1781742703",
+    "name": "Cuisine Libanaise",
+    "address": "Övre Husargatan 7, Göteborg",
+    "lat": 57.694664,
+    "lng": 11.957545,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant"
+    ]
+  },
+  {
+    "id": "restaurant-1781742706",
+    "name": "Yoshi",
+    "address": "Övre Husargatan 17, 413 14 Göteborg",
+    "lat": 57.69381,
+    "lng": 11.956657,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant",
+      "Sushi"
+    ]
+  },
+  {
+    "id": "restaurant-1809420023",
+    "name": "Traktör Mikael Sande",
+    "address": "Göteborg, Sweden",
+    "lat": 57.691495,
+    "lng": 11.981189,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant"
+    ]
+  },
+  {
+    "id": "cafe-1825428790",
+    "name": "En Deli",
+    "address": "Haga Nygata 15, 413 01 Göteborg",
+    "lat": 57.698491,
+    "lng": 11.956276,
+    "hasOutdoor": true,
+    "tags": [
+      "Cafe"
+    ]
+  },
+  {
+    "id": "cafe-1825429025",
+    "name": "Jacob's Cafè",
+    "address": "Göteborg, Sweden",
+    "lat": 57.698496,
+    "lng": 11.95722,
+    "hasOutdoor": true,
+    "tags": [
+      "Cafe"
+    ]
+  },
+  {
+    "id": "restaurant-1880285287",
+    "name": "Bombay Bistro",
+    "address": "Lindholmsallén 35, 417 53 Göteborg",
+    "lat": 57.708413,
+    "lng": 11.937699,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant",
+      "Indian"
+    ]
+  },
+  {
+    "id": "cafe-1931250746",
+    "name": "da Matteo Panetteria",
+    "address": "Magasinsgatan 17A, Göteborg",
+    "lat": 57.703175,
+    "lng": 11.962371,
+    "hasOutdoor": true,
+    "tags": [
+      "Cafe",
+      "Coffee_shop"
+    ]
+  },
+  {
+    "id": "cafe-1982753674",
+    "name": "le Petit Café",
+    "address": "Haga Nygata 2, 413 01 Göteborg",
+    "lat": 57.698951,
+    "lng": 11.953283,
+    "hasOutdoor": true,
+    "tags": [
+      "Cafe",
+      "French"
+    ]
+  },
+  {
+    "id": "bar-2032342785",
+    "name": "Grace",
+    "address": "Kungsportsavenyen 9, 411 36 Göteborg",
+    "lat": 57.701105,
+    "lng": 11.973419,
+    "hasOutdoor": true,
+    "tags": [
+      "Bar"
+    ]
+  },
+  {
+    "id": "cafe-2033520019",
+    "name": "Espresso House Avenyn",
+    "address": "Göteborg, Sweden",
+    "lat": 57.701689,
+    "lng": 11.973591,
+    "hasOutdoor": true,
+    "tags": [
+      "Cafe",
+      "Coffee_shop"
+    ]
+  },
+  {
+    "id": "restaurant-2033520050",
+    "name": "Hard Rock Cafe",
+    "address": "Kungsportsavenyen 10, 411 36 Göteborg",
+    "lat": 57.701228,
+    "lng": 11.974252,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant",
+      "American"
+    ]
+  },
+  {
+    "id": "restaurant-2033520090",
+    "name": "Joe Farelli's",
+    "address": "Kungsportsavenyen 12, 411 36 Göteborg",
+    "lat": 57.701149,
+    "lng": 11.97437,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant",
+      "American;italian"
+    ]
+  },
+  {
+    "id": "restaurant-2039167837",
+    "name": "Tandoori kitchen",
+    "address": "Kungsgatan 25, 411 19 Göteborg",
+    "lat": 57.703868,
+    "lng": 11.963259,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant",
+      "Indian"
+    ]
+  },
+  {
+    "id": "cafe-2039206497",
+    "name": "Condeco",
+    "address": "Kungsgatan 45, 41115 Göteborg",
+    "lat": 57.70437,
+    "lng": 11.96659,
+    "hasOutdoor": true,
+    "tags": [
+      "Cafe"
+    ]
+  },
+  {
+    "id": "restaurant-2073302696",
+    "name": "Focusresturangen",
+    "address": "Göteborg, Sweden",
+    "lat": 57.698667,
+    "lng": 11.992556,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant",
+      "Diner"
+    ]
+  },
+  {
+    "id": "restaurant-2073313714",
+    "name": "Incontro Restaurant & Bar",
+    "address": "Mässans Gata 16, 412 51 Göteborg",
+    "lat": 57.697584,
+    "lng": 11.987355,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant",
+      "Mediterranean"
+    ]
+  },
+  {
+    "id": "pub-2078806783",
+    "name": "Bryggeriet",
+    "address": "Göteborg, Sweden",
+    "lat": 57.701356,
+    "lng": 11.973055,
+    "hasOutdoor": true,
+    "tags": [
+      "Pub"
+    ]
+  },
+  {
+    "id": "restaurant-2078806888",
+    "name": "John Scotts",
+    "address": "Göteborg, Sweden",
+    "lat": 57.700718,
+    "lng": 11.973958,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant"
+    ]
+  },
+  {
+    "id": "cafe-2078806891",
+    "name": "JOS",
+    "address": "Kungsportsavenyen 23, 411 36 Göteborg",
+    "lat": 57.700042,
+    "lng": 11.974955,
+    "hasOutdoor": true,
+    "tags": [
+      "Cafe"
+    ]
+  },
+  {
+    "id": "restaurant-2139221301",
+    "name": "Restaurant Humm",
+    "address": "Södra Vägen 2, 412 54 Göteborg",
+    "lat": 57.699679,
+    "lng": 11.980077,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant",
+      "Asian"
+    ]
+  },
+  {
+    "id": "restaurant-2141492054",
+    "name": "Hasselsson",
+    "address": "Göteborg, Sweden",
+    "lat": 57.70555,
+    "lng": 11.966286,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant",
+      "Fish_and_chips;fish"
+    ]
+  },
+  {
+    "id": "restaurant-2141492109",
+    "name": "Zaffran",
+    "address": "Göteborg, Sweden",
+    "lat": 57.707027,
+    "lng": 11.973948,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant",
+      "Persian"
+    ]
+  },
+  {
+    "id": "restaurant-2141492133",
+    "name": "Tugg Burgers",
+    "address": "Drottninggatan 21, 41114 Göteborg",
+    "lat": 57.705368,
+    "lng": 11.965706,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant",
+      "Burger"
+    ]
+  },
+  {
+    "id": "restaurant-2141492138",
+    "name": "Zozaki",
+    "address": "Göteborg, Sweden",
+    "lat": 57.706965,
+    "lng": 11.973978,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant",
+      "Japanese"
+    ]
+  },
+  {
+    "id": "restaurant-2144014644",
+    "name": "Khoki Sushi",
+    "address": "Göteborg, Sweden",
+    "lat": 57.705294,
+    "lng": 11.967883,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant",
+      "Sushi"
+    ]
+  },
+  {
+    "id": "restaurant-2144014651",
+    "name": "Ma Cuisine",
+    "address": "Göteborg, Sweden",
+    "lat": 57.704952,
+    "lng": 11.965847,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant"
+    ]
+  },
+  {
+    "id": "cafe-2144107211",
+    "name": "Kopps",
+    "address": "Kungsgatan 40, Göteborg",
+    "lat": 57.704031,
+    "lng": 11.963466,
+    "hasOutdoor": true,
+    "tags": [
+      "Cafe",
+      "Pizza;burger;pasta;salad;sandwich"
+    ]
+  },
+  {
+    "id": "restaurant-2144107230",
+    "name": "Targaz",
+    "address": "Kungsgatan 34, 411 19 Göteborg",
+    "lat": 57.703899,
+    "lng": 11.962611,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant",
+      "Greek;persian"
+    ]
+  },
+  {
+    "id": "restaurant-2146680222",
+    "name": "Löfqvist",
+    "address": "Göteborg, Sweden",
+    "lat": 57.703485,
+    "lng": 11.96367,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant"
+    ]
+  },
+  {
+    "id": "restaurant-2152041779",
+    "name": "Södra Larm",
+    "address": "Södra Larmgatan , Göteborg",
+    "lat": 57.703003,
+    "lng": 11.965221,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant"
+    ]
+  },
+  {
+    "id": "cafe-2154571385",
+    "name": "Ahlströms Konditori",
+    "address": "Göteborg, Sweden",
+    "lat": 57.705788,
+    "lng": 11.965831,
+    "hasOutdoor": true,
+    "tags": [
+      "Cafe"
+    ]
+  },
+  {
+    "id": "restaurant-2163840883",
+    "name": "Sorellina",
+    "address": "Västra Hamngatan 20, Göteborg",
+    "lat": 57.703297,
+    "lng": 11.964508,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant",
+      "Italian"
+    ]
+  },
+  {
+    "id": "cafe-2168909648",
+    "name": "Havana Espresso & Juice Bar",
+    "address": "Vasagatan 11, 411 24 Göteborg",
+    "lat": 57.697763,
+    "lng": 11.96537,
+    "hasOutdoor": true,
+    "tags": [
+      "Cafe"
+    ]
+  },
+  {
+    "id": "bar-2168909821",
+    "name": "Italienska Skafferiet",
+    "address": "Göteborg, Sweden",
+    "lat": 57.698295,
+    "lng": 11.966174,
+    "hasOutdoor": true,
+    "tags": [
+      "Bar"
+    ]
+  },
+  {
+    "id": "bar-2168909856",
+    "name": "Vasa Vibe",
+    "address": "Vasagatan 8, 411 24 Göteborg",
+    "lat": 57.697957,
+    "lng": 11.964028,
+    "hasOutdoor": true,
+    "tags": [
+      "Bar"
+    ]
+  },
+  {
+    "id": "restaurant-2168909873",
+    "name": "New Delhi",
+    "address": "Vasagatan 4, 411 24 Göteborg",
+    "lat": 57.697876,
+    "lng": 11.963518,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant",
+      "Indian"
+    ]
+  },
+  {
+    "id": "restaurant-2168909950",
+    "name": "Happy Me Kitchen",
+    "address": "Vasagatan 24, 41124 Göteborg",
+    "lat": 57.698377,
+    "lng": 11.966696,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant",
+      "Juice;local"
+    ]
+  },
+  {
+    "id": "restaurant-2203092201",
+    "name": "Nonna",
+    "address": "Göteborg, Sweden",
+    "lat": 57.703248,
+    "lng": 11.959546,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant"
+    ]
+  },
+  {
+    "id": "restaurant-2214741146",
+    "name": "Takame",
+    "address": "Sankt Eriksgatan 8, Göteborg",
+    "lat": 57.709766,
+    "lng": 11.965996,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant"
+    ]
+  },
+  {
+    "id": "pub-2313335879",
+    "name": "Beerista Avenyn",
+    "address": "Kristinelundsgatan 13, 411 37 Göteborg",
+    "lat": 57.700139,
+    "lng": 11.977134,
+    "hasOutdoor": true,
+    "tags": [
+      "Pub"
+    ]
+  },
+  {
+    "id": "restaurant-2318390718",
+    "name": "Ching Palace",
+    "address": "Södra Hamngatan 2, 411 06 Göteborg",
+    "lat": 57.707005,
+    "lng": 11.971089,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant",
+      "Chinese"
+    ]
+  },
+  {
+    "id": "restaurant-2318390755",
+    "name": "Pinchos",
+    "address": "Lilla Torget 3, 411 18 Göteborg",
+    "lat": 57.705357,
+    "lng": 11.961764,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant"
+    ]
+  },
+  {
+    "id": "restaurant-2321220201",
+    "name": "Bombay Express",
+    "address": "Göteborg, Sweden",
+    "lat": 57.692665,
+    "lng": 11.977499,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant",
+      "Indian"
+    ]
+  },
+  {
+    "id": "pub-2321220204",
+    "name": "Foxes",
+    "address": "Göteborg, Sweden",
+    "lat": 57.693282,
+    "lng": 11.976963,
+    "hasOutdoor": true,
+    "tags": [
+      "Pub"
+    ]
+  },
+  {
+    "id": "restaurant-2321220205",
+    "name": "Kizuna",
+    "address": "Göteborg, Sweden",
+    "lat": 57.693404,
+    "lng": 11.976847,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant",
+      "Asian"
+    ]
+  },
+  {
+    "id": "restaurant-2360369855",
+    "name": "Linkai Sushi",
+    "address": "Göteborg, Sweden",
+    "lat": 57.698289,
+    "lng": 11.93499,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant",
+      "Sushi"
+    ]
+  },
+  {
+    "id": "bar-2371753178",
+    "name": "Provianten",
+    "address": "Lilla Bommens Torg 2, 411 04 Göteborg",
+    "lat": 57.711462,
+    "lng": 11.96634,
+    "hasOutdoor": true,
+    "tags": [
+      "Bar"
+    ]
+  },
+  {
+    "id": "pub-2393734182",
+    "name": "J.A. Pripps Pub & Café",
+    "address": "Göteborg, Sweden",
+    "lat": 57.688755,
+    "lng": 11.974631,
+    "hasOutdoor": true,
+    "tags": [
+      "Pub"
+    ]
+  },
+  {
+    "id": "restaurant-2397035751",
+    "name": "Mr Thaifood",
+    "address": "Göteborg, Sweden",
+    "lat": 57.707908,
+    "lng": 11.933167,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant",
+      "Thai"
+    ]
+  },
+  {
+    "id": "restaurant-2410369343",
+    "name": "Restaurang Röda Sten",
+    "address": "Göteborg, Sweden",
+    "lat": 57.689152,
+    "lng": 11.901386,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant"
+    ]
+  },
+  {
+    "id": "restaurant-2466992929",
+    "name": "Linnéterrassen",
+    "address": "Linnégatan 32, 413 04 Göteborg",
+    "lat": 57.696019,
+    "lng": 11.951989,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant",
+      "Regional"
+    ]
+  },
+  {
+    "id": "restaurant-2468969609",
+    "name": "Moon",
+    "address": "Kristinelundsgatan 9, 411 37 Göteborg",
+    "lat": 57.699344,
+    "lng": 11.975234,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant",
+      "Thai"
+    ]
+  },
+  {
+    "id": "bar-2468969615",
+    "name": "Rockbaren",
+    "address": "Göteborg, Sweden",
+    "lat": 57.700145,
+    "lng": 11.976563,
+    "hasOutdoor": true,
+    "tags": [
+      "Bar"
+    ]
+  },
+  {
+    "id": "restaurant-2638431582",
+    "name": "Noba",
+    "address": "Göteborg, Sweden",
+    "lat": 57.699324,
+    "lng": 11.964533,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant",
+      "Regional"
+    ]
+  },
+  {
+    "id": "cafe-2640849131",
+    "name": "Next Level Gelato & Juice Bar",
+    "address": "Linnégatan 40, 413 08 Göteborg",
+    "lat": 57.69491,
+    "lng": 11.952371,
+    "hasOutdoor": true,
+    "tags": [
+      "Cafe"
+    ]
+  },
+  {
+    "id": "restaurant-2689842340",
+    "name": "Sandberg Månsson",
+    "address": "Magasinsgatan 26, 41118 Göteborg",
+    "lat": 57.702594,
+    "lng": 11.963152,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant",
+      "Regional"
+    ]
+  },
+  {
+    "id": "restaurant-2689844040",
+    "name": "Gourmet Korv",
+    "address": "Södra Larmgatan 6, 41116 Göteborg",
+    "lat": 57.702706,
+    "lng": 11.963733,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant",
+      "Hot_dog"
+    ]
+  },
+  {
+    "id": "pub-2696450898",
+    "name": "Hemma Hos…",
+    "address": "Göteborg, Sweden",
+    "lat": 57.698489,
+    "lng": 11.957454,
+    "hasOutdoor": true,
+    "tags": [
+      "Pub"
+    ]
+  },
+  {
+    "id": "cafe-2696735454",
+    "name": "Kastello",
+    "address": "Landsvägsgatan 38, 413 04 Göteborg",
+    "lat": 57.696269,
+    "lng": 11.95205,
+    "hasOutdoor": true,
+    "tags": [
+      "Cafe",
+      "Coffee_shop"
+    ]
+  },
+  {
+    "id": "restaurant-2719985643",
+    "name": "Restaurang Bombay",
+    "address": "Göteborg, Sweden",
+    "lat": 57.699411,
+    "lng": 11.95174,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant",
+      "Indian"
+    ]
+  },
+  {
+    "id": "cafe-2727042225",
+    "name": "Steinbrenner & Nyberg",
+    "address": "Göteborg, Sweden",
+    "lat": 57.69948,
+    "lng": 11.952561,
+    "hasOutdoor": true,
+    "tags": [
+      "Cafe"
+    ]
+  },
+  {
+    "id": "bar-2749347064",
+    "name": "Ölstugan Tullen Lejonet",
+    "address": "Friggagatan 27, 416 64 Göteborg",
+    "lat": 57.712535,
+    "lng": 11.990999,
+    "hasOutdoor": true,
+    "tags": [
+      "Bar"
+    ]
+  },
+  {
+    "id": "restaurant-2759249903",
+    "name": "Ai Sushi",
+    "address": "Rosenlundsgatan 4, 41120 Göteborg",
+    "lat": 57.701284,
+    "lng": 11.957385,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant",
+      "Sushi"
+    ]
+  },
+  {
+    "id": "restaurant-2824868301",
+    "name": "Burgersson",
+    "address": "Skanstorget 4, 411 22 Göteborg",
+    "lat": 57.695576,
+    "lng": 11.958971,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant",
+      "Burger"
+    ]
+  },
+  {
+    "id": "restaurant-2868454571",
+    "name": "Barabicu",
+    "address": "Rosenlundsgatan 4, 41120 Göteborg",
+    "lat": 57.701898,
+    "lng": 11.955905,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant",
+      "American"
+    ]
+  },
+  {
+    "id": "restaurant-2930998802",
+    "name": "La Terrazza",
+    "address": "Sten Sturegatan 19, 412 52 Göteborg",
+    "lat": 57.699851,
+    "lng": 11.984655,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant",
+      "Italian"
+    ]
+  },
+  {
+    "id": "restaurant-2931010901",
+    "name": "Mikado",
+    "address": "Sten Sturegatan 42, 412 52 Göteborg",
+    "lat": 57.700209,
+    "lng": 11.985027,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant",
+      "Japanese"
+    ]
+  },
+  {
+    "id": "cafe-2931024101",
+    "name": "Fratelli Gridelli",
+    "address": "Tegnérsgatan 26, 412 52 Göteborg",
+    "lat": 57.69908,
+    "lng": 11.98571,
+    "hasOutdoor": true,
+    "tags": [
+      "Cafe"
+    ]
+  },
+  {
+    "id": "restaurant-2931038401",
+    "name": "La Cucina italiana",
+    "address": "Göteborg, Sweden",
+    "lat": 57.697513,
+    "lng": 11.986228,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant",
+      "Italian"
+    ]
+  },
+  {
+    "id": "bar-2931039101",
+    "name": "Tony's Coffeebar",
+    "address": "Göteborg, Sweden",
+    "lat": 57.697465,
+    "lng": 11.986227,
+    "hasOutdoor": true,
+    "tags": [
+      "Bar"
+    ]
+  },
+  {
+    "id": "restaurant-2932676504",
+    "name": "Sultan Grill",
+    "address": "Göteborg, Sweden",
+    "lat": 57.719196,
+    "lng": 11.944849,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant",
+      "Turkish"
+    ]
+  },
+  {
+    "id": "restaurant-3065138072",
+    "name": "Robb",
+    "address": "Mariagatan 16, 414 71 Göteborg",
+    "lat": 57.685064,
+    "lng": 11.918479,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant"
+    ]
+  },
+  {
+    "id": "restaurant-3065187595",
+    "name": "Hasselssons Majorna",
+    "address": "Mariagatan 27, 414 71 Göteborg",
+    "lat": 57.684543,
+    "lng": 11.91659,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant",
+      "Fish_and_chips;seafood"
+    ]
+  },
+  {
+    "id": "restaurant-3123485837",
+    "name": "Guldhedens kvarterskrog",
+    "address": "Göteborg, Sweden",
+    "lat": 57.68402,
+    "lng": 11.97247,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant",
+      "Regional"
+    ]
+  },
+  {
+    "id": "restaurant-3127350920",
+    "name": "Pizzeria Cyrano",
+    "address": "Göteborg, Sweden",
+    "lat": 57.694523,
+    "lng": 11.988584,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant",
+      "Pizza"
+    ]
+  },
+  {
+    "id": "cafe-3150511661",
+    "name": "Anki's kaffestuga",
+    "address": "Göteborg, Sweden",
+    "lat": 57.710618,
+    "lng": 11.918731,
+    "hasOutdoor": true,
+    "tags": [
+      "Cafe"
+    ]
+  },
+  {
+    "id": "restaurant-3191380361",
+    "name": "Restaurang Olivedal",
+    "address": "Ranängsgatan 8, 416 64 Göteborg",
+    "lat": 57.712267,
+    "lng": 11.991694,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant"
+    ]
+  },
+  {
+    "id": "restaurant-3222691361",
+    "name": "Brödernas",
+    "address": "Göteborg, Sweden",
+    "lat": 57.69979,
+    "lng": 11.953705,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant",
+      "Burger"
+    ]
+  },
+  {
+    "id": "cafe-3273905903",
+    "name": "Café Hebbe Lelle",
+    "address": "Haga Nygata 23B, 413 01 Göteborg",
+    "lat": 57.698327,
+    "lng": 11.958273,
+    "hasOutdoor": true,
+    "tags": [
+      "Cafe",
+      "Coffee_shop"
+    ]
+  },
+  {
+    "id": "restaurant-3273912091",
+    "name": "Sushi Today",
+    "address": "Magasinsgatan 8, Göteborg",
+    "lat": 57.704671,
+    "lng": 11.962021,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant",
+      "Sushi"
+    ]
+  },
+  {
+    "id": "cafe-3355033263",
+    "name": "Cafe Linné",
+    "address": "Linnégatan 57, 41308 Göteborg",
+    "lat": 57.692481,
+    "lng": 11.952219,
+    "hasOutdoor": true,
+    "tags": [
+      "Cafe"
+    ]
+  },
+  {
+    "id": "restaurant-3390634060",
+    "name": "Magic Flamingo",
+    "address": "Linnégatan 42, 413 08 Göteborg",
+    "lat": 57.694655,
+    "lng": 11.952482,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant"
+    ]
+  },
+  {
+    "id": "cafe-3390634061",
+    "name": "Bönor & Bagles",
+    "address": "Linnégatan 48, 41308 Göteborg",
+    "lat": 57.694278,
+    "lng": 11.952644,
+    "hasOutdoor": true,
+    "tags": [
+      "Cafe"
+    ]
+  },
+  {
+    "id": "restaurant-3431315351",
+    "name": "Schnitzelplatz Lagerhuset",
+    "address": "Heurlins Plats 1, 41301 Göteborg",
+    "lat": 57.701945,
+    "lng": 11.953966,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant"
+    ]
+  },
+  {
+    "id": "restaurant-3450176827",
+    "name": "Mido Sushi",
+    "address": "Landsvägsgatan 5, Göteborg",
+    "lat": 57.699145,
+    "lng": 11.95309,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant",
+      "Sushi"
+    ]
+  },
+  {
+    "id": "pub-3574071597",
+    "name": "Jerntorgets Brygghus",
+    "address": "Järntorget 4, 413 04 Göteborg",
+    "lat": 57.699604,
+    "lng": 11.951908,
+    "hasOutdoor": true,
+    "tags": [
+      "Pub",
+      "Sandwich;burger;fish_and_chips;salad"
+    ]
+  },
+  {
+    "id": "cafe-3590440674",
+    "name": "Frid & Fröjd Café",
+    "address": "Göteborg, Sweden",
+    "lat": 57.698892,
+    "lng": 11.951618,
+    "hasOutdoor": true,
+    "tags": [
+      "Cafe"
+    ]
+  },
+  {
+    "id": "restaurant-3590440977",
+    "name": "Taverna Averna",
+    "address": "Göteborg, Sweden",
+    "lat": 57.698841,
+    "lng": 11.951054,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant"
+    ]
+  },
+  {
+    "id": "restaurant-3590459097",
+    "name": "Byns Bistro",
+    "address": "Tredje Långgatan 13, 413 03 Göteborg",
+    "lat": 57.69873,
+    "lng": 11.949715,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant"
+    ]
+  },
+  {
+    "id": "pub-3590459671",
+    "name": "Brewers Beer Bar",
     "address": "Tredje Långgatan 8, 413 03 Göteborg",
-    "lat": 57.699741,
-    "lng": 11.948283,
+    "lat": 57.69865,
+    "lng": 11.950947,
     "hasOutdoor": true,
-    "tags": ["Bar", "Pizza", "Beer"]
+    "tags": [
+      "Pub",
+      "Pizza"
+    ]
   },
   {
-    "id": "kino-linne",
-    "name": "Kino",
-    "address": "Linnégatan 21, 413 04 Göteborg",
-    "lat": 57.698322,
-    "lng": 11.951566,
+    "id": "restaurant-3590462334",
+    "name": "Made in China",
+    "address": "Tredje Långgatan 9, 413 03 Göteborg",
+    "lat": 57.69879,
+    "lng": 11.950622,
     "hasOutdoor": true,
-    "tags": ["Restaurant", "Café", "Vegetarian"]
+    "tags": [
+      "Restaurant"
+    ]
   },
   {
-    "id": "lagerhuset",
-    "name": "Lagerhuset",
-    "address": "Heurlins Plats 1, 413 01 Göteborg",
-    "lat": 57.701123,
-    "lng": 11.954200,
+    "id": "restaurant-3590628867",
+    "name": "Storköket | The Barn",
+    "address": "Göteborg, Sweden",
+    "lat": 57.702701,
+    "lng": 11.970335,
     "hasOutdoor": true,
-    "tags": ["Café", "Bar"]
+    "tags": [
+      "Restaurant"
+    ]
+  },
+  {
+    "id": "pub-3621716494",
+    "name": "Levantine",
+    "address": "Aschebergsgatan 22, 411 27 Göteborg",
+    "lat": 57.696494,
+    "lng": 11.971268,
+    "hasOutdoor": true,
+    "tags": [
+      "Pub"
+    ]
+  },
+  {
+    "id": "bar-3623338404",
+    "name": "The Queen",
+    "address": "Göteborg, Sweden",
+    "lat": 57.698742,
+    "lng": 11.96496,
+    "hasOutdoor": true,
+    "tags": [
+      "Bar",
+      "Pub"
+    ]
+  },
+  {
+    "id": "restaurant-3635519306",
+    "name": "Paradiset Mariaplan",
+    "address": "Göteborg, Sweden",
+    "lat": 57.6878,
+    "lng": 11.920917,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant"
+    ]
+  },
+  {
+    "id": "bar-3819446557",
+    "name": "Pix & Pintxos Cocktails",
+    "address": "Grönsakstorget 1, Göteborg",
+    "lat": 57.70257,
+    "lng": 11.965178,
+    "hasOutdoor": true,
+    "tags": [
+      "Bar"
+    ]
+  },
+  {
+    "id": "restaurant-4194849324",
+    "name": "Kungstorgets Brygghus",
+    "address": "Kungstorget 11, Göteborg",
+    "lat": 57.703869,
+    "lng": 11.9689,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant"
+    ]
+  },
+  {
+    "id": "restaurant-4216272568",
+    "name": "Kooperativet",
+    "address": "Anders Carlssons Gata 2, 417 55 Göteborg",
+    "lat": 57.708588,
+    "lng": 11.944719,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant",
+      "Fish;indian;international;regional;thai"
+    ]
+  },
+  {
+    "id": "cafe-4344957464",
+    "name": "Café Husaren",
+    "address": "Haga Nygata 28, 411 22 Göteborg",
+    "lat": 57.698383,
+    "lng": 11.959749,
+    "hasOutdoor": true,
+    "tags": [
+      "Cafe",
+      "Cake;sandwich;fish;dessert;breakfast"
+    ]
+  },
+  {
+    "id": "cafe-4408093592",
+    "name": "Llama Lloyd",
+    "address": "Väderkvarnsgatan 16, 417 04 Göteborg",
+    "lat": 57.717821,
+    "lng": 11.947313,
+    "hasOutdoor": true,
+    "tags": [
+      "Cafe"
+    ]
+  },
+  {
+    "id": "cafe-4944579159",
+    "name": "Matería",
+    "address": "Göteborg, Sweden",
+    "lat": 57.686197,
+    "lng": 11.919396,
+    "hasOutdoor": true,
+    "tags": [
+      "Cafe"
+    ]
+  },
+  {
+    "id": "restaurant-5194353212",
+    "name": "The Elephant",
+    "address": "Linnégatan 68, 41308 Göteborg",
+    "lat": 57.691838,
+    "lng": 11.952851,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant"
+    ]
+  },
+  {
+    "id": "cafe-5194353213",
+    "name": "Sunshine Café",
+    "address": "Göteborg, Sweden",
+    "lat": 57.691659,
+    "lng": 11.952772,
+    "hasOutdoor": true,
+    "tags": [
+      "Cafe",
+      "Brunch;breakfast;sandwich"
+    ]
+  },
+  {
+    "id": "restaurant-5194353214",
+    "name": "Pasha Grill",
+    "address": "Göteborg, Sweden",
+    "lat": 57.691505,
+    "lng": 11.95269,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant"
+    ]
+  },
+  {
+    "id": "cafe-5607853228",
+    "name": "Frestelsen C & G",
+    "address": "Göteborg, Sweden",
+    "lat": 57.708286,
+    "lng": 11.944494,
+    "hasOutdoor": true,
+    "tags": [
+      "Cafe",
+      "Sandwich;salad;cake"
+    ]
+  },
+  {
+    "id": "restaurant-5714995835",
+    "name": "Emona",
+    "address": "Göteborg, Sweden",
+    "lat": 57.691053,
+    "lng": 11.93592,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant",
+      "Pizza"
+    ]
+  },
+  {
+    "id": "restaurant-5745155253",
+    "name": "Marinade Kitchen & Bar",
+    "address": "Linnégatan 59, 41308 Göteborg",
+    "lat": 57.692088,
+    "lng": 11.952123,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant"
+    ]
+  },
+  {
+    "id": "restaurant-5749480767",
+    "name": "Mac´s",
+    "address": "Göteborg, Sweden",
+    "lat": 57.690935,
+    "lng": 11.914569,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant"
+    ]
+  },
+  {
+    "id": "restaurant-5757080992",
+    "name": "Chumphon Thai",
+    "address": "Chapmans Torg 4, 414 54 Göteborg",
+    "lat": 57.693551,
+    "lng": 11.920063,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant",
+      "Asian"
+    ]
+  },
+  {
+    "id": "restaurant-5829753045",
+    "name": "Lemona Sushi",
+    "address": "Göteborg, Sweden",
+    "lat": 57.693791,
+    "lng": 11.919396,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant",
+      "Sushi"
+    ]
+  },
+  {
+    "id": "restaurant-5844200321",
+    "name": "Vietnamnhaket",
+    "address": "Göteborg, Sweden",
+    "lat": 57.698119,
+    "lng": 11.950012,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant",
+      "Asian"
+    ]
+  },
+  {
+    "id": "cafe-6002665961",
+    "name": "da Matteo Magasinsgatan",
+    "address": "Magasinsgatan 17, 41118 Göteborg",
+    "lat": 57.70278,
+    "lng": 11.96226,
+    "hasOutdoor": true,
+    "tags": [
+      "Cafe",
+      "Bakery"
+    ]
+  },
+  {
+    "id": "restaurant-6092626271",
+    "name": "Johanneberg Sushi",
+    "address": "Örnehufvudsgatan 1, 412 59 Göteborg",
+    "lat": 57.688528,
+    "lng": 11.984236,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant",
+      "Sushi"
+    ]
+  },
+  {
+    "id": "restaurant-6448659492",
+    "name": "Ha Long Bay",
+    "address": "Göteborg, Sweden",
+    "lat": 57.705962,
+    "lng": 11.940004,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant",
+      "Asian"
+    ]
+  },
+  {
+    "id": "restaurant-7077915853",
+    "name": "Marsala",
+    "address": "Chapmans Torg 2, 414 54 Göteborg",
+    "lat": 57.693788,
+    "lng": 11.920076,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant"
+    ]
+  },
+  {
+    "id": "restaurant-7206509314",
+    "name": "Holy Cow",
+    "address": "Södra Vägen 77, Göteborg",
+    "lat": 57.693745,
+    "lng": 11.989489,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant"
+    ]
+  },
+  {
+    "id": "pub-7815214401",
+    "name": "Vega Bryggeri Restaurang",
+    "address": "Göteborg, Sweden",
+    "lat": 57.71926,
+    "lng": 11.973471,
+    "hasOutdoor": true,
+    "tags": [
+      "Pub"
+    ]
+  },
+  {
+    "id": "restaurant-7830164634",
+    "name": "Majornas bryggeri",
+    "address": "Karl Johansgatan 90, 414 55 Göteborg",
+    "lat": 57.693495,
+    "lng": 11.918671,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant",
+      "Fries;burger"
+    ]
+  },
+  {
+    "id": "restaurant-7855299751",
+    "name": "Wasabi Majorna",
+    "address": "Karl Johansgatan 59, 415 55 Göteborg",
+    "lat": 57.693513,
+    "lng": 11.918126,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant",
+      "Sushi"
+    ]
+  },
+  {
+    "id": "restaurant-8493101010",
+    "name": "Tai Shanghai",
+    "address": "Haga Östergata 4A, Göteborg",
+    "lat": 57.699421,
+    "lng": 11.954632,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant"
+    ]
+  },
+  {
+    "id": "cafe-8493101012",
+    "name": "Café Kringlan",
+    "address": "Haga Nygata 13, 413 01 Göteborg",
+    "lat": 57.698567,
+    "lng": 11.955658,
+    "hasOutdoor": true,
+    "tags": [
+      "Cafe"
+    ]
+  },
+  {
+    "id": "restaurant-8493101016",
+    "name": "Sjöbaren",
+    "address": "Haga Nygata 25, 413 01 Göteborg",
+    "lat": 57.69833,
+    "lng": 11.958754,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant",
+      "Fish"
+    ]
+  },
+  {
+    "id": "restaurant-8493125346",
+    "name": "John Scott's",
+    "address": "Linnégatan 38, 413 04 Göteborg",
+    "lat": 57.69529,
+    "lng": 11.952262,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant",
+      "Regional"
+    ]
+  },
+  {
+    "id": "cafe-8493125347",
+    "name": "Coco Orangerie",
+    "address": "Linnégatan 38A, 413 04 Göteborg",
+    "lat": 57.695442,
+    "lng": 11.952242,
+    "hasOutdoor": true,
+    "tags": [
+      "Cafe"
+    ]
+  },
+  {
+    "id": "pub-8879928020",
+    "name": "Station Linné",
+    "address": "Linnéplatsen 9, 413 10 Göteborg",
+    "lat": 57.690612,
+    "lng": 11.952713,
+    "hasOutdoor": true,
+    "tags": [
+      "Pub",
+      "Diner;international;regional"
+    ]
+  },
+  {
+    "id": "restaurant-9081048315",
+    "name": "Spanska köket",
+    "address": "Övre Husargatan 3, 411 22 Göteborg",
+    "lat": 57.694897,
+    "lng": 11.957603,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant",
+      "Spanish"
+    ]
+  },
+  {
+    "id": "restaurant-9198324010",
+    "name": "Office Food",
+    "address": "Göteborg, Sweden",
+    "lat": 57.708269,
+    "lng": 11.96531,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant"
+    ]
+  },
+  {
+    "id": "restaurant-9323555465",
+    "name": "Tant Anton i stan",
+    "address": "Linnégatan 52, 41308 Göteborg",
+    "lat": 57.693712,
+    "lng": 11.952867,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant"
+    ]
+  },
+  {
+    "id": "restaurant-9323555470",
+    "name": "Lilla Tavernan",
+    "address": "Olivedalsgatan 17, 413 10 Göteborg",
+    "lat": 57.692017,
+    "lng": 11.951023,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant",
+      "Greek"
+    ]
+  },
+  {
+    "id": "restaurant-9340380833",
+    "name": "Solrosen",
+    "address": "Kaponjärgatan 4 A, 413 02 Göteborg",
+    "lat": 57.699035,
+    "lng": 11.956736,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant"
+    ]
+  },
+  {
+    "id": "cafe-9883479132",
+    "name": "Gerd",
+    "address": "Göteborg, Sweden",
+    "lat": 57.698303,
+    "lng": 11.951306,
+    "hasOutdoor": true,
+    "tags": [
+      "Cafe",
+      "Coffee_shop"
+    ]
+  },
+  {
+    "id": "restaurant-9915324999",
+    "name": "Mexikanska Monarkin",
+    "address": "Kastellgatan 4, 411 22 Göteborg",
+    "lat": 57.695198,
+    "lng": 11.956825,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant",
+      "Mexican"
+    ]
+  },
+  {
+    "id": "restaurant-9915384228",
+    "name": "Würst",
+    "address": "Djupedalsgatan 2, 413 07 Göteborg",
+    "lat": 57.695046,
+    "lng": 11.953081,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant"
+    ]
+  },
+  {
+    "id": "restaurant-9915384233",
+    "name": "Karlsson's Garage",
+    "address": "Linnégatan 54, 41308 Göteborg",
+    "lat": 57.693444,
+    "lng": 11.952934,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant"
+    ]
+  },
+  {
+    "id": "restaurant-9915384234",
+    "name": "Brunchoteket",
+    "address": "Linnégatan 56, 41308 Göteborg",
+    "lat": 57.693263,
+    "lng": 11.952964,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant",
+      "Breakfast;sandwich;salad"
+    ]
+  },
+  {
+    "id": "restaurant-9915384236",
+    "name": "Sushi Lee",
+    "address": "Linnégatan 60, 413 08 Göteborg",
+    "lat": 57.693013,
+    "lng": 11.952996,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant",
+      "Sushi"
+    ]
+  },
+  {
+    "id": "restaurant-9915384246",
+    "name": "Deshi Kitchen",
+    "address": "Sveagatan 24, Göteborg",
+    "lat": 57.692709,
+    "lng": 11.954638,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant",
+      "Indian"
+    ]
+  },
+  {
+    "id": "restaurant-9915384248",
+    "name": "Gyllene Prag",
+    "address": "Sveagatan 25, Göteborg",
+    "lat": 57.692481,
+    "lng": 11.954414,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant",
+      "Eastern European"
+    ]
+  },
+  {
+    "id": "cafe-9944495497",
+    "name": "Manniny",
+    "address": "Göteborg, Sweden",
+    "lat": 57.698268,
+    "lng": 11.965954,
+    "hasOutdoor": true,
+    "tags": [
+      "Cafe",
+      "Coffee_shop;italian;sandwich"
+    ]
+  },
+  {
+    "id": "cafe-10739425471",
+    "name": "Poptea",
+    "address": "Sprängkullsgatan 15, 411 23 Göteborg",
+    "lat": 57.697996,
+    "lng": 11.960524,
+    "hasOutdoor": true,
+    "tags": [
+      "Cafe",
+      "Bubble_tea"
+    ]
+  },
+  {
+    "id": "restaurant-10810815354",
+    "name": "Holy Greens",
+    "address": "Kyrkogatan 60, 411 08 Göteborg",
+    "lat": 57.705824,
+    "lng": 11.971479,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant",
+      "Salad"
+    ]
+  },
+  {
+    "id": "cafe-10942263576",
+    "name": "Våffelcafé Soldattorpet",
+    "address": "Leijonsparres Väg 15, 413 04 Göteborg",
+    "lat": 57.695677,
+    "lng": 11.955226,
+    "hasOutdoor": true,
+    "tags": [
+      "Cafe"
+    ]
+  },
+  {
+    "id": "cafe-11964149297",
+    "name": "Göteborgs glutenfria bageri",
+    "address": "Prinsgatan 3, 413 05 Göteborg",
+    "lat": 57.696396,
+    "lng": 11.950212,
+    "hasOutdoor": true,
+    "tags": [
+      "Cafe"
+    ]
+  },
+  {
+    "id": "cafe-11973585994",
+    "name": "Bröd & Salt",
+    "address": "Linnégatan 11, 413 04 Göteborg",
+    "lat": 57.697512,
+    "lng": 11.95082,
+    "hasOutdoor": true,
+    "tags": [
+      "Cafe"
+    ]
+  },
+  {
+    "id": "restaurant-11987936078",
+    "name": "Paradiset",
+    "address": "Sveagatan 27, Göteborg",
+    "lat": 57.692164,
+    "lng": 11.954484,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant",
+      "Pizza"
+    ]
+  },
+  {
+    "id": "restaurant-11990524006",
+    "name": "Blind Mango Bar",
+    "address": "Nordenskiöldsgatan 3, Göteborg",
+    "lat": 57.692677,
+    "lng": 11.955064,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant"
+    ]
+  },
+  {
+    "id": "restaurant-11992463669",
+    "name": "Bar El Guiri",
+    "address": "Göteborg, Sweden",
+    "lat": 57.703759,
+    "lng": 11.969528,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant"
+    ]
+  },
+  {
+    "id": "restaurant-12030911584",
+    "name": "Mañana",
+    "address": "Göteborg, Sweden",
+    "lat": 57.710053,
+    "lng": 11.984966,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant"
+    ]
+  },
+  {
+    "id": "bar-12111462940",
+    "name": "Bar Bruno",
+    "address": "Göteborg, Sweden",
+    "lat": 57.704384,
+    "lng": 11.962929,
+    "hasOutdoor": true,
+    "tags": [
+      "Bar"
+    ]
+  },
+  {
+    "id": "restaurant-12153656185",
+    "name": "Tizne",
+    "address": "Göteborg, Sweden",
+    "lat": 57.698173,
+    "lng": 11.950854,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant",
+      "Mexican"
+    ]
+  },
+  {
+    "id": "restaurant-34634716",
+    "name": "lunchen.nu",
+    "address": "Medicinaregatan 8A, Göteborg",
+    "lat": 57.684037,
+    "lng": 11.958488,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant"
+    ]
+  },
+  {
+    "id": "cafe-108735683",
+    "name": "Botaniska Paviljongen",
+    "address": "Carl Skottsbergs Gata 22, 41319 Göteborg",
+    "lat": 57.68088,
+    "lng": 11.955704,
+    "hasOutdoor": true,
+    "tags": [
+      "Cafe"
+    ]
+  },
+  {
+    "id": "restaurant-150279285",
+    "name": "Floating Saigon",
+    "address": "Göteborg, Sweden",
+    "lat": 57.703413,
+    "lng": 11.96973,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant",
+      "Vietnamese"
+    ]
+  },
+  {
+    "id": "cafe-368281311",
+    "name": "Cafe Azalea",
+    "address": "Vedbacken 1, Göteborg",
+    "lat": 57.684301,
+    "lng": 11.935735,
+    "hasOutdoor": true,
+    "tags": [
+      "Cafe",
+      "Regional"
+    ]
+  },
+  {
+    "id": "restaurant-504208099",
+    "name": "Skanshof",
+    "address": "Lilla Bergsgatan 1, 411 28 Göteborg",
+    "lat": 57.696208,
+    "lng": 11.960206,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant"
+    ]
+  },
+  {
+    "id": "restaurant-1467896657",
+    "name": "Café Malmska valen",
+    "address": "Göteborg, Sweden",
+    "lat": 57.689592,
+    "lng": 11.949042,
+    "hasOutdoor": true,
+    "tags": [
+      "Restaurant"
+    ]
   }
 ]
