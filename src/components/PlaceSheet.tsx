@@ -26,10 +26,8 @@ export const PlaceSheet: React.FC<PlaceSheetProps> = ({
   const activeLat = venue.outdoorPoint?.lat ?? venue.lat;
   const activeLng = venue.outdoorPoint?.lng ?? venue.lng;
 
-  // 1. Core V2 shadow calculations for the selected evaluated time
   const sun = calculateSunDetails(activeLat, activeLng, evaluatedTime, venue.horizonMask);
 
-  // 2. High-Fidelity 28-Segment Timeline Generator (08:00 to 22:00, in 30-minute steps)
   const timelineSegments = useMemo(() => {
     const segments = [];
     const baseDate = new Date(evaluatedTime);
@@ -38,7 +36,7 @@ export const PlaceSheet: React.FC<PlaceSheetProps> = ({
     const day = baseDate.getDate();
 
     for (let i = 0; i < 28; i++) {
-      const totalMinutes = 8 * 60 + i * 30; // Starts at 08:00, adds 30 minutes per step
+      const totalMinutes = 8 * 60 + i * 30;
       const hour = Math.floor(totalMinutes / 60);
       const min = totalMinutes % 60;
 
@@ -54,14 +52,13 @@ export const PlaceSheet: React.FC<PlaceSheetProps> = ({
     return segments;
   }, [activeLat, activeLng, evaluatedTime, venue.horizonMask]);
 
-  // 3. Calculate position percentage of the vertical selection pointer
   const pointerPercent = useMemo(() => {
     const currentMins = evaluatedTime.getHours() * 60 + evaluatedTime.getMinutes();
-    const startMins = 8 * 60; // 08:00
-    const totalMins = 14 * 60; // 14 hours total window (22:00 - 08:00)
+    const startMins = 8 * 60;
+    const totalMins = 14 * 60;
     
     const percentage = ((currentMins - startMins) / totalMins) * 100;
-    return Math.max(0, Math.min(100, percentage)); // Clamp between 0% and 100%
+    return Math.max(0, Math.min(100, percentage));
   }, [evaluatedTime]);
 
   const getDirectionsUrl = () => {
@@ -77,10 +74,9 @@ export const PlaceSheet: React.FC<PlaceSheetProps> = ({
 
   return (
     <div className="bg-white rounded-t-3xl shadow-2xl border-t border-slate-100 flex flex-col max-h-[85vh] overflow-hidden">
-      {/* Header Panel */}
       <div className="flex items-center justify-between px-5 pt-5 pb-3 border-b border-slate-50">
         <div className="flex-1 min-w-0">
-          <h3 className="text-lg font-bold text-slate-900 truncate">{venue.name}</h3>
+          <h3 className="text-lg font-bold text-[#350505] truncate">{venue.name}</h3>
           <p className="text-xs text-slate-500 truncate mt-0.5">{venue.address}</p>
         </div>
         <div className="flex items-center gap-2">
@@ -103,58 +99,52 @@ export const PlaceSheet: React.FC<PlaceSheetProps> = ({
       </div>
 
       <div className="overflow-y-auto px-5 py-4 space-y-5">
-        {/* Dynamic numerical overview cards */}
         <div className="grid grid-cols-2 gap-3">
-          <div className="p-3 bg-slate-50 border border-slate-100 rounded-2xl">
+          <div className="p-3 bg-[#eab88d]/10 border border-[#eab88d]/20 rounded-2xl">
             <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Currently</span>
-            <span className={`text-sm font-extrabold block mt-0.5 ${sun.inSunNow ? 'text-amber-600' : 'text-slate-600'}`}>
+            <span className={`text-sm font-extrabold block mt-0.5 ${sun.inSunNow ? 'text-[#cf5a47]' : 'text-slate-500'}`}>
               {sun.inSunNow ? '☀️ Sunny Patio' : '🌥️ In Shade'}
             </span>
           </div>
-          <div className="p-3 bg-slate-50 border border-slate-100 rounded-2xl">
+          <div className="p-3 bg-[#eab88d]/10 border border-[#eab88d]/20 rounded-2xl">
             <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Total Sun today</span>
-            <span className="text-sm font-extrabold text-slate-800 block mt-0.5">{(sun.totalSunMinutes / 60).toFixed(1)} hours</span>
+            <span className="text-sm font-extrabold text-[#350505] block mt-0.5">{(sun.totalSunMinutes / 60).toFixed(1)} hours</span>
           </div>
         </div>
 
-        {/* --- GRAPHICAL DAY-GLOW TIMELINE --- */}
+        {/* --- GEOMETRIC TIMELINE WITH THE PALETTE --- */}
         <div className="space-y-2">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Day Sun-Profile (08:00 - 22:00)</span>
-            <span className="text-[10px] font-bold text-slate-500 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded">
-              Yellow = Sun | Gray = Shade
+            <span className="text-[10px] font-bold text-[#cf5a47] bg-[#cf5a47]/5 border border-[#cf5a47]/15 px-2 py-0.5 rounded">
+              Terracotta = Sun | Soft Sand = Shade
             </span>
           </div>
 
           <div className="relative pt-1.5 pb-2">
-            {/* Timeline Segment Bar */}
             <div className="flex h-3 w-full gap-[2px] rounded-md overflow-hidden bg-slate-100">
               {timelineSegments.map((seg, idx) => (
                 <div
                   key={idx}
                   title={`${seg.timeStr}: ${seg.inSun ? 'Sunny' : 'Shaded'}`}
                   className={`flex-1 h-full transition-colors ${
-                    seg.inSun ? 'bg-amber-400 shadow-sm shadow-amber-400/30' : 'bg-slate-200'
+                    seg.inSun ? 'bg-[#cf5a47] shadow-sm shadow-[#cf5a47]/20' : 'bg-[#eab88d]/20'
                   }`}
                 />
               ))}
             </div>
 
-            {/* Float selection time indicator pin */}
             <div 
               className="absolute top-0 bottom-1 flex flex-col items-center transition-all duration-300 pointer-events-none"
               style={{ left: `${pointerPercent}%` }}
             >
-              {/* Floating label tag */}
-              <div className="bg-slate-900 text-white text-[9px] font-bold px-1.5 py-0.5 rounded shadow-md -translate-y-5 whitespace-nowrap">
+              <div className="bg-[#350505] text-white text-[9px] font-bold px-1.5 py-0.5 rounded shadow-md -translate-y-5 whitespace-nowrap">
                 {formatDisplayTime(evaluatedTime)}
               </div>
-              {/* Vertical line pointer pin */}
-              <div className="w-[1.5px] h-[100%] bg-slate-900 z-10"></div>
+              <div className="w-[1.5px] h-[100%] bg-[#350505] z-10"></div>
             </div>
           </div>
 
-          {/* Simple time labels */}
           <div className="flex justify-between text-[10px] font-bold text-slate-400 px-1 pt-1">
             <span>08:00</span>
             <span>11:30</span>
@@ -164,9 +154,8 @@ export const PlaceSheet: React.FC<PlaceSheetProps> = ({
           </div>
         </div>
 
-        {/* Detailed disclaimer block */}
-        <div className="p-3.5 bg-slate-50 border border-slate-150 rounded-2xl text-[11px] text-slate-500 leading-relaxed space-y-1">
-          <p className="font-bold text-slate-700 flex items-center gap-1">
+        <div className="p-3.5 bg-[#eab88d]/5 border border-[#eab88d]/15 rounded-2xl text-[11px] text-slate-500 leading-relaxed space-y-1">
+          <p className="font-bold text-[#350505] flex items-center gap-1">
             <span>📐</span> V2 Shading Model Active
           </p>
           <p>
@@ -174,7 +163,6 @@ export const PlaceSheet: React.FC<PlaceSheetProps> = ({
           </p>
         </div>
 
-        {/* Category tags */}
         <div className="flex flex-wrap gap-1">
           {venue.tags.map((t) => (
             <span key={t} className="px-2.5 py-1 bg-slate-100 text-slate-600 text-xs font-bold rounded-full">
@@ -183,13 +171,12 @@ export const PlaceSheet: React.FC<PlaceSheetProps> = ({
           ))}
         </div>
 
-        {/* Operating buttons */}
         <div className="pt-2 space-y-2">
           <a
             href={getDirectionsUrl()}
             target="_blank"
             rel="noopener noreferrer"
-            className="w-full py-3 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-center text-sm font-bold transition-colors flex items-center justify-center gap-2"
+            className="w-full py-3 bg-[#350505] hover:bg-[#350505]/95 text-white rounded-xl text-center text-sm font-bold transition-all flex items-center justify-center gap-2"
           >
             🗺️ Open in Map Navigation
           </a>

@@ -70,7 +70,6 @@ export const HubbaMap: React.FC<HubbaMapProps> = ({
     map.setView([targetCenter.lat, targetCenter.lng], targetCenter.zoom ?? 15, { animate: true });
   }, [targetCenter]);
 
-  // Update/Draw Venue Markers with ultra-clean, minimal geometric dots
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
@@ -83,12 +82,12 @@ export const HubbaMap: React.FC<HubbaMapProps> = ({
       const activeLng = venue.outdoorPoint?.lng ?? venue.lng;
       const { inSunNow } = calculateSunDetails(activeLat, activeLng, evaluatedTime, venue.horizonMask);
 
-      // Replaced busy SVG icon with a clean, high-contrast, modern solid dot
+      // Pins styled with Terracotta (#cf5a47) and a soft glow
       const html = `
         <div class="flex items-center justify-center transition-transform duration-300">
           <div class="rounded-full border-2 border-white shadow-md transition-all duration-300 ${
             inSunNow 
-              ? 'w-5 h-5 bg-amber-500 ring-4 ring-amber-500/20 scale-110' 
+              ? 'w-5 h-5 bg-[#cf5a47] ring-4 ring-[#cf5a47]/20 scale-110' 
               : 'w-3 h-3 bg-slate-400 opacity-65'
           }"></div>
         </div>
@@ -135,10 +134,10 @@ export const HubbaMap: React.FC<HubbaMapProps> = ({
       const adjustIcon = L.divIcon({
         html: `
           <div class="flex flex-col items-center">
-            <div class="bg-slate-900 text-white rounded-lg px-2.5 py-1 text-[10px] font-bold shadow-md whitespace-nowrap mb-1">
+            <div class="bg-[#350505] text-white rounded-lg px-2.5 py-1 text-[10px] font-bold shadow-md whitespace-nowrap mb-1">
               Drag to outdoor seating
             </div>
-            <div class="w-7 h-7 rounded-full border-2 border-white bg-slate-900 shadow-xl flex items-center justify-center text-white">
+            <div class="w-7 h-7 rounded-full border-2 border-white bg-[#350505] shadow-xl flex items-center justify-center text-white">
               📍
             </div>
           </div>
@@ -162,6 +161,7 @@ export const HubbaMap: React.FC<HubbaMapProps> = ({
     }
   }, [isAdjustingPoint, selectedVenue]);
 
+  // Geolocation dot styled with Teal (#7cbcc7)
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
@@ -175,8 +175,8 @@ export const HubbaMap: React.FC<HubbaMapProps> = ({
       const userIcon = L.divIcon({
         html: `
           <div class="relative flex items-center justify-center">
-            <div class="w-3.5 h-3.5 bg-blue-500 rounded-full border-2 border-white shadow-md"></div>
-            <div class="absolute w-7 h-7 bg-blue-400 rounded-full opacity-30 animate-ping"></div>
+            <div class="w-3.5 h-3.5 bg-[#7cbcc7] rounded-full border-2 border-white shadow-md"></div>
+            <div class="absolute w-7 h-7 bg-[#7cbcc7] rounded-full opacity-35 animate-ping"></div>
           </div>
         `,
         className: 'user-location-marker',

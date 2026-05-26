@@ -15,7 +15,6 @@ interface WeatherState {
   isBad: boolean;
 }
 
-// Minimal, emoji-free district jump coordinates
 const DISTRICTS = [
   { name: "Majorna", lat: 57.6920, lng: 11.9180 },
   { name: "Linné", lat: 57.6980, lng: 11.9510 },
@@ -25,7 +24,6 @@ const DISTRICTS = [
   { name: "Lindholmen", lat: 57.7060, lng: 11.9370 }
 ];
 
-// Simplified core amenity list (removes messy raw OSM food sub-tags)
 const CLEAN_AMENITIES = ['Bar', 'Pub', 'Restaurant', 'Café'];
 
 function parseWMOCode(code: number): { desc: string; isBad: boolean; icon: string } {
@@ -44,14 +42,11 @@ export default function App() {
   const [isLiveNow, setIsLiveNow] = useState(true);
   const [venues, setVenues] = useState<Venue[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
-  
-  // Advanced filters state
   const [activeFilters, setActiveFilters] = useState({
     tags: [] as string[],
-    minHours: 2.0, // Swapped to float for continuous slider
+    minHours: 2.0,
     onlyFavs: false,
   });
-  
   const [selectedVenue, setSelectedVenue] = useState<Venue | null>(null);
   const [showFilters, setShowFilters] = useState(false);
   const [isAdjustingPoint, setIsAdjustingPoint] = useState(false);
@@ -137,7 +132,6 @@ export default function App() {
       if (!v.hasOutdoor) return false;
       if (activeFilters.onlyFavs && !favorites.includes(v.id)) return false;
 
-      // Filter by clean amenities (matching 'Bar', 'Pub', 'Restaurant', 'Café')
       if (activeFilters.tags.length > 0) {
         const hasMatchingTag = activeFilters.tags.some((t) => v.tags.includes(t));
         if (!hasMatchingTag) return false;
@@ -226,7 +220,6 @@ export default function App() {
   return (
     <div className="relative w-screen h-[100dvh] flex flex-col overflow-hidden bg-slate-50 font-sans antialiased text-slate-800">
       
-      {/* Search Header and live Weather Alerts */}
       <div className="absolute top-4 left-4 right-4 z-[1000] flex flex-col gap-2 pointer-events-none">
         <div className="w-full pointer-events-auto bg-white/95 backdrop-blur-md rounded-2xl shadow-xl border border-slate-100 p-2.5 flex items-center justify-between gap-2.5">
           <div className="flex items-center gap-2.5 flex-1 min-w-0">
@@ -242,8 +235,9 @@ export default function App() {
             />
           </div>
 
+          {/* Weather pill styled with Teal (#7cbcc7) */}
           {weather && (
-            <div className="text-xs font-bold text-slate-600 bg-slate-100 px-2.5 py-1.5 rounded-xl flex items-center gap-1.5 flex-shrink-0 mr-1 shadow-sm" title={weather.description}>
+            <div className="text-xs font-bold text-[#7cbcc7] bg-[#7cbcc7]/10 border border-[#7cbcc7]/20 px-2.5 py-1.5 rounded-xl flex items-center gap-1.5 flex-shrink-0 mr-1 shadow-sm" title={weather.description}>
               <span>{weather.icon}</span>
               <span>{weather.temp}°C</span>
             </div>
@@ -251,11 +245,12 @@ export default function App() {
         </div>
 
         <div className="flex items-center gap-1.5 pointer-events-auto overflow-x-auto no-scrollbar py-0.5">
+          {/* Main chips styled with Terracotta (#cf5a47) and Burgundy (#350505) */}
           <button
             onClick={() => setIsLiveNow(true)}
             className={`px-4 py-2 rounded-full text-xs font-bold shadow-md transition-all whitespace-nowrap border ${
               isLiveNow
-                ? 'bg-amber-400 border-amber-400 text-slate-900 ring-2 ring-amber-400/20'
+                ? 'bg-[#cf5a47] border-[#cf5a47] text-white ring-2 ring-[#cf5a47]/20'
                 : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
             }`}
           >
@@ -269,7 +264,7 @@ export default function App() {
             }}
             className={`px-4 py-2 rounded-full text-xs font-bold shadow-md transition-all whitespace-nowrap border ${
               activeFilters.minHours >= 2
-                ? 'bg-slate-900 border-slate-900 text-white'
+                ? 'bg-[#350505] border-[#350505] text-white shadow-sm'
                 : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
             }`}
           >
@@ -280,7 +275,7 @@ export default function App() {
             onClick={() => setShowFilters(true)}
             className={`px-4 py-2 rounded-full text-xs font-bold shadow-md transition-all whitespace-nowrap border ${
               showFilters || activeFilters.tags.length > 0 || activeFilters.onlyFavs
-                ? 'bg-indigo-600 border-indigo-600 text-white'
+                ? 'bg-[#350505] border-[#350505] text-white shadow-sm'
                 : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
             }`}
           >
@@ -288,7 +283,6 @@ export default function App() {
           </button>
         </div>
 
-        {/* Minimalist, emoji-free district jump row */}
         <div className="flex items-center gap-1.5 pointer-events-auto overflow-x-auto no-scrollbar py-0.5">
           {DISTRICTS.map((dist) => (
             <button
@@ -301,8 +295,9 @@ export default function App() {
           ))}
         </div>
 
+        {/* Live Weather Alert Banner styled with Peach (#eab88d) and Burgundy (#350505) */}
         {weather?.isBad && (
-          <div className="w-full pointer-events-auto bg-amber-500 text-slate-950 px-4 py-2.5 rounded-xl shadow-lg flex items-center gap-2 border border-amber-400/30">
+          <div className="w-full pointer-events-auto bg-[#eab88d]/15 text-[#350505] px-4 py-2.5 rounded-xl shadow-lg flex items-center gap-2 border border-[#eab88d]/30">
             <span className="text-sm">⚠️</span>
             <p className="text-[11px] font-bold leading-tight">
               Göteborg is currently {weather.description.toLowerCase()}. Calculated sun windows represent theoretical clear skies.
@@ -369,7 +364,7 @@ export default function App() {
           <div className="w-full max-w-lg">
             <FilterSheet
               onClose={() => setShowFilters(false)}
-              availableTags={CLEAN_AMENITIES} // Passing the simplified categories array
+              availableTags={CLEAN_AMENITIES}
               selectedTags={activeFilters.tags}
               onToggleTag={(t) => {
                 setActiveFilters((prev) => {

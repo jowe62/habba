@@ -2,20 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
-/* System-wide modern typography and viewport resets */
 html, body, #root {
   width: 100%;
   height: 100%;
   margin: 0;
   padding: 0;
   overflow: hidden;
-  background-color: #f8fafc;
+  background-color: #fcf9f6; /* Set to soft warm sand tint */
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Hide horizontal scrollbar for clean horizontal chip bars */
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
@@ -24,9 +22,8 @@ html, body, #root {
   scrollbar-width: none;
 }
 
-/* Clean up Leaflet generic UI borders and backgrounds */
 .leaflet-container {
-  background: #f8fafc !important;
+  background: #fcf9f6 !important;
 }
 .leaflet-pane {
   z-index: 1 !important;
@@ -35,37 +32,37 @@ html, body, #root {
   z-index: 100 !important;
 }
 
-/* Custom premium range slider thumb styling */
+/* Custom Terracotta (#cf5a47) Slider Thumb handle */
 input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 18px;
-  height: 18px;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
-  background: #f59e0b; /* Warm amber-500 */
+  background: #cf5a47;
   border: 3px solid #ffffff;
-  box-shadow: 0 4px 10px rgba(245, 158, 11, 0.4);
+  box-shadow: 0 4px 10px rgba(207, 90, 71, 0.4);
   cursor: pointer;
   transition: transform 0.1s ease, box-shadow 0.1s ease;
 }
 
 input[type="range"]::-webkit-slider-thumb:hover {
   transform: scale(1.15);
-  box-shadow: 0 4px 14px rgba(245, 158, 11, 0.6);
+  box-shadow: 0 4px 14px rgba(207, 90, 71, 0.6);
 }
 
 input[type="range"]::-moz-range-thumb {
-  width: 18px;
-  height: 18px;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
-  background: #f59e0b;
+  background: #cf5a47;
   border: 3px solid #ffffff;
-  box-shadow: 0 4px 10px rgba(245, 158, 11, 0.4);
+  box-shadow: 0 4px 10px rgba(207, 90, 71, 0.4);
   cursor: pointer;
   transition: transform 0.1s ease, box-shadow 0.1s ease;
 }
 
 input[type="range"]::-moz-range-thumb:hover {
   transform: scale(1.15);
-  box-shadow: 0 4px 14px rgba(245, 158, 11, 0.6);
+  box-shadow: 0 4px 14px rgba(207, 90, 71, 0.6);
 }

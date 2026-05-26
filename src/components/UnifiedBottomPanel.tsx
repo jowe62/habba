@@ -3,14 +3,11 @@ import { Venue } from '../types';
 import { calculateSunDetails } from '../utils/sunUtils';
 
 interface UnifiedBottomPanelProps {
-  // Time Control State
   currentHour: number;
   currentMin: number;
   onTimeChange: (hour: number, minute: number) => void;
   isLiveNow: boolean;
   onSetLiveNow: () => void;
-  
-  // Venue State
   venuesInView: Venue[];
   evaluatedTime: Date;
   onSelectVenue: (venue: Venue) => void;
@@ -32,7 +29,6 @@ export const UnifiedBottomPanel: React.FC<UnifiedBottomPanelProps> = ({
 }) => {
   const [isListOpen, setIsListOpen] = useState(false);
 
-  // Time calculations
   const sliderVal = currentHour * 60 + currentMin;
 
   const handleSliderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -52,7 +48,6 @@ export const UnifiedBottomPanel: React.FC<UnifiedBottomPanelProps> = ({
     { label: 'Evening', h: 20, m: 0 },
   ];
 
-  // Process and sort list
   const processedList = venuesInView
     .map((v) => {
       const activeLat = v.outdoorPoint?.lat ?? v.lat;
@@ -65,12 +60,10 @@ export const UnifiedBottomPanel: React.FC<UnifiedBottomPanelProps> = ({
       if (!a.sun.inSunNow && b.sun.inSunNow) return 1;
       return b.sun.totalSunMinutes - a.sun.totalSunMinutes;
     })
-    .slice(0, 8); // Top 8 nearby bars
+    .slice(0, 8);
 
   return (
     <div className="bg-white/95 backdrop-blur-md rounded-t-[2.5rem] shadow-[0_-12px_40px_-15px_rgba(0,0,0,0.15)] border-t border-slate-100 flex flex-col max-h-[80vh] w-full transition-all duration-300">
-      
-      {/* 1. Drag Handle & Sheet Header */}
       <div 
         onClick={() => setIsListOpen(!isListOpen)} 
         className="w-full pt-3 pb-1 flex flex-col items-center justify-center cursor-pointer select-none"
@@ -78,7 +71,6 @@ export const UnifiedBottomPanel: React.FC<UnifiedBottomPanelProps> = ({
         <div className="w-12 h-1.5 bg-slate-200 rounded-full mb-1"></div>
       </div>
 
-      {/* 2. Embedded Time Controls (Always accessible in the thumb zone) */}
       <div className="px-5 pb-4 space-y-3 border-b border-slate-50">
         <div className="flex items-center justify-between">
           <span className="text-xs font-bold text-slate-400 tracking-wider uppercase">Seating Time</span>
@@ -89,14 +81,14 @@ export const UnifiedBottomPanel: React.FC<UnifiedBottomPanelProps> = ({
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
               </span>
             )}
-            <span className="text-xl font-bold tracking-tight text-slate-800 tabular-nums">
+            <span className="text-xl font-bold tracking-tight text-[#350505] tabular-nums">
               {formatDisplayTime(currentHour, currentMin)}
             </span>
           </div>
         </div>
 
-        {/* Custom Slider */}
         <div className="relative w-full">
+          {/* Continuous slider active color set to Terracotta (#cf5a47) */}
           <input
             type="range"
             min={8 * 60}
@@ -104,7 +96,7 @@ export const UnifiedBottomPanel: React.FC<UnifiedBottomPanelProps> = ({
             step={10}
             value={sliderVal}
             onChange={handleSliderChange}
-            className="w-full h-2 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-amber-500 focus:outline-none"
+            className="w-full h-2 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-[#cf5a47] focus:outline-none"
           />
           <div className="flex justify-between text-[9px] font-bold text-slate-400 mt-1 px-1">
             <span>08:00</span>
@@ -115,13 +107,12 @@ export const UnifiedBottomPanel: React.FC<UnifiedBottomPanelProps> = ({
           </div>
         </div>
 
-        {/* Quick Hotkeys */}
         <div className="flex items-center gap-1.5 pt-1">
           <button
             onClick={onSetLiveNow}
             className={`px-3 py-1.5 rounded-full text-xs font-bold transition-all border ${
               isLiveNow
-                ? 'bg-emerald-50 border-emerald-200 text-emerald-700 shadow-sm'
+                ? 'bg-[#7cbcc7]/10 border-[#7cbcc7] text-[#7cbcc7] shadow-sm'
                 : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50'
             }`}
           >
@@ -135,7 +126,7 @@ export const UnifiedBottomPanel: React.FC<UnifiedBottomPanelProps> = ({
                 onClick={() => onTimeChange(preset.h, preset.m)}
                 className={`px-3 py-1.5 rounded-full text-xs font-bold transition-all border ${
                   isActive
-                    ? 'bg-slate-900 border-slate-900 text-white shadow-sm'
+                    ? 'bg-[#350505] border-[#350505] text-white shadow-sm'
                     : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50'
                 }`}
               >
@@ -146,12 +137,11 @@ export const UnifiedBottomPanel: React.FC<UnifiedBottomPanelProps> = ({
         </div>
       </div>
 
-      {/* 3. Sliding List Trigger Header */}
       <button
         onClick={() => setIsListOpen(!isListOpen)}
         className="w-full py-3.5 px-5 flex items-center justify-between hover:bg-slate-50/50 transition-colors focus:outline-none text-left"
       >
-        <span className="text-sm font-bold text-slate-800">
+        <span className="text-sm font-bold text-[#350505]">
           {isListOpen ? 'Close Places List' : `Show nearby patios (${venuesInView.length})`}
         </span>
         <div className="flex items-center gap-1">
@@ -162,7 +152,6 @@ export const UnifiedBottomPanel: React.FC<UnifiedBottomPanelProps> = ({
         </div>
       </button>
 
-      {/* 4. Sliding Venue List */}
       {isListOpen && (
         <div className="overflow-y-auto px-5 pb-6 flex-1 divide-y divide-slate-100">
           {processedList.length === 0 ? (
@@ -175,7 +164,7 @@ export const UnifiedBottomPanel: React.FC<UnifiedBottomPanelProps> = ({
               {hasActiveFilters && (
                 <button
                   onClick={onClearFilters}
-                  className="mt-3 px-4 py-2 bg-slate-950 text-white rounded-full text-xs font-bold"
+                  className="mt-3 px-4 py-2 bg-[#350505] text-white rounded-full text-xs font-bold"
                 >
                   Reset Active Filters
                 </button>
@@ -204,7 +193,7 @@ export const UnifiedBottomPanel: React.FC<UnifiedBottomPanelProps> = ({
 
                 <div className="text-right flex-shrink-0 flex flex-col items-end">
                   {sun.inSunNow ? (
-                    <span className="text-[10px] font-extrabold text-amber-700 flex items-center gap-0.5 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">
+                    <span className="text-[10px] font-extrabold text-[#cf5a47] flex items-center gap-0.5 bg-[#cf5a47]/5 px-2 py-0.5 rounded-full border border-[#cf5a47]/20">
                       ☀️ Sun now
                     </span>
                   ) : (
