@@ -48,6 +48,7 @@ export const UnifiedBottomPanel: React.FC<UnifiedBottomPanelProps> = ({
     { label: 'Evening', h: 20, m: 0 },
   ];
 
+  // Dynamic context-sensitive sorting algorithm based on active schedule state
   const processedList = venuesInView
     .map((v) => {
       const activeLat = v.outdoorPoint?.lat ?? v.lat;
@@ -56,9 +57,22 @@ export const UnifiedBottomPanel: React.FC<UnifiedBottomPanelProps> = ({
       return { venue: v, sun };
     })
     .sort((a, b) => {
-      if (a.sun.inSunNow && !b.sun.inSunNow) return -1;
-      if (!a.sun.inSunNow && b.sun.inSunNow) return 1;
-      return b.sun.totalSunMinutes - a.sun.totalSunMinutes;
+      if (isLiveNow) {
+        // Now-mode: Sort by inSunNow (desc), then totalSunMinutes (desc)
+        if (a.sun.inSunNow !== b.sun.inSunNow) {
+          return a.sun.inSunNow ? -1 : 1;
+        }
+        return b.sun.totalSunMinutes - a.sun.totalSunMinutes;
+      } else {
+        // Plan-mode: Sort by totalSunMinutes (desc), then inSunNow (desc)
+        if (b.sun.totalSunMinutes !== a.sun.totalSunMinutes) {
+          return b.sun.totalSunMinutes - a.sun.totalSunMinutes;
+        }
+        if (a.sun.inSunNow !== b.sun.inSunNow) {
+          return a.sun.inSunNow ? -1 : 1;
+        }
+        return 0;
+      }
     })
     .slice(0, 8);
 

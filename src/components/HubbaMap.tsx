@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { Venue } from '../types';
@@ -16,43 +16,6 @@ interface HubbaMapProps {
   targetCenter: { lat: number; lng: number; zoom?: number } | null;
 }
 
-// Calculates consecutive remaining sunny hours from the current selected time forward
-function getRemainingSunHours(venue: Venue, evaluatedTime: Date): number {
-  const activeLat = venue.outdoorPoint?.lat ?? venue.lat;
-  const activeLng = venue.outdoorPoint?.lng ?? venue.lng;
-  
-  const baseDate = new Date(evaluatedTime);
-  const { altitude: currAlt, azimuth: currAz } = getSolarCoordinates(activeLat, activeLng, baseDate);
-  const inSunNow = isPointInSun(currAlt, currAz, venue.horizonMask);
-  
-  if (!inSunNow) return 0;
-  
-  let consecutiveMins = 0;
-  const year = baseDate.getFullYear();
-  const month = baseDate.getMonth();
-  const day = baseDate.getDate();
-  const currentHour = baseDate.getHours();
-  const currentMin = baseDate.getMinutes();
-  
-  const startMins = currentHour * 60 + currentMin;
-  const endMins = 22 * 60; // Up to end of active window (22:00)
-  
-  for (let mins = startMins; mins <= endMins; mins += 10) {
-    const h = Math.floor(mins / 60);
-    const m = mins % 60;
-    const stepTime = new Date(year, month, day, h, m, 0);
-    const { altitude, azimuth } = getSolarCoordinates(activeLat, activeLng, stepTime);
-    
-    if (isPointInSun(altitude, azimuth, venue.horizonMask)) {
-      consecutiveMins += 10;
-    } else {
-      break; // Stop at first structural shade obstacle
-    }
-  }
-  
-  return consecutiveMins / 60;
-}
-
 export const HubbaMap: React.FC<HubbaMapProps> = ({
   venues,
   selectedVenue,
@@ -66,10 +29,14 @@ export const HubbaMap: React.FC<HubbaMapProps> = ({
 }) => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
-  const markersRef = useRef<{ [key: string]: L.Marker }>({});
+  const markersRef = useRef<{ [key: string]: L.Marker | L.Layer }>({});
   const adjustmentMarkerRef = useRef<L.Marker | null>(null);
   const userLocMarkerRef = useRef<L.Marker | null>(null);
 
+  // Active zoom state tracker to drive progressive visual disclosure
+  const [zoomState, setZoomState] = useState(14);
+
+  // Initialize Map
   useEffect(() => {
     if (!mapContainerRef.current || mapRef.current) return;
 
@@ -89,8 +56,13 @@ export const HubbaMap: React.FC<HubbaMapProps> = ({
       onBoundsChange(map.getBounds());
     });
 
+    map.on('zoomend', () => {
+      setZoomState(map.getZoom());
+    });
+
     setTimeout(() => {
       onBoundsChange(map.getBounds());
+      setZoomState(map.getZoom());
     }, 100);
 
     mapRef.current = map;
@@ -101,55 +73,148 @@ export const HubbaMap: React.FC<HubbaMapProps> = ({
     };
   }, []);
 
+  // Fly-to listener for district chips jumping
   useEffect(() => {
     const map = mapRef.current;
     if (!map || !targetCenter) return;
     map.setView([targetCenter.lat, targetCenter.lng], targetCenter.zoom ?? 15, { animate: true });
   }, [targetCenter]);
 
+  // Update/Draw Venue Markers and Custom Clustering
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
 
-    Object.values(markersRef.current).forEach((m) => m.remove());
+    // Clear previous markers and layers
+    Object.values(markersRef.current).forEach((layer) => layer.remove());
     markersRef.current = {};
 
-    venues.forEach((venue) => {
-      const activeLat = venue.outdoorPoint?.lat ?? venue.lat;
-      const activeLng = venue.outdoorPoint?.lng ?? venue.lng;
-      const { inSunNow } = calculateSunDetails(activeLat, activeLng, evaluatedTime, venue.horizonMask);
+    // A. Lightweight, reactive grid-clustering system (Zoom <= 13)
+    if (zoomState <= 13) {
+      const clusters: { [key: string]: Venue[] } = {};
+      // Set grid boundary scale based on zoom density
+      const gridSize = zoomState === 13 ? 0.007 : zoomState === 12 ? 0.014 : 0.028;
 
-      // Calculates fill percentage based on: 4+ hrs = 100%, 2 hrs = 50%, 1 hr = 25%
-      const remainingHours = getRemainingSunHours(venue, evaluatedTime);
-      const fillPercent = Math.min(100, Math.round((remainingHours / 4) * 100));
-
-      // Uses pure CSS linear gradients to render direct filling cylinder dots on active nodes
-      const html = `
-        <div class="flex items-center justify-center transition-transform duration-300">
-          <div class="rounded-full border-2 border-white shadow-md transition-all duration-300 ${
-            inSunNow 
-              ? 'w-[22px] h-[22px] ring-4 ring-[#cf5a47]/10 scale-110' 
-              : 'w-3 h-3 bg-[#eab88d] opacity-55'
-          }" style="${inSunNow ? `background: linear-gradient(to top, #cf5a47 ${fillPercent}%, rgba(234, 184, 141, 0.3) ${fillPercent}%);` : ''}"></div>
-        </div>
-      `;
-
-      const customIcon = L.divIcon({
-        html,
-        className: 'custom-venue-dot',
-        iconSize: inSunNow ? [26, 26] : [16, 16],
-        iconAnchor: inSunNow ? [13, 13] : [8, 8],
+      venues.forEach((venue) => {
+        const lat = venue.outdoorPoint?.lat ?? venue.lat;
+        const lng = venue.outdoorPoint?.lng ?? venue.lng;
+        const cellX = Math.floor(lng / gridSize);
+        const cellY = Math.floor(lat / gridSize);
+        const key = `${cellX}_${cellY}`;
+        
+        if (!clusters[key]) {
+          clusters[key] = [];
+        }
+        clusters[key].push(venue);
       });
 
-      const marker = L.marker([activeLat, activeLng], { icon: customIcon })
-        .addTo(map)
-        .on('click', () => {
-          onSelectVenue(venue);
-        });
+      Object.entries(clusters).forEach(([key, list]) => {
+        if (list.length === 1) {
+          // Render individual marker with no progressive badge
+          renderIndividualMarker(map, list[0], false);
+        } else {
+          // Calculate centroid center
+          let sumLat = 0;
+          let sumLng = 0;
+          list.forEach(v => {
+            sumLat += v.outdoorPoint?.lat ?? v.lat;
+            sumLng += v.outdoorPoint?.lng ?? v.lng;
+          });
+          const avgLat = sumLat / list.length;
+          const avgLng = sumLng / list.length;
 
-      markersRef.current[venue.id] = marker;
+          // Check if any patio inside is currently in the sun
+          const anyInSun = list.some(v => {
+            const activeLat = v.outdoorPoint?.lat ?? v.lat;
+            const activeLng = v.outdoorPoint?.lng ?? v.lng;
+            const { inSunNow } = calculateSunDetails(activeLat, activeLng, evaluatedTime, v.horizonMask);
+            return inSunNow;
+          });
+
+          const html = `
+            <div class="flex items-center justify-center w-11 h-11 relative">
+              <div class="absolute inset-0"></div> <!-- 44px tap target -->
+              <div class="w-8 h-8 bg-[#350505] text-[#eab88d] rounded-full flex items-center justify-center text-xs font-bold shadow-md border-2 border-white relative transition-transform ${
+                anyInSun ? 'ring-4 ring-[#cf5a47]/30' : ''
+              }">
+                ${list.length}
+                ${anyInSun ? `<div class="absolute -top-1 -right-1 w-2.5 h-2.5 bg-[#cf5a47] rounded-full border border-white shadow-sm"></div>` : ''}
+              </div>
+            </div>
+          `;
+
+          const customIcon = L.divIcon({
+            html,
+            className: 'custom-cluster-icon',
+            iconSize: [44, 44],
+            iconAnchor: [22, 22],
+          });
+
+          const clusterMarker = L.marker([avgLat, avgLng], { icon: customIcon, zIndexOffset: 2000 })
+            .addTo(map)
+            .on('click', () => {
+              map.setView([avgLat, avgLng], zoomState + 2, { animate: true });
+            });
+
+          markersRef.current[`cluster-${key}`] = clusterMarker;
+        }
+      });
+    } else {
+      // B. Individual rendering mode (Zoom >= 14)
+      venues.forEach((venue) => {
+        renderIndividualMarker(map, venue, zoomState >= 15);
+      });
+    }
+  }, [venues, evaluatedTime, zoomState]);
+
+  // Helper function to render a clean, high-contrast, dual-dimension marker
+  const renderIndividualMarker = (map: L.Map, venue: Venue, showBadge: boolean) => {
+    const activeLat = venue.outdoorPoint?.lat ?? venue.lat;
+    const activeLng = venue.outdoorPoint?.lng ?? venue.lng;
+    const { inSunNow, totalSunMinutes } = calculateSunDetails(activeLat, activeLng, evaluatedTime, venue.horizonMask);
+
+    // Compute sun-hours badge text (Capped at 6h+)
+    const roundedHours = Math.round(totalSunMinutes / 60);
+    const badgeText = roundedHours >= 6 ? '6h+' : `${roundedHours}h`;
+
+    // Visual Hierarchy: Sun = high-contrast terracotta (#cf5a47); Shade = neutral gray (#94a3b8)
+    const html = `
+      <div class="flex items-center justify-center w-11 h-11 relative">
+        <div class="absolute inset-0"></div> <!-- Guaranteed 44px transparent tap target -->
+        
+        <div class="rounded-full border-2 border-white shadow-md transition-all duration-300 ${
+          inSunNow 
+            ? 'w-5 h-5 bg-[#cf5a47] ring-4 ring-[#cf5a47]/20 scale-110' 
+            : 'w-3.5 h-3.5 bg-[#94a3b8] opacity-70'
+        }"></div>
+
+        <!-- Progressive disclosure hours badge (Visible at Zoom >= 15) -->
+        ${showBadge ? `
+          <div class="absolute left-7 bg-white/95 px-1.5 py-0.5 rounded-md border border-slate-100 shadow-sm text-[9px] font-extrabold whitespace-nowrap text-[#350505] tracking-tight">
+            ${badgeText}
+          </div>
+        ` : ''}
+      </div>
+    `;
+
+    const customIcon = L.divIcon({
+      html,
+      className: 'custom-venue-dot',
+      iconSize: [44, 44],
+      iconAnchor: [22, 22],
     });
-  }, [venues, evaluatedTime]);
+
+    const marker = L.marker([activeLat, activeLng], { 
+      icon: customIcon,
+      zIndexOffset: inSunNow ? 1000 : 0 // Sun markers drawn on top of shade markers
+    })
+      .addTo(map)
+      .on('click', () => {
+        onSelectVenue(venue);
+      });
+
+    markersRef.current[venue.id] = marker;
+  };
 
   useEffect(() => {
     const map = mapRef.current;
@@ -202,6 +267,7 @@ export const HubbaMap: React.FC<HubbaMapProps> = ({
     }
   }, [isAdjustingPoint, selectedVenue]);
 
+  // Geolocation dot
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
