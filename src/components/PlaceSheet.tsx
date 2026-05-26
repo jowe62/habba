@@ -162,7 +162,6 @@ export const PlaceSheet: React.FC<PlaceSheetProps> = ({
           </div>
         </div>
 
-        {/* --- CROWDSOURCED LIVE SIGNAL BLOCK (V3) --- */}
         <div className="p-4 bg-[#eebd8d]/5 border border-[#eebd8d]/15 rounded-2xl flex flex-col gap-3">
           <div className="flex items-center justify-between">
             <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Live Seating Signal</span>
@@ -212,7 +211,6 @@ export const PlaceSheet: React.FC<PlaceSheetProps> = ({
           </div>
         </div>
 
-        {/* --- TIMELINE SECTION (Legend/Alerts completely hidden) --- */}
         <div className="space-y-2">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Day Sun-Profile (08:00 - 22:00)</span>
@@ -231,7 +229,6 @@ export const PlaceSheet: React.FC<PlaceSheetProps> = ({
               ))}
             </div>
 
-            {/* Custom pointer pin styled back in Main Red (#fc5a47) */}
             <div 
               className="absolute top-0 bottom-1 flex flex-col items-center transition-all duration-300 pointer-events-none"
               style={{ left: `${pointerPercent}%` }}
@@ -261,12 +258,11 @@ export const PlaceSheet: React.FC<PlaceSheetProps> = ({
         </div>
 
         <div className="pt-2 space-y-2">
-          {/* Primary Action Button now styled back to Main Red (#fc5a47) with white text */}
           <a
             href={getDirectionsUrl()}
             target="_blank"
             rel="noopener noreferrer"
-            className="w-full py-3 bg-[#fc5a47] hover:bg-[#fc5a47]/90 text-white rounded-xl text-center text-sm font-bold transition-all flex items-center justify-center gap-2 shadow-md"
+            className="w-full py-3 bg-[#7cbec7] hover:bg-[#7cbec7]/90 text-[#350505] rounded-xl text-center text-sm font-bold transition-all flex items-center justify-center gap-2 shadow-md"
           >
             🗺️ Open in Map Navigation
           </a>

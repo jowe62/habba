@@ -27,7 +27,6 @@ export interface SunDetails {
   totalSunMinutes: number;
 }
 
-// Crowdsourced live report definition
 export interface Report {
   timestamp: number;
   venueId: string;

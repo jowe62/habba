@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import processedVenues from './data/processed_venues.json';
-import { Venue } from './types';
+import { Venue, Report, OutdoorPoint } from './types';
 import { calculateSunDetails } from './utils/sunUtils';
 import { HubbaMap } from './components/HubbaMap';
 import { UnifiedBottomPanel } from './components/UnifiedBottomPanel';
@@ -15,7 +15,6 @@ interface WeatherState {
   isBad: boolean;
 }
 
-// Minimal, emoji-free district jump coordinates
 const DISTRICTS = [
   { name: "Majorna", lat: 57.6920, lng: 11.9180 },
   { name: "Linné", lat: 57.6980, lng: 11.9510 },
@@ -25,7 +24,6 @@ const DISTRICTS = [
   { name: "Lindholmen", lat: 57.7060, lng: 11.9370 }
 ];
 
-// Simplified core amenity list (removes messy raw OSM food sub-tags)
 const CLEAN_AMENITIES = ['Bar', 'Pub', 'Restaurant', 'Café'];
 
 function parseWMOCode(code: number): { desc: string; isBad: boolean; icon: string } {
@@ -44,14 +42,11 @@ export default function App() {
   const [isLiveNow, setIsLiveNow] = useState(true);
   const [venues, setVenues] = useState<Venue[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
-  
-  // Advanced filters state
   const [activeFilters, setActiveFilters] = useState({
     tags: [] as string[],
-    minHours: 2.0, // Swapped to float for continuous slider
+    minHours: 1.0,
     onlyFavs: false,
   });
-  
   const [selectedVenue, setSelectedVenue] = useState<Venue | null>(null);
   const [showFilters, setShowFilters] = useState(false);
   const [isAdjustingPoint, setIsAdjustingPoint] = useState(false);
@@ -60,6 +55,10 @@ export default function App() {
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
   const [weather, setWeather] = useState<WeatherState | null>(null);
   const [targetCenter, setTargetCenter] = useState<{ lat: number; lng: number; zoom?: number } | null>(null);
+  const [activeDistrict, setActiveDistrict] = useState<string | null>(null);
+
+  const [originalOutdoorPoint, setOriginalOutdoorPoint] = useState<OutdoorPoint | null>(null);
+  const [reports, setReports] = useState<Report[]>([]);
 
   const evaluatedTime = useMemo(() => {
     const d = new Date();
@@ -73,6 +72,17 @@ export default function App() {
     const savedFavs = localStorage.getItem('habba_favs');
     if (savedFavs) {
       setFavorites(JSON.parse(savedFavs));
+    }
+
+    let deviceId = localStorage.getItem('habba_device_id');
+    if (!deviceId) {
+      deviceId = 'device_' + Math.random().toString(36).substring(2, 15);
+      localStorage.setItem('habba_device_id', deviceId);
+    }
+
+    const savedReports = localStorage.getItem('habba_reports');
+    if (savedReports) {
+      setReports(JSON.parse(savedReports));
     }
 
     const savedAdjustments = localStorage.getItem('habba_adjustments');
@@ -124,6 +134,12 @@ export default function App() {
     return () => clearInterval(interval);
   }, [isLiveNow]);
 
+  const availableTags = useMemo(() => {
+    const tags = new Set<string>();
+    venues.forEach((v) => v.tags.forEach((t) => tags.add(t)));
+    return Array.from(tags);
+  }, [venues]);
+
   const filteredVenues = useMemo(() => {
     return venues.filter((v) => {
       if (searchQuery.trim().length > 0) {
@@ -137,7 +153,6 @@ export default function App() {
       if (!v.hasOutdoor) return false;
       if (activeFilters.onlyFavs && !favorites.includes(v.id)) return false;
 
-      // Filter by clean amenities (matching 'Bar', 'Pub', 'Restaurant', 'Café')
       if (activeFilters.tags.length > 0) {
         const hasMatchingTag = activeFilters.tags.some((t) => v.tags.includes(t));
         if (!hasMatchingTag) return false;
@@ -173,17 +188,52 @@ export default function App() {
   };
 
   const handleUpdateOutdoorPoint = (id: string, lat: number, lng: number) => {
-    const savedAdjustments = localStorage.getItem('habba_adjustments');
-    const adjustments = savedAdjustments ? JSON.parse(savedAdjustments) : {};
-
-    adjustments[id] = { lat, lng };
-    localStorage.setItem('habba_adjustments', JSON.stringify(adjustments));
-
     setVenues((prev) =>
       prev.map((v) => (v.id === id ? { ...v, outdoorPoint: { lat, lng } } : v))
     );
 
     setSelectedVenue((prev) => (prev && prev.id === id ? { ...prev, outdoorPoint: { lat, lng } } : prev));
+  };
+
+  const handleStartAdjustMode = () => {
+    if (selectedVenue) {
+      setOriginalOutdoorPoint(selectedVenue.outdoorPoint || null);
+    }
+    setIsAdjustingPoint(true);
+  };
+
+  const handleCancelAdjustMode = () => {
+    if (selectedVenue) {
+      const restoredPoint = originalOutdoorPoint || undefined;
+      setVenues((prev) =>
+        prev.map((v) => (v.id === selectedVenue.id ? { ...v, outdoorPoint: restoredPoint } : v))
+      );
+      setSelectedVenue((prev) => (prev && prev.id === selectedVenue.id ? { ...prev, outdoorPoint: restoredPoint } : prev));
+    }
+    setIsAdjustingPoint(false);
+    setOriginalOutdoorPoint(null);
+  };
+
+  const handleSaveAdjustMode = () => {
+    if (selectedVenue) {
+      const currentPoint = selectedVenue.outdoorPoint;
+      if (currentPoint) {
+        const savedAdjustments = localStorage.getItem('habba_adjustments');
+        const adjustments = savedAdjustments ? JSON.parse(savedAdjustments) : {};
+        adjustments[selectedVenue.id] = currentPoint;
+        localStorage.setItem('habba_adjustments', JSON.stringify(adjustments));
+      }
+    }
+    setIsAdjustingPoint(false);
+    setOriginalOutdoorPoint(null);
+  };
+
+  const handleResetOutdoorPointSelf = () => {
+    if (selectedVenue) {
+      handleResetOutdoorPoint(selectedVenue.id);
+      setIsAdjustingPoint(false);
+      setOriginalOutdoorPoint(null);
+    }
   };
 
   const handleResetOutdoorPoint = (id: string) => {
@@ -215,101 +265,126 @@ export default function App() {
     });
   };
 
+  const handleAddReport = (value: 'yes' | 'no'): boolean => {
+    if (!selectedVenue) return false;
+    const devId = localStorage.getItem('habba_device_id') || 'anon';
+    
+    const existingIdx = reports.findIndex(r => r.venueId === selectedVenue.id && r.deviceId === devId);
+
+    if (existingIdx > -1) {
+      const existing = reports[existingIdx];
+      const elapsed = Date.now() - existing.timestamp;
+
+      if (elapsed < 30 * 1000) {
+        const remaining = Math.ceil((30 * 1000 - elapsed) / 1000);
+        alert(`Please wait ${remaining}s before changing your vote.`);
+        return false;
+      }
+
+      const updated = [...reports];
+      updated[existingIdx] = {
+        ...existing,
+        timestamp: Date.now(),
+        value
+      };
+      setReports(updated);
+      localStorage.setItem('habba_reports', JSON.stringify(updated));
+    } else {
+      const newReport: Report = {
+        timestamp: Date.now(),
+        venueId: selectedVenue.id,
+        deviceId: devId,
+        value
+      };
+      const updated = [...reports, newReport];
+      setReports(updated);
+      localStorage.setItem('habba_reports', JSON.stringify(updated));
+    }
+    return true;
+  };
+
   const handleClearFilters = () => {
     setActiveFilters({
       tags: [],
       minHours: 1.0,
       onlyFavs: false,
     });
+    setActiveDistrict(null);
   };
 
   return (
-    <div className="relative w-screen h-[100dvh] flex flex-col overflow-hidden bg-slate-50 font-sans antialiased text-slate-800">
+    <div className="relative w-screen h-[100dvh] flex flex-col overflow-hidden bg-[#faf8f5] font-sans antialiased text-slate-800">
       
-      {/* Search Header and live Weather Alerts */}
-      <div className="absolute top-4 left-4 right-4 z-[1000] flex flex-col gap-2 pointer-events-none">
-        <div className="w-full pointer-events-auto bg-white/95 backdrop-blur-md rounded-2xl shadow-xl border border-slate-100 p-2.5 flex items-center justify-between gap-2.5">
-          <div className="flex items-center gap-2.5 flex-1 min-w-0">
-            <svg className="w-5 h-5 text-slate-400 flex-shrink-0 ml-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-            </svg>
-            <input
-              type="text"
-              placeholder="Search venues, tags..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full focus:outline-none bg-transparent text-sm font-semibold placeholder-slate-400"
-            />
-          </div>
-
-          {weather && (
-            <div className="text-xs font-bold text-slate-600 bg-slate-100 px-2.5 py-1.5 rounded-xl flex items-center gap-1.5 flex-shrink-0 mr-1 shadow-sm" title={weather.description}>
-              <span>{weather.icon}</span>
-              <span>{weather.temp}°C</span>
+      {!isAdjustingPoint && (
+        <div className="absolute top-4 left-4 right-4 z-[1000] flex flex-col gap-2 pointer-events-none">
+          <div className="w-full pointer-events-auto bg-white/95 backdrop-blur-md rounded-2xl shadow-xl border border-[#eebd8d]/30 p-2.5 flex items-center justify-between gap-2">
+            
+            <div className="flex items-center gap-2.5 flex-1 min-w-0">
+              <svg className="w-5 h-5 text-slate-400 flex-shrink-0 ml-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+              </svg>
+              <input
+                type="text"
+                placeholder="Search..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full focus:outline-none bg-transparent text-sm font-bold placeholder-slate-400 text-[#350505]"
+              />
             </div>
-          )}
+
+            <div className="flex items-center gap-1.5 flex-shrink-0">
+              <button
+                onClick={() => setShowFilters(true)}
+                className={`px-3.5 py-1.5 rounded-xl text-xs font-bold border transition-all ${
+                  activeFilters.tags.length > 0 || activeFilters.onlyFavs || activeFilters.minHours > 1 || activeDistrict
+                    ? 'bg-[#fc5a47] border-[#fc5a47] text-white shadow-sm'
+                    : 'bg-white border-[#eebd8d]/30 text-[#350505] hover:bg-[#eebd8d]/10'
+                }`}
+              >
+                Filters {(activeFilters.tags.length > 0 || activeFilters.onlyFavs || activeFilters.minHours > 1 || activeDistrict) && '●'}
+              </button>
+
+              {weather && (
+                <div className="text-xs font-bold text-[#350505] bg-[#eebd8d]/10 border border-[#eebd8d]/20 px-2 py-1.5 rounded-xl flex items-center gap-1 shadow-sm" title={weather.description}>
+                  <span>{weather.icon}</span>
+                  <span>{weather.temp}°C</span>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
+      )}
 
-        <div className="flex items-center gap-1.5 pointer-events-auto overflow-x-auto no-scrollbar py-0.5">
-          <button
-            onClick={() => setIsLiveNow(true)}
-            className={`px-4 py-2 rounded-full text-xs font-bold shadow-md transition-all whitespace-nowrap border ${
-              isLiveNow
-                ? 'bg-amber-400 border-amber-400 text-slate-900 ring-2 ring-amber-400/20'
-                : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
-            }`}
-          >
-            ☀️ Now
-          </button>
-
-          <button
-            onClick={() => {
-              setIsLiveNow(false);
-              setActiveFilters((prev) => ({ ...prev, minHours: prev.minHours >= 2 ? 0 : 2 }));
-            }}
-            className={`px-4 py-2 rounded-full text-xs font-bold shadow-md transition-all whitespace-nowrap border ${
-              activeFilters.minHours >= 2
-                ? 'bg-slate-900 border-slate-900 text-white'
-                : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
-            }`}
-          >
-            ⏱️ ≥ 2h Today
-          </button>
-
-          <button
-            onClick={() => setShowFilters(true)}
-            className={`px-4 py-2 rounded-full text-xs font-bold shadow-md transition-all whitespace-nowrap border ${
-              showFilters || activeFilters.tags.length > 0 || activeFilters.onlyFavs
-                ? 'bg-indigo-600 border-indigo-600 text-white'
-                : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
-            }`}
-          >
-            ⚙️ Filters {(activeFilters.tags.length > 0 || activeFilters.onlyFavs) && '●'}
-          </button>
-        </div>
-
-        {/* Minimalist, emoji-free district jump row */}
-        <div className="flex items-center gap-1.5 pointer-events-auto overflow-x-auto no-scrollbar py-0.5">
-          {DISTRICTS.map((dist) => (
-            <button
-              key={dist.name}
-              onClick={() => setTargetCenter({ lat: dist.lat, lng: dist.lng, zoom: 15 })}
-              className="px-3.5 py-1.5 bg-white/95 border border-slate-100 rounded-full text-[11px] font-bold text-slate-600 shadow-md active:bg-slate-50 whitespace-nowrap transition-all"
-            >
-              {dist.name}
-            </button>
-          ))}
-        </div>
-
-        {weather?.isBad && (
-          <div className="w-full pointer-events-auto bg-amber-500 text-slate-950 px-4 py-2.5 rounded-xl shadow-lg flex items-center gap-2 border border-amber-400/30">
-            <span className="text-sm">⚠️</span>
-            <p className="text-[11px] font-bold leading-tight">
-              Göteborg is currently {weather.description.toLowerCase()}. Calculated sun windows represent theoretical clear skies.
+      {isAdjustingPoint && selectedVenue && (
+        <div className="absolute top-4 left-4 right-4 z-[1000] pointer-events-auto bg-white/95 backdrop-blur-md rounded-2xl shadow-xl border border-[#eebd8d]/30 p-4 flex flex-col md:flex-row md:items-center justify-between gap-3 animate-fade-in">
+          <div className="flex items-center gap-2">
+            <span className="text-sm">📐</span>
+            <p className="text-xs font-bold text-[#350505]">
+              Drag the blue pin to the outdoor seating area
             </p>
           </div>
-        )}
-      </div>
+          <div className="flex items-center gap-2 self-end md:self-auto">
+            <button
+              onClick={handleResetOutdoorPointSelf}
+              className="px-3 py-2 bg-red-50 hover:bg-red-100 border border-red-100 text-red-600 rounded-xl text-xs font-bold transition-all"
+            >
+              Reset
+            </button>
+            <button
+              onClick={handleCancelAdjustMode}
+              className="px-3.5 py-2 bg-white border border-slate-200 text-slate-700 rounded-xl text-xs font-bold hover:bg-slate-50 transition-all"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={handleSaveAdjustMode}
+              className="px-4 py-2 bg-[#fc5a47] hover:bg-[#fc5a47]/95 text-white rounded-xl text-xs font-bold transition-all shadow-md"
+            >
+              Save Position
+            </button>
+          </div>
+        </div>
+      )}
 
       <div className="flex-1 w-full h-full relative z-0">
         <HubbaMap
@@ -328,48 +403,56 @@ export default function App() {
         />
       </div>
 
-      <div className="absolute bottom-0 left-0 right-0 z-[1001] flex flex-col gap-3 pointer-events-none p-4 max-w-lg mx-auto w-full">
-        <div className="pointer-events-auto">
-          {selectedVenue ? (
-            <PlaceSheet
-              venue={selectedVenue}
-              evaluatedTime={evaluatedTime}
-              onClose={() => {
-                setSelectedVenue(null);
-                setIsAdjustingPoint(false);
-              }}
-              isFavorite={favorites.includes(selectedVenue.id)}
-              onToggleFavorite={() => handleToggleFavorite(selectedVenue.id)}
-              isAdjustingPoint={isAdjustingPoint}
-              onToggleAdjustMode={() => setIsAdjustingPoint(!isAdjustingPoint)}
-              onResetOutdoorPoint={() => handleResetOutdoorPoint(selectedVenue.id)}
-            />
-          ) : (
-            <UnifiedBottomPanel
-              currentHour={timeState.hour}
-              currentMin={timeState.min}
-              onTimeChange={(h, m) => {
-                setIsLiveNow(false);
-                setTimeState({ hour: h, min: m });
-              }}
-              isLiveNow={isLiveNow}
-              onSetLiveNow={() => setIsLiveNow(true)}
-              venuesInView={venuesInView}
-              evaluatedTime={evaluatedTime}
-              onSelectVenue={setSelectedVenue}
-              hasActiveFilters={activeFilters.tags.length > 0 || activeFilters.onlyFavs}
-              onClearFilters={handleClearFilters}
-            />
-          )}
+      {!isAdjustingPoint && (
+        <div className="absolute bottom-0 left-0 right-0 z-[1001] flex flex-col gap-3 pointer-events-none p-4 max-w-lg mx-auto w-full">
+          <div className="pointer-events-auto">
+            {selectedVenue ? (
+              <PlaceSheet
+                venue={selectedVenue}
+                evaluatedTime={evaluatedTime}
+                onClose={() => {
+                  setSelectedVenue(null);
+                  setIsAdjustingPoint(false);
+                }}
+                isFavorite={favorites.includes(selectedVenue.id)}
+                onToggleFavorite={() => handleToggleFavorite(selectedVenue.id)}
+                isAdjustingPoint={isAdjustingPoint}
+                onToggleAdjustMode={handleStartAdjustMode}
+                onResetOutdoorPoint={() => handleResetOutdoorPoint(selectedVenue.id)}
+                
+                onCancelAdjustMode={handleCancelAdjustMode}
+                onSaveAdjustMode={handleSaveAdjustMode}
+                
+                reports={reports}
+                onAddReport={handleAddReport}
+              />
+            ) : (
+              <UnifiedBottomPanel
+                currentHour={timeState.hour}
+                currentMin={timeState.min}
+                onTimeChange={(h, m) => {
+                  setIsLiveNow(false);
+                  setTimeState({ hour: h, min: m });
+                }}
+                isLiveNow={isLiveNow}
+                onSetLiveNow={() => setIsLiveNow(true)}
+                venuesInView={venuesInView}
+                evaluatedTime={evaluatedTime}
+                onSelectVenue={setSelectedVenue}
+                hasActiveFilters={activeFilters.tags.length > 0 || activeFilters.onlyFavs || activeDistrict !== null}
+                onClearFilters={handleClearFilters}
+              />
+            )}
+          </div>
         </div>
-      </div>
+      )}
 
       {showFilters && (
         <div className="absolute inset-0 z-[2000] bg-slate-900/40 backdrop-blur-sm flex items-end justify-center">
           <div className="w-full max-w-lg">
             <FilterSheet
               onClose={() => setShowFilters(false)}
-              availableTags={CLEAN_AMENITIES} // Passing the simplified categories array
+              availableTags={CLEAN_AMENITIES}
               selectedTags={activeFilters.tags}
               onToggleTag={(t) => {
                 setActiveFilters((prev) => {
@@ -387,6 +470,12 @@ export default function App() {
                 setActiveFilters((prev) => ({ ...prev, onlyFavs: !prev.onlyFavs }));
               }}
               onClear={handleClearFilters}
+              districts={DISTRICTS}
+              activeDistrict={activeDistrict}
+              onSelectDistrict={(name, lat, lng) => {
+                setActiveDistrict(name);
+                setTargetCenter({ lat, lng, zoom: 15 });
+              }}
             />
           </div>
         </div>

@@ -31,12 +31,12 @@ export const FilterSheet: React.FC<FilterSheetProps> = ({
   onSelectDistrict,
 }) => {
   return (
-    <div className="bg-[#faf8f5]/95 backdrop-blur-md rounded-t-[2.5rem] shadow-[0_-12px_40px_-15px_rgba(0,0,0,0.15)] border-t border-[#eebd8d]/30 flex flex-col max-h-[85vh] overflow-hidden transition-all duration-300">
+    <div className="bg-white/95 backdrop-blur-md rounded-t-[2.5rem] shadow-[0_-12px_40px_-15px_rgba(0,0,0,0.15)] border-t border-slate-100 flex flex-col max-h-[85vh] overflow-hidden transition-all duration-300">
       <div className="w-full pt-3 pb-1 flex flex-col items-center justify-center">
         <div className="w-12 h-1.5 bg-slate-200 rounded-full mb-1"></div>
       </div>
 
-      <div className="flex items-center justify-between px-5 pt-3 pb-3 border-b border-[#eebd8d]/15">
+      <div className="flex items-center justify-between px-5 pt-3 pb-3 border-b border-slate-50">
         <h3 className="text-sm font-bold text-slate-400 tracking-wider uppercase">Advanced Filters</h3>
         <button onClick={onClose} className="p-2 bg-slate-100 hover:bg-slate-200 rounded-full text-slate-600 text-xs w-7 h-7 flex items-center justify-center font-bold">
           ✕
@@ -57,7 +57,7 @@ export const FilterSheet: React.FC<FilterSheetProps> = ({
           />
         </div>
 
-        <div className="space-y-3 p-4 bg-[#eebd8d]/5 border border-[#eebd8d]/15 rounded-2xl">
+        <div className="space-y-3 p-4 bg-[#eabd8d]/5 border border-[#eabd8d]/15 rounded-2xl">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold text-slate-400 tracking-wider uppercase">Minimum Sun Duration</span>
             <span className="text-sm font-extrabold text-[#350505]">

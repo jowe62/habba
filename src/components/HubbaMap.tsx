@@ -72,7 +72,6 @@ export const HubbaMap: React.FC<HubbaMapProps> = ({
 
   const [zoomState, setZoomState] = useState(14);
 
-  // Initialize Map
   useEffect(() => {
     if (!mapContainerRef.current || mapRef.current) return;
 
@@ -109,7 +108,7 @@ export const HubbaMap: React.FC<HubbaMapProps> = ({
     };
   }, []);
 
-  // Freeze Map Interactions while Seating Point adjustment is active
+  // Fixed map locking utilizing (map as any) type casts to bypass .tap TS errors
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
@@ -121,7 +120,7 @@ export const HubbaMap: React.FC<HubbaMapProps> = ({
       map.scrollWheelZoom.disable();
       map.boxZoom.disable();
       map.keyboard.disable();
-      if (map.tap) map.tap.disable();
+      if ((map as any).tap) (map as any).tap.disable();
     } else {
       map.dragging.enable();
       map.touchZoom.enable();
@@ -129,7 +128,7 @@ export const HubbaMap: React.FC<HubbaMapProps> = ({
       map.scrollWheelZoom.enable();
       map.boxZoom.enable();
       map.keyboard.enable();
-      if (map.tap) map.tap.enable();
+      if ((map as any).tap) (map as any).tap.enable();
     }
   }, [isAdjustingPoint]);
 
@@ -139,12 +138,10 @@ export const HubbaMap: React.FC<HubbaMapProps> = ({
     map.setView([targetCenter.lat, targetCenter.lng], targetCenter.zoom ?? 15, { animate: true });
   }, [targetCenter]);
 
-  // Update/Draw Venue Markers
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
 
-    // Clear previous markers
     Object.keys(markersRef.current).forEach((key) => {
       if (key !== 'locked-venue' && key !== 'adjustable-seating') {
         markersRef.current[key].remove();
@@ -191,7 +188,6 @@ export const HubbaMap: React.FC<HubbaMapProps> = ({
             return inSunNow;
           });
 
-          // Dim clusters during Seating Point adjustment mode
           const isDimmed = isAdjustingPoint;
 
           const html = `
@@ -216,7 +212,7 @@ export const HubbaMap: React.FC<HubbaMapProps> = ({
           const clusterMarker = L.marker([avgLat, avgLng], { icon: customIcon, zIndexOffset: 2000 })
             .addTo(map)
             .on('click', () => {
-              if (isAdjustingPoint) return; // Ignore interaction while locked
+              if (isAdjustingPoint) return;
               map.setView([avgLat, avgLng], zoomState + 2, { animate: true });
             });
 
@@ -275,7 +271,7 @@ export const HubbaMap: React.FC<HubbaMapProps> = ({
     })
       .addTo(map)
       .on('click', () => {
-        if (isAdjustingPoint) return; // Lock map interactions
+        if (isAdjustingPoint) return;
         onSelectVenue(venue);
       });
 
@@ -290,7 +286,6 @@ export const HubbaMap: React.FC<HubbaMapProps> = ({
     map.setView([targetLat, targetLng], 16, { animate: true });
   }, [selectedVenue]);
 
-  // Adjusting Seating Point (Locked venue and draggable blue indicators)
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
@@ -310,7 +305,6 @@ export const HubbaMap: React.FC<HubbaMapProps> = ({
       const currentSeatingLat = selectedVenue.outdoorPoint?.lat ?? selectedVenue.lat;
       const currentSeatingLng = selectedVenue.outdoorPoint?.lng ?? selectedVenue.lng;
 
-      // 1. Draw Static Venue Center Node (slate-gray)
       const lockedIcon = L.divIcon({
         html: `
           <div class="flex flex-col items-center select-none">
@@ -328,7 +322,6 @@ export const HubbaMap: React.FC<HubbaMapProps> = ({
       lockedVenueMarkerRef.current = L.marker([venueLat, venueLng], { icon: lockedIcon })
         .addTo(map);
 
-      // 2. Draw Draggable Seating Node (larger blue #7cbec7 with autoPan: false)
       const seatingIcon = L.divIcon({
         html: `
           <div class="flex flex-col items-center select-none">
@@ -346,7 +339,7 @@ export const HubbaMap: React.FC<HubbaMapProps> = ({
       const adjMarker = L.marker([currentSeatingLat, currentSeatingLng], {
         icon: seatingIcon,
         draggable: true,
-        autoPan: false, // Prevent dragging the marker from moving the map boundaries
+        autoPan: false,
         zIndexOffset: 3000
       }).addTo(map);
 
